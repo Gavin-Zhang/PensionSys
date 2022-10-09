@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>老人管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <script src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./js/index.js"></script>
+	<script type="text/javascript" src="../js/base.js"></script>
+
+</head>
+<body>
+<div class="x-nav">
+          <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">老人管理</a>
+            <a>
+              <cite>老人列表</cite></a>
+          </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5">
+                        <div class="layui-inline layui-show-xs-block">
+                            <input class="layui-input"  autocomplete="off" placeholder="开始日" name="start" id="start">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <input class="layui-input"  autocomplete="off" placeholder="截止日" name="end" id="end">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="layui-hide" id="demo" lay-filter="test"></table>
+
+<!--工具栏模板-->
+<script type="text/html" id="clientlisttools">
+  <div class="layui-btn-group">
+    <button class="layui-btn layui-btn layui-btn-sm" onclick="onAddClient();" lay-event="add">
+		<i class="layui-icon">&#xe61f;</i>添加
+	</button>
+	<!--<button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" onclick="onRefresh();" lay-event="refresh"><i class="layui-icon"  style="font-size: 20px">&#xe669;</i></button>-->
+  </div>
+</script>
+<script type="text/html" id="fieldtool">
+  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="modify">编辑</a>
+</script>
+
+<script>
+    layui.use(['table', 'laydate','form'], function(){
+        var table = layui.table
+		var laydate = layui.laydate;
+        var form = layui.form;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#end' //指定元素
+        });
+		
+		$.ajaxSetup({
+			headers: {'Access-Control-Allow-Origin' : 'http://localhost',},
+            xhrFields: {withCredentials: true},
+        });
+		
+		table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+			var data = obj.data //获得当前行数据
+			,layEvent = obj.event; //获得 lay-event 对应的值
+			if(layEvent === 'detail'){
+				layer.msg('查看操作');
+			} else if(layEvent === 'modify'){
+				var local = layui.sessionData("client-list")
+				for(var client of local.clients) {
+					if (data["Idx"] === client["Idx"]) {
+					layui.sessionData("client-list", {key:"modify", value:client})
+						layer.open({
+							type: 2,
+							area: ['900px', '600px'],
+							fixed: false, //不固定
+							maxmin: true,
+							title: "编辑",
+							content: 'client-modify.html',
+						});
+						return;
+					}
+				}
+			}
+		});
+		
+		table.render({
+			elem: '#demo'
+			,height: 420
+			,url: BasePath + '/getclients'
+			,method: 'post'
+			,page: true //开启分页
+			,toolbar: '#clientlisttools'//'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+			,defaultToolbar: ['filter', 'exports', 'print']
+			//,totalRow: true //开启合计行
+			,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+			,id:"clients"
+			,title:"列表"
+			,cols: [[
+				//{type:'radio', align: 'center'}
+				{field:'Idx', title: '编号', align:'center', hide: false}
+				,{field:'Name', title: '姓名', align:'center', hide: false}
+				,{field:'Sex', title: '性别', align:'center', width: '5%', minWidth: 20}
+				,{field:'Age', title: '年龄', align:'center', width: '5%', minWidth: 20} 
+				,{field:'ChinaId', title: '证件号码', align:'center', width: '15%', minWidth: 100}
+				,{field:'Phone', title: '联系方式', align:'center', width: '10%', minWidth: 100}
+				,{field:'Type', title: '类型', align:'center', width: '10%', minWidth: 100}
+				,{field:'Handler', title: '登记人', align:'center', width: '10%', minWidth: 100}
+				,{field:'RegisterTime', title: '等记时间', align:'center', width: '10%', minWidth: 100}
+				,{title: '操作', align:'center', toolbar: '#fieldtool', fixed: 'right'}
+			]]
+			,parseData: function(res){ //res 即为原始返回的数据
+				if (res.code == 0) {
+					console.log(res.data[0])
+					layui.sessionData("client-list", {key:"clients", value:res.data[0]})
+					for(var tableitem of res.data[0]) {
+						console.log(tableitem)
+						tableitem["Sex"] = GetSex(tableitem.ChinaId)
+						tableitem["Age"] = GetAge(tableitem.ChinaId)
+						tableitem["Type"] = tableitem["Type"]
+						tableitem["RegisterTime"] = tableitem["RegisterTime"].substr(0,10)
+					}
+					return {
+					  "code": res.code, //解析接口状态
+					  "msg": res.message, //解析提示文本
+					  "count": res.count, //解析数据长度
+					  "data": res.data[0] //解析数据列表
+					};
+				}
+				if (res.code == 1001) {
+					parent.location.href = "../index.html";
+				}
+				return {
+				  "code": res.code, //解析接口状态
+				  "msg": res.message, //解析提示文本
+				  "count": res.count, //解析数据长度
+				  "data": [] //解析数据列表
+				};
+			}
+			,done: function(res, curr, count){
+
+			}
+		});
+    });
+	
+	function onAddClient() {
+		layer.open({
+			type: 2,
+			area: ['900px', '600px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "老人注册",
+			content: 'client-add.html',
+			success:function(layero,index){
+				var body = layer.getChildFrame('body', index);
+				console.log(body.contents().find("#from"));
+				body.contents().find("#from").val("client-list");
+			}
+		});
+	}
+	
+	function onRefresh() {
+		
+	}
+
+</script>
+</body>
+</html>
