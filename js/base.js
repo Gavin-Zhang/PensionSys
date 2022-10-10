@@ -1,5 +1,6 @@
 ﻿
 ;var BasePath = "http://localhost:8001";
+;var Domain = 'http://localhost';
 ;var CookieName = "bm-cookie";
 
 function GetCookie(name) {

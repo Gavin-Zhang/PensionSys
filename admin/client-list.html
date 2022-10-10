@@ -81,7 +81,7 @@
         });
 		
 		$.ajaxSetup({
-			headers: {'Access-Control-Allow-Origin' : 'http://localhost',},
+			headers: {'Access-Control-Allow-Origin' : Domain,},
             xhrFields: {withCredentials: true},
         });
 		
@@ -132,7 +132,7 @@
 				,{field:'Type', title: '类型', align:'center', width: '10%', minWidth: 100}
 				,{field:'Handler', title: '登记人', align:'center', width: '10%', minWidth: 100}
 				,{field:'RegisterTime', title: '等记时间', align:'center', width: '10%', minWidth: 100}
-				,{title: '操作', align:'center', toolbar: '#fieldtool', fixed: 'right'}
+				,{title: '操作', align:'center', toolbar: '#fieldtool', minWidth: 150, fixed: 'right'}
 			]]
 			,parseData: function(res){ //res 即为原始返回的数据
 				if (res.code == 0) {
