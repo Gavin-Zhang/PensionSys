@@ -30,7 +30,7 @@
                             <input class="layui-input"  autocomplete="off" placeholder="身份证" name="querychinaid" id="querychinaid">
                         </div>
                         <div class="layui-inline layui-show-xs-block">
-                            <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                            <button class="layui-btn"  type="button" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
                         </div>
                     </form>
                 </div>
@@ -76,8 +76,6 @@
 			]]
 			,parseData: function(res){ //res 即为原始返回的数据
 				if (res.code == 0) {
-					console.log(res.data[0])
-					layui.sessionData("client-list", {key:"clients", value:res.data[0]})
 					for(var tableitem of res.data[0]) {
 						console.log(tableitem)
 						tableitem["Sex"] = GetSex(tableitem.ChinaId)
@@ -91,7 +89,7 @@
 					};
 				}
 				if (res.code == 1001) {
-					//parent.location.href = "../index.html";
+					parent.location.href = "../index.html";
 				}
 				return {
 				  "code": res.code, //解析接口状态
@@ -111,6 +109,36 @@
 			var index = parent.layer.getFrameIndex(window.name);
 			parent.layer.close(index);
 		});
+		
+		//监听提交
+        form.on('submit(sreach)', function(data){
+			console.log("on sreach")
+			var name = $('#queryname').val()
+			var phone = $('#queryphone').val()
+			var chinaid = $('#querychinaid').val()
+			
+			if (name=="" && phone=="" && chinaid=="") {
+				table.reload('clients', {where:{}})
+				return;
+			}
+			
+			var where = {};
+			if (name != "") {
+				where["name"] = name;
+			}
+			if (phone != "") {
+				where["phone"] = phone;
+			}
+			if (chinaid != "") {
+				where["chinaid"] = chinaid;
+			}
+			console.log(where)
+			
+			
+            table.reload('clients', {
+				where: where
+			})
+        });
     });
 </script>
 </body>
