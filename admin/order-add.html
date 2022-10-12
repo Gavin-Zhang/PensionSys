@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>
-        工单
+        新建工单
     </title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -14,6 +14,7 @@
 
     <link rel="stylesheet" href="./css/font.css">
     <link rel="stylesheet" href="./css/index.css">
+	<link rel="stylesheet" href="./css/input.css">
     <script src="./lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="./js/index.js"></script>
 	<script type="text/javascript" src="../js/base.js"></script>
@@ -28,49 +29,167 @@
     <script src="./ueditor/ueditor.all.min.js"></script>
     <script src="./ueditor/lang/zh-cn/zh-cn.js"></script>
 	-->
+<style type="text/css">
+
+</style>
 </head>
 <body>
 <div class="layui-fluid">
-		<form class="layui-form layui-form-pane">
+		<form class="layui-form layui-form-pane" id="orderadd" lay-filter="orderadd">
 			<div class="layui-form-item">
 				<div class="layui-row">
-					<div class="layui-col-xs6 layui-col-sm6 layui-col-md10">
-						<label for="L_email" class="layui-form-label">
+					<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+						<label for="name" class="layui-form-label">
 							<span class="x-red">*</span>老人</label>
 						<div class="layui-input-block">
-							<input type="text" id="name" name="name" required="" disabled="disabled" class="layui-input"></div>
+							<input type="text" id="name" name="name" required="" disabled="disabled" class="layui-input">
 						</div>
-						<div class="layui-col-md2">
-							<button class="layui-input-inline layui-btn" onclick="onSelName();" lay-event="seclect">
-								<i class="layui-icon">&#xe615;</i>
-							</button>
+					</div>
+					<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+						<button class="layui-btn layui-btn-normal" type="button" onclick="onSelClient();">
+							<i class="layui-icon">&#xe615;</i>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-row layui-col-space5">
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="phone" class="layui-form-label">
+							<span class="x-red">*</span>联系方式
+						</label>
+						<div class="layui-input-block">
+							<input type="text" id="phone" name="phone" lay-verify="number" required="" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label class="layui-form-label">
+							<span class='x-red'>*</span>所属社区
+						</label>
+						<div class="layui-input-block">
+							<select name="ascription" id="ascription">
+								<option value="0">---请选择所属社区---</option>
+								<option value="温泉社区">温泉社区</option>
+								<option value="玉龙社区">玉龙社区</option>
+								<option value="毛绢社区">毛绢社区</option>
+								<option value="营胜村">营胜村</option>
+								<option value="五龙背村">五龙背村</option>
+								<option value="新建村">新建村</option>
+								<option value="新康村">新康村</option>
+								<option value="孙家村">孙家村</option>
+							</select>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="layui-form-item">
-				<label for="L_username" class="layui-form-label">
-					<span class="x-red">*</span>昵称</label>
-				<div class="layui-input-inline">
-					<input type="text" id="L_username" name="username" required="" lay-verify="nikename" autocomplete="off" class="layui-input"></div>
+				<label for="addr" class="layui-form-label">
+					<span class="x-red">*</span>地址</label>
+				<div class="layui-input-block">
+					<input id="addr" name="addr" required="" autocomplete="off" class="layui-input">
+				</div>
 			</div>
 			<div class="layui-form-item">
-				<label for="L_pass" class="layui-form-label">
-					<span class="x-red">*</span>密码</label>
-				<div class="layui-input-inline">
-					<input type="password" id="L_pass" name="pass" required="" lay-verify="pass" autocomplete="off" class="layui-input"></div>
-				<div class="layui-form-mid layui-word-aux">6到16个字符</div></div>
-			<div class="layui-form-item">
-				<label for="L_repass" class="layui-form-label">
-					<span class="x-red">*</span>确认密码</label>
-				<div class="layui-input-inline">
-					<input type="password" id="L_repass" name="repass" required="" lay-verify="repass" autocomplete="off" class="layui-input"></div>
+				<div class="layui-row layui-col-space1">
+					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+						<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+							<label for="service" class="layui-form-label">
+								<span class="x-red">*</span>服务项目</label>
+							<div class="layui-input-block">
+								<input type="text" id="service" name="service" required="" disabled="disabled" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+							<button class="layui-btn layui-btn-normal" onclick="onSelService();">
+								<i class="layui-icon">&#xe615;</i>
+							</button>
+						</div>
+					</div>
+					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+						<label for="charge" class="layui-form-label">
+							<span class="x-red">*</span>收费</label>
+						<div class="layui-input-block">
+							<input type="text" id="charge" name="charge" required="" disabled="disabled" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+						<label for="servicetime" class="layui-form-label"><span class="x-red">*</span>预约时间</label>
+						<div class="layui-input-block">
+							<input type="text" class="layui-input" id="servicetime">
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="layui-form-item">
-				<label for="L_repass" class="layui-form-label"></label>
-				<button class="layui-btn" lay-filter="add" lay-submit="">增加</button></div>
+				<div class="layui-row layui-col-space5">
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+							<label for="waiter" class="layui-form-label">
+								<span class="x-red">*</span>服务人员</label>
+							<div class="layui-input-block">
+								<input type="text" id="waiter" name="waiter" required="" disabled="disabled" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+							<button class="layui-btn layui-btn-normal" onclick="onSelWaiter();" lay-event="seclectw">
+								<i class="layui-icon">&#xe615;</i>
+							</button>
+						</div>
+					</div>
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="waiterphone" class="layui-form-label"><span class="x-red">*</span>联系电话</label>
+						<div class="layui-input-block">
+							<input type="text" class="layui-input" id="waiterphone">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="handler" class="layui-form-label">
+					<span class="x-red">*</span>办理人</label>
+				<div class="layui-input-block">
+					<input id="handler" name="handler" required="" lay-verify="handler" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<textarea id="remarks" name="remarks" placeholder="备注" class="layui-textarea"></textarea>
+			</div>
+			<!--
+			<div class="layui-form-item">
+				<div class="layui-row layui-col-space1">
+					<div class="layui-col-md6">
+						<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+							<label for="service" class="layui-form-label">
+								<span class="x-red">*</span>服务项目</label>
+							<div class="layui-input-block">
+								<input type="text" id="service" name="service" required="" disabled="disabled" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+							<button class="layui-btn layui-btn-normal" onclick="onSelService();" lay-event="seclects">
+								<i class="layui-icon">&#xe615;</i>
+							</button>
+						</div>
+					</div>
+					<div class="layui-col-md6">
+						<label for="service" class="layui-form-label">
+							<span class="x-red">*</span>服务时长</label>
+							<div class="layui-input-block">
+								<input class="layui-input" type="number" name="num" data-step="1" 
+								data-maxvalue="20" 
+								data-minvalue="1" 
+								lay-verify="required" 
+								placeholder="小时"
+								autocomplete="off" >
+							</div>
+					</div>
+				</div>
+			</div>
+			-->
+			<div class="layui-form-item">
+				<button class="layui-btn layui-btn-fluid" lay-filter="add" lay-submit="">创建</button>
+			</div>
 		</form>
-	</div>
 </div>
 
 <script type="text/html" id="fieldtool">
@@ -89,47 +208,34 @@
 
 <script>
 
+	var form;
     layui.use(['element','layer','form','upload', 'table', 'laydate'], function(){
         var  $ = layui.jquery;//jquery
         var lement = layui.element;//面包导航
         var layer = layui.layer;//弹出层
-        var form = layui.form;
+         form = layui.form;
         var upload = layui.upload;
 		var table = layui.table;
 		var laydate = layui.laydate;
 
-        //图片上传接口
-        /*layui.upload({
-          url: './upload.json' //上传接口
-          ,success: function(res){ //上传成功后的回调
-              console.log(res);
-            $('#LAY_demo_upload').attr('src',res.url);
-          }
-        });*/
-        //指定允许上传的文件类型
-        /*upload.render({
-            elem: '#head'
-            ,url: '/user/head/'
-			//,auto: false
-            ,before: function(obj){
-                obj.preview(function(index, file, result){
-					layer.msg(result);
-					console.log(result);
-					console.log(file);
-					$('#headimages').attr('src', result); //图片链接（base64）
-				});
-            }
-        });*/
-		
-		var gloab = layui.data('yl-user');
-		form.val("register", {
-			"registrant": gloab.user["UserName"],
-			}
-		)
+        //预约时间日期
+		var date= new Date();
+		var year = date.getFullYear();      //年
+		var month = date.getMonth() + 1;    //月
+		var strDate = date.getDate();       //日
+		var hours = date.getHours();        //时
+		var minutes = date.getMinutes();    //分
+		laydate.render({
+			elem: '#servicetime'
+			,value: year+"-"+month+"-"+strDate+" "+hours+":"+minutes+":00"
+			,isInitValue: true
+			,type: 'datetime'
+		 });
+	
 		
 		table.render({
 			elem: '#contacts'
-			,height: 270
+			,height: 'full-100'
 			,data: [{"name":"11111", "phone":"2", "relationship":"3"}]
 			,editTrigger: 'dblclick'
 			,toolbar: '#contactstools'
@@ -173,13 +279,6 @@
 				
 			table.reload("contacts", {data: table_data})
 		});
-		
-		//初始赋值
-		laydate.render({
-			elem: '#registrant_time'
-			,value: new Date()
-			,isInitValue: true
-		 });
 		 
 		 //鼠标失去焦点事件
         $(document).ready(function () {
@@ -251,39 +350,33 @@
                 }
             });
         });
-
+		
     })
+	
+	function onSelClient() {
+		layer.open({
+			type: 2,
+			area: ['880px', '500px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "工单",
+			content: 'client-select.html',
+			success:function(layero,index){
+				
+			}
+		});
+	}
 </script>
-<!--栏目缩略图上传-->
+
 <script>
-    function upload(obj,id){
-        var formData = new FormData();
-        formData.append('images', $('#previewImg')[0].files[0]);
-        formData.append('id', id);//将id追加再id中
-        layer.msg('图片上传中', {icon: 16});
-        $.ajax({
-            type:"post",
-            processData: false,
-            contentType: false,
-            url:"",
-            data:formData,
-            success:function(data){
-                if(data.status == 1){
-                    console.log(data.image_name);
-                    layer.closeAll('loading');
-                    //layer.msg(data.info,{icon:1,time:1000});
-                    $("#pimages").attr('src',data.image_name);
-                    $("#avatar").val(data.image_name);
-                    $(".imgs").show();
-                    return false;
-                }else{
-                    layer.msg(data.info,{icon:2,time:1000});
-                }
-            }
-        });
-    }
-	
-	
+    function DoSelectClient(data) {
+		form.val("orderadd", {
+			name: data["Name"],
+			phone: data["Phone"],
+			ascription: data["Community"],
+			addr: data["Addr"],
+		})
+	}
 </script>
 
 </body>
