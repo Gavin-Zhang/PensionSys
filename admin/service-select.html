@@ -2,7 +2,7 @@
 <html class="x-admin-sm">
 <head>
     <meta charset="UTF-8">
-    <title>选择服务</title>
+    <title>选择老人</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
@@ -21,13 +21,12 @@
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5">
                         <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input"  autocomplete="off" placeholder="姓名" name="queryname" id="queryname">
+                            <input class="layui-input"  autocomplete="off" placeholder="服务名称" name="queryservice" id="queryservice">
                         </div>
                         <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input"  autocomplete="off" placeholder="电话" name="queryphone" id="queryphone">
-                        </div>
-                        <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input"  autocomplete="off" placeholder="身份证" name="querychinaid" id="querychinaid">
+                            <select name="queryclass" id="queryclass">
+								<option value="">---服务类别---</option>
+							</select>
                         </div>
                         <div class="layui-inline layui-show-xs-block">
                             <button class="layui-btn"  type="button" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
@@ -42,45 +41,38 @@
 
 
 <script>
+
+	var form;
     layui.use(['table', 'laydate','form'], function(){
         var table = layui.table
 		var laydate = layui.laydate;
-        var form = layui.form;
+        form = layui.form;
 		
 		$.ajaxSetup({
 			headers: {'Access-Control-Allow-Origin' : Domain,},
             xhrFields: {withCredentials: true},
         });
+		init_select();
 		
 		table.render({
 			elem: '#demo'
 			//,height: 220
-			,url: BasePath + '/getclients'
+			,url: BasePath + '/getservices'
 			,method: 'post'
 			,page: true //开启分页
 			//,totalRow: true //开启合计行
 			,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-			,id:"clients"
+			,id:"orders"
 			,title:"列表"
 			,height: 'full-100'
 			,cols: [[
-				{field:'Idx', title: '编号', align:'center', hide: false}
-				,{field:'Name', title: '姓名', align:'center', width: '8%', hide: false}
-				,{field:'Sex', title: '性别', align:'center', width: '7%', minWidth: 20}
-				,{field:'Age', title: '年龄', align:'center', width: '7%', minWidth: 20} 
-				,{field:'ChinaId', title: '证件号码', align:'center', width: '18%', minWidth: 100}
-				,{field:'Phone', title: '联系方式', align:'center', width: '15%', minWidth: 100}
-				,{field:'Community', title: '所属社区', align:'center', width: '15%', minWidth: 100}
-				,{field:'Type', title: '类型', align:'center', width: '10%', minWidth: 100}
-				,{field:'Handler', title: '登记人', align:'center', width: '10%', minWidth: 100}
+				{field:'Id', title: '编号', align:'center', width: '15%', hide: false}
+				,{field:'Class', title: '类别', align:'center', width: '25%', hide: false}
+				,{field:'Name', title: '服务', align:'center', width: '30%', minWidth: 20}
+				,{field:'Price', title: '价格', align:'center', width: '31%', minWidth: 20} 
 			]]
 			,parseData: function(res){ //res 即为原始返回的数据
 				if (res.code == 0) {
-					for(var tableitem of res.data[0]) {
-						console.log(tableitem)
-						tableitem["Sex"] = GetSex(tableitem.ChinaId)
-						tableitem["Age"] = GetAge(tableitem.ChinaId)
-					}
 					return {
 					  "code": res.code, //解析接口状态
 					  "msg": res.message, //解析提示文本
@@ -105,41 +97,54 @@
 		
 		table.on('rowDouble(test)', function(obj){
 			console.log(obj.data)
-			parent.DoSelectClient(obj.data)
+			parent.DoSelectService(obj.data)
 			var index = parent.layer.getFrameIndex(window.name);
 			parent.layer.close(index);
 		});
 		
 		//监听提交
         form.on('submit(sreach)', function(data){
-			console.log("on sreach")
-			var name = $('#queryname').val()
-			var phone = $('#queryphone').val()
-			var chinaid = $('#querychinaid').val()
+			var service = $('#queryservice').val()
+			var classtype = $('#queryclass').val()
 			
-			if (name=="" && phone=="" && chinaid=="") {
-				table.reload('clients', {where:{}})
+			if (service=="" && classtype=="") {
+				table.reload('orders', {where:{}})
 				return;
 			}
 			
 			var where = {};
-			if (name != "") {
-				where["name"] = name;
+			if (service != "") {
+				where["service"] = name;
 			}
-			if (phone != "") {
-				where["phone"] = phone;
+			if (classtype != "") {
+				where["class"] = classtype;
 			}
-			if (chinaid != "") {
-				where["chinaid"] = chinaid;
-			}
-			console.log(where)
-			
-			
-            table.reload('clients', {
+
+            table.reload('orders', {
 				where: where
 			})
         });
     });
+	
+	function init_select() {		
+		$.ajax({
+			url: BasePath + "/getserviceclass",
+			type:"post",
+			dataType:"json",
+			headers: {'Access-Control-Allow-Origin' : Domain,},
+			xhrFields: {withCredentials: true},
+			success:function (data){
+				if (data.code==0){
+					console.log(data.data[0])
+					for (var i=0;i<data.data[0].length;i++) {
+						console.log(data.data[0][i]["Class"])
+						$("#queryclass").append(new Option(data.data[0][i]["Class"], data.data[0][i]["Class"]))
+					}
+					form.render('select');	
+				}
+			}
+		});
+	}
 </script>
 </body>
 </html>
