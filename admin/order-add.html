@@ -108,7 +108,7 @@
 						<label for="charge" class="layui-form-label">
 							<span class="x-red">*</span>收费</label>
 						<div class="layui-input-block">
-							<input type="text" id="charge" name="charge" required="" disabled="disabled" class="layui-input">
+							<input type="text" id="charge" name="charge" required="" class="layui-input">
 						</div>
 					</div>
 					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
@@ -130,7 +130,7 @@
 							</div>
 						</div>
 						<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-							<button class="layui-btn layui-btn-normal" onclick="onSelWaiter();" lay-event="seclectw">
+							<button class="layui-btn layui-btn-normal" type="button" onclick="onSelWaiter();" lay-event="seclectw">
 								<i class="layui-icon">&#xe615;</i>
 							</button>
 						</div>
@@ -138,7 +138,7 @@
 					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 						<label for="waiterphone" class="layui-form-label"><span class="x-red">*</span>联系电话</label>
 						<div class="layui-input-block">
-							<input type="text" class="layui-input" id="waiterphone">
+							<input type="text" class="layui-input" name="waiterphone" id="waiterphone">
 						</div>
 					</div>
 				</div>
@@ -229,7 +229,13 @@
 			,value: year+"-"+month+"-"+strDate+" "+hours+":"+minutes+":00"
 			,isInitValue: true
 			,type: 'datetime'
-		 });
+		});
+		 
+		var gloab = layui.data('yl-user');
+		form.val("orderadd", {
+			"handler": gloab.user["UserName"],
+			}
+		)
 	
 		
 		table.render({
@@ -379,6 +385,20 @@
 			}
 		});
 	}
+	
+	function onSelWaiter() {
+		layer.open({
+			type: 2,
+			area: ['880px', '500px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "选择服务人员",
+			content: 'worker-select.html',
+			success:function(layero,index){
+			
+			}
+		});
+	}
 </script>
 
 <script>
@@ -395,6 +415,14 @@
 		form.val("orderadd", {
 			service: data["Name"],
 			charge: data["Price"],
+		})
+	}
+	
+	function DoSelectWorker(data) {
+		console.log(data)
+		form.val("orderadd", {
+			waiter: data["Name"],
+			waiterphone: data["Phone"],
 		})
 	}
 </script>

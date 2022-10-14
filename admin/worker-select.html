@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>选择服务人员</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <script src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./js/index.js"></script>
+	<script type="text/javascript" src="../js/base.js"></script>
+
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5">
+                        <div class="layui-inline layui-show-xs-block">
+                            <input class="layui-input"  autocomplete="off" placeholder="姓名" name="queryname" id="queryname">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <input class="layui-input"  autocomplete="off" placeholder="电话" name="queryphone" id="queryphone">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <select name="queryclass" id="queryclass">
+								<option value="">---类别---</option>
+							</select>
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn"  type="button" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="layui-hide" id="demo" lay-filter="test"></table>	
+
+
+<script>
+    layui.use(['table', 'laydate','form'], function(){
+        var table = layui.table
+		var laydate = layui.laydate;
+        var form = layui.form;
+		
+		$.ajaxSetup({
+			headers: {'Access-Control-Allow-Origin' : Domain,},
+            xhrFields: {withCredentials: true},
+        });
+		init_select();
+
+		table.render({
+			elem: '#demo'
+			//,height: 220
+			,url: BasePath + '/getworkers'
+			,method: 'post'
+			,page: true //开启分页
+			//,totalRow: true //开启合计行
+			,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+			,id:"workers"
+			,title:"列表"
+			,height: 'full-100'
+			,cols: [[
+				{field:'Idx', title: '编号', align:'center', hide: false}
+				,{field:'Name', title: '姓名', align:'center', width: '10%', hide: false}
+				,{field:'Sex', title: '性别', align:'center', width: '10%', minWidth: 20}
+				,{field:'Age', title: '年龄', align:'center', width: '10%', minWidth: 20} 
+				,{field:'ChinaId', title: '证件号码', align:'center', width: '20%', minWidth: 100}
+				,{field:'Phone', title: '联系方式', align:'center', width: '20%', minWidth: 100}
+				,{field:'Class', title: '类型', align:'center', width: '10%', minWidth: 100}
+			]]
+			,parseData: function(res){ //res 即为原始返回的数据
+				if (res.code == 0) {
+					for(var tableitem of res.data[0]) {
+						console.log(tableitem)
+						tableitem["Sex"] = GetSex(tableitem.ChinaId)
+						tableitem["Age"] = GetAge(tableitem.ChinaId)
+					}
+					return {
+					  "code": res.code, //解析接口状态
+					  "msg": res.message, //解析提示文本
+					  "count": res.count, //解析数据长度
+					  "data": res.data[0] //解析数据列表
+					};
+				}
+				if (res.code == 1001) {
+					parent.location.href = "../index.html";
+				}
+				return {
+				  "code": res.code, //解析接口状态
+				  "msg": res.message, //解析提示文本
+				  "count": res.count, //解析数据长度
+				  "data": [] //解析数据列表
+				};
+			}
+			,done: function(res, curr, count){
+				
+			}
+		});
+		
+		table.on('rowDouble(test)', function(obj){
+			console.log(obj.data)
+			parent.DoSelectWorker(obj.data)
+			var index = parent.layer.getFrameIndex(window.name);
+			parent.layer.close(index);
+		});
+		
+		//监听提交
+        form.on('submit(sreach)', function(data){
+			var name = $('#queryname').val()
+			var phone = $('#queryphone').val()
+			var classtype = $('#queryclass').val()
+			
+			if (name=="" && phone=="" && classtype=="") {
+				table.reload('workers', {where:{}})
+				return;
+			}
+			
+			var where = {};
+			if (name != "") {
+				where["name"] = name;
+			}
+			if (phone != "") {
+				where["phone"] = phone;
+			}
+			if (classtype != "") {
+				where["class"] = classtype;
+			}			
+			
+            table.reload('workers', {
+				where: where
+			})
+        });
+    });
+	
+	function init_select() {		
+		$.ajax({
+			url: BasePath + "/getworkerclass",
+			type:"post",
+			dataType:"json",
+			headers: {'Access-Control-Allow-Origin' : Domain,},
+			xhrFields: {withCredentials: true},
+			success:function (data){
+				if (data.code==0){
+					console.log(data.data[0])
+					for (var i=0;i<data.data[0].length;i++) {
+						console.log(data.data[0][i]["Class"])
+						$("#queryclass").append(new Option(data.data[0][i]["Class"], data.data[0][i]["Class"]))
+					}
+					layui.form.render('select');	
+				}
+			}
+		});
+	}
+</script>
+</body>
+</html>
