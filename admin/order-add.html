@@ -90,7 +90,7 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-row layui-col-space1">
-					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 						<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
 							<label for="service" class="layui-form-label">
 								<span class="x-red">*</span>服务项目</label>
@@ -104,21 +104,53 @@
 							</button>
 						</div>
 					</div>
-					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-						<label for="charge" class="layui-form-label">
-							<span class="x-red">*</span>收费</label>
-						<div class="layui-input-block">
-							<input type="text" id="charge" name="charge" required="" class="layui-input">
-						</div>
-					</div>
-					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+					
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 						<label for="servicetime" class="layui-form-label"><span class="x-red">*</span>预约时间</label>
 						<div class="layui-input-block">
-							<input type="text" class="layui-input" id="servicetime">
+							<input type="text" class="layui-input" id="servicetime" name="servicetime">
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="layui-form-item">
+				<div class="layui-row layui-col-space1">
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="consumptiontype" class="layui-form-label">
+								<span class="x-red">*</span>消费类型</label>
+						<div class="layui-inline layui-show-xs-block">
+                            <select name="consumptiontype" id="consumptiontype" lay-filter="consumptiontype">
+							</select>
+                        </div>
+					</div>
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="charge" class="layui-form-label">
+							<span class="x-red">*</span>参考价格</label>
+						<div class="layui-input-block">
+							<input type="text" id="charge" name="charge" required="" lay-verify="" disabled="disabled" class="layui-input">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item" id="fareself">
+				<div class="layui-row layui-col-space1">
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="fare" class="layui-form-label">
+							</span>车费</label>
+						<div class="layui-input-block">
+							<input type="text" id="fare" name="fare" value="0" required="" lay-verify="number" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="highrise" class="layui-form-label">
+							</span>高层费用</label>
+						<div class="layui-input-block">
+							<input type="text" id="highrise" name="highrise" value="0" required="" lay-verify="number" class="layui-input">
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--
 			<div class="layui-form-item">
 				<div class="layui-row layui-col-space5">
 					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -143,6 +175,7 @@
 					</div>
 				</div>
 			</div>
+			-->
 			<div class="layui-form-item">
 				<label for="handler" class="layui-form-label">
 					<span class="x-red">*</span>办理人</label>
@@ -208,14 +241,16 @@
 <script>
 
 	var form;
-    layui.use(['element','layer','form','upload', 'table', 'laydate'], function(){
+    layui.use(['element','layer', 'form', 'table', 'laydate'], function(){
         var  $ = layui.jquery;//jquery
         var lement = layui.element;//面包导航
         var layer = layui.layer;//弹出层
-         form = layui.form;
+        form = layui.form;
         var upload = layui.upload;
 		var table = layui.table;
 		var laydate = layui.laydate;
+		
+		init_ConsumptionType_select();
 
         //预约时间日期
 		var date= new Date();
@@ -229,6 +264,7 @@
 			,value: year+"-"+month+"-"+strDate+" "+hours+":"+minutes+":00"
 			,isInitValue: true
 			,type: 'datetime'
+			,min: Date.now()
 		});
 		 
 		var gloab = layui.data('yl-user');
@@ -236,109 +272,36 @@
 			"handler": gloab.user["UserName"],
 			}
 		)
-	
 		
-		table.render({
-			elem: '#contacts'
-			,height: 'full-100'
-			,data: [{"name":"11111", "phone":"2", "relationship":"3"}]
-			,editTrigger: 'dblclick'
-			,toolbar: '#contactstools'
-			,cols: [[
-				,{field:'id', width: '1%', align:'center', title: '序号', hide: true}
-				,{field:'name', width: '24%', align:'center', edit: 'text', title: '姓名'}
-				,{field:'phone', width: '40%', align:'center', edit: 'text', title: '联系电话'}
-				,{field:'relationship', width: '25%', align:'center', edit: 'text', title: '关系'} 
-				,{title: '操作', width: '10%', align:'center', toolbar: '#fieldtool', fixed: 'right'}
-			]]
-		});
-		
-		table.on('tool(test)', function(obj) {
-			var data = obj.data;
-			console.log(obj.event);
-			
-			if (obj.event === 'delete') {
-				if (data.name == "") {
-					var table_data = table.cache["contacts"];
-					table_data.splice(obj.tr.data("index"), 1);
-					table.reload("contacts", {data: table_data})
-				} else {
-					layer.confirm('确定要删除[' + data.name + ']么?',
-						{btn:['确定', '取消']},
-						function(index, layero) {
-							var table_data = table.cache["contacts"];
-							table_data.splice(obj.tr.data("index"), 1);
-							table.reload("contacts", {data: table_data})
-							layer.close(index);
-						});
-				}
+		form.on('select(consumptiontype)', function(data){
+			console.log("data.value:"+data.value)
+			if (data.value === "政府购买") {
+				document.getElementById('fareself').style.display = 'none';
+			} else if (data.value === "自费") {
+				document.getElementById('fareself').style.display = 'block';
 			}
-		});
-		
-		$(document).on('click', '#contacts_add', function(){			
-			var table_data = table.cache["contacts"];
-			table_data.push({
-				"name": "",
-				"phone": "",
-				"relationship":""});
-				
-			table.reload("contacts", {data: table_data})
-		});
-		 
-		 //鼠标失去焦点事件
-        $(document).ready(function () {
-            $("#chinaid").blur(function () {
-                var china_id = $(this).val();
-				console.log(china_id);
-				var age = GetAge(china_id);
-				if (age != 0) {
-					$("#age").val(age);
-				}
-				
-				var sex = GetSex(china_id);
-				if (sex != 0) {
-					document.getElementById("sex").value = GetSex(china_id);
-					form.render("select");
-				}
-            })
-        });
+		});      
+
 
         //监听提交
-        form.on('submit(add)', function(data){
-            
-			var slow = [];
-			var child = $(".seach-box input[type='checkbox']");
-			console.log(child);
-			child.each(function (index, item) {		
-				if (item.checked) {
-					slow.push(item.id);
-				}
-			});
-			// 慢病
-			console.log(slow);
-			data.field["slow"] = JSON.stringify(slow);
-			// 联系人
-			data.field["contacts"] = JSON.stringify(table.cache["contacts"]);
-			console.log(data.field);
-			var obj = JSON.parse(data.field["contacts"])
-			console.log(obj)
-			
+        form.on('submit(add)', function(data){	
+			var back;
             $.ajax({
                 type: "post",
-                url: BasePath + '/register',
+                url: BasePath + '/addorder',
                 data: data.field,
                 dataType: "json",
 				headers: {'Access-Control-Allow-Origin' : Domain,},
 				xhrFields: {withCredentials: true},
                 success: function(data){
-					console.log(data)
+					back = data
                     if(data.code==0){
+						console.log("data.code==0")
                         layer.msg("注册成功", {icon: 6,time:2000},function () {
                             window.parent.location.reload();
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
                         });
-                        return false;
                     }else if(data.code==1001) {
 						// cookie 失效
 						var from = document.getElementById("from").value;
@@ -347,16 +310,40 @@
 						} else {
 							parent.location.href = "../index.html";
 						}
-                        return false;
 					}else{
-                        layer.msg(data.msg,{icon:5,time:5000});
-						return false;
+                        layer.msg(data.msg, {icon:5,time:5000});
                     }
                 }
             });
+			return false;
         });
 		
     })
+	
+	function init_ConsumptionType_select() {		
+		$.ajax({
+			url: BasePath + "/getconsumptiontypes",
+			type:"post",
+			dataType:"json",
+			headers: {'Access-Control-Allow-Origin' : Domain,},
+			xhrFields: {withCredentials: true},
+			success:function (data){
+				if (data.code==0){
+					for (var i=0;i<data.data[0].length;i++) {
+						console.log(data.data[0][i]["Type"])
+						$("#consumptiontype").append(new Option(data.data[0][i]["Type"], data.data[0][i]["Type"]))
+					}
+					form.render('select');	
+					
+					if ($('#consumptiontype option:selected').val() === "政府购买") {
+						document.getElementById('fareself').style.display = 'none';
+					} else {
+						document.getElementById('fareself').style.display = 'block';
+					}
+				}
+			}
+		});
+	}
 	
 	function onSelClient() {
 		layer.open({
@@ -412,12 +399,14 @@
 	}
 	
 	function DoSelectService(data) {
+		console.log(data)
 		form.val("orderadd", {
 			service: data["Name"],
 			charge: data["Price"],
 		})
 	}
 	
+	/*
 	function DoSelectWorker(data) {
 		console.log(data)
 		form.val("orderadd", {
@@ -425,6 +414,7 @@
 			waiterphone: data["Phone"],
 		})
 	}
+	*/
 </script>
 
 </body>

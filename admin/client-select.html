@@ -77,7 +77,6 @@
 			,parseData: function(res){ //res 即为原始返回的数据
 				if (res.code == 0) {
 					for(var tableitem of res.data[0]) {
-						console.log(tableitem)
 						tableitem["Sex"] = GetSex(tableitem.ChinaId)
 						tableitem["Age"] = GetAge(tableitem.ChinaId)
 					}
@@ -104,7 +103,6 @@
 		});
 		
 		table.on('rowDouble(test)', function(obj){
-			console.log(obj.data)
 			parent.DoSelectClient(obj.data)
 			var index = parent.layer.getFrameIndex(window.name);
 			parent.layer.close(index);
