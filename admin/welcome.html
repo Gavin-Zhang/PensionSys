@@ -36,16 +36,19 @@
             }
         </style>
     </head>
+	
     <body>
+		<script id="username" type="text/html">
+			<blockquote class="layui-elem-quote">欢迎管理员：
+				<span class="x-red" >{{= d.UserName }}</span>
+				<span id="time"></span>
+			</blockquote>
+		</script>
         <div class="layui-fluid">
             <div class="layui-row layui-col-space15">
                 <div class="layui-col-md12">
                     <div class="layui-card">
-                        <div class="layui-card-body ">
-                            <blockquote class="layui-elem-quote">欢迎管理员：
-                                <span class="x-red" >admin</span>
-                                <span id="time"></span>
-                            </blockquote>
+                        <div class="layui-card-body " id="div_name_1">
                         </div>
                     </div>
                 </div>
@@ -313,8 +316,17 @@
 
         });
 
-        layui.use('layer', function(){
+        layui.use(['layer', 'laytpl'], function(){
             var layer = layui.layer;
+			var laytpl = layui.laytpl;
+			
+			var data = layui.data('yl-user').user;
+			var getTpl = username.innerHTML;
+			var view = document.getElementById('div_name_1');
+			laytpl(getTpl).render(data, function(html){
+				view.innerHTML = html;
+			})
+			
             var remember = '';
             $(document).ready(function(){
                 layer.prompt({

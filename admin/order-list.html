@@ -76,14 +76,15 @@
 	  </div>
 	</script>
 	<script type="text/html" id="fieldtool">
-		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">订单跟踪</a>
+		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="track">订单跟踪</a>
 		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="modify">编辑</a>
 	</script>
     <script>
-		layui.use(['laydate', 'form', 'table'],
+		layui.use(['laydate', 'form', 'table', 'layer'],
 			function() {
 				var laydate = layui.laydate;
 				var table = layui.table;
+				var layer = layui.layer;
 
 				//执行一个laydate实例
 				laydate.render({
@@ -135,6 +136,10 @@
 						for(var tableitem of res.data[0]) {
 							tableitem["ServiceTime"] = tableitem["ServiceTime"].substr(0,19).replace('T', ' ');
 							tableitem["Created"] = tableitem["Created"].substr(0,19).replace('T', ' ');
+							tableitem["AssignTime"] = formattime(tableitem["AssignTime"]);
+							tableitem["BeginTime"] = formattime(tableitem["BeginTime"]);
+							tableitem["EndTime"] = formattime(tableitem["EndTime"]);
+							tableitem["FinishTime"] = formattime(tableitem["FinishTime"]);
 						}
 					
 						return {
@@ -159,6 +164,24 @@
 
 				}
 			});
+			
+			table.on('tool(orderlist)', function(obj){
+				var data = obj.data //获得当前行数据
+				,layEvent = obj.event; //获得 lay-event 对应的值
+				if(layEvent === 'track'){
+					layui.sessionData("order-list", {key:"track", value:data})
+					layer.open({
+						type: 2,
+						area: ['900px', '600px'],
+						fixed: false, //不固定
+						maxmin: true,
+						title: "工单追踪",
+						content: 'order-track.html',
+					});
+				} else if(layEvent === 'modify'){
+					console.log(data)
+				}
+			});
 		});
 		
 		function onAddOrder() {
@@ -173,6 +196,13 @@
 					
 				}
 			});
+		}
+		
+		function formattime(t) {
+			if (t === "0001-01-01T00:00:00Z") {
+				return ""
+			}
+			return t.substr(0,19).replace('T', ' ');
 		}
 	</script>
 </html>

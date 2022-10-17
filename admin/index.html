@@ -15,6 +15,16 @@
 
     </head>
     <body class="index">
+		<script id="username" type="text/html">
+			<a href="javascript:;">{{= d.UserName }}</a>
+			<dl class="layui-nav-child">
+				<!-- 二级菜单 -->
+				<dd>
+					<a onclick="xadmin.open('个人信息','one_set.html')">个人信息</a></dd>
+				<dd>
+					<a href="../index.html">退出</a></dd>
+			</dl>
+		</script>
         <!-- 顶部开始 -->
         <div class="container">
             <div class="logo">
@@ -25,7 +35,7 @@
 
             <ul class="layui-nav right" lay-filter="">
 
-                <li class="layui-nav-item">
+                <li class="layui-nav-item" id="username_li">
                     <a href="javascript:;">admin</a>
                     <dl class="layui-nav-child">
                         <!-- 二级菜单 -->
@@ -35,8 +45,7 @@
                             <a href="../index.html">退出</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item to-index">
-                    <a href="/">前台首页</a></li>
+
             </ul>
 
 
@@ -348,7 +357,16 @@
         });
 	*/
     }
-
+	
+	layui.use(['laytpl'], function(){
+		var laytpl = layui.laytpl;
+		var data = layui.data('yl-user').user;
+		var getTpl = username.innerHTML;
+		var view = document.getElementById('username_li');
+		laytpl(getTpl).render(data, function(html){
+			view.innerHTML = html;
+		})
+	});
 
 
 
