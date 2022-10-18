@@ -41,7 +41,7 @@
 						<label for="name" class="layui-form-label">
 							<span class="x-red">*</span>老人</label>
 						<div class="layui-input-block">
-							<input type="text" id="name" name="name" required="" disabled="disabled" class="layui-input">
+							<input type="text" id="name" name="name" lay-verify="required" required="" disabled="disabled" class="layui-input">
 						</div>
 					</div>
 					<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
@@ -51,6 +51,11 @@
 					</div>
 				</div>
 			</div>
+			<div class="layui-form-item" hidden="true">
+				<div class="layui-input-block">
+					<input type="text" id="chinaid" name="chinaid" required="" disabled="disabled" class="layui-input">
+				</div>
+			</div>
 			<div class="layui-form-item">
 				<div class="layui-row layui-col-space5">
 					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -58,7 +63,7 @@
 							<span class="x-red">*</span>联系方式
 						</label>
 						<div class="layui-input-block">
-							<input type="text" id="phone" name="phone" lay-verify="number" required="" class="layui-input">
+							<input type="text" id="phone" name="phone" lay-verify="required|number" required="" class="layui-input">
 						</div>
 					</div>
 					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -66,7 +71,7 @@
 							<span class='x-red'>*</span>所属社区
 						</label>
 						<div class="layui-input-block">
-							<select name="ascription" id="ascription">
+							<select name="ascription" id="ascription" lay-verify="required">
 								<option value="0">---请选择所属社区---</option>
 								<option value="温泉社区">温泉社区</option>
 								<option value="玉龙社区">玉龙社区</option>
@@ -85,7 +90,7 @@
 				<label for="addr" class="layui-form-label">
 					<span class="x-red">*</span>地址</label>
 				<div class="layui-input-block">
-					<input id="addr" name="addr" required="" autocomplete="off" class="layui-input">
+					<input id="addr" name="addr" required="" lay-verify="required" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -95,7 +100,7 @@
 							<label for="service" class="layui-form-label">
 								<span class="x-red">*</span>服务项目</label>
 							<div class="layui-input-block">
-								<input type="text" id="service" name="service" required="" disabled="disabled" class="layui-input">
+								<input type="text" id="service" name="service" lay-verify="required" required="" disabled="disabled" class="layui-input">
 							</div>
 						</div>
 						<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
@@ -108,7 +113,7 @@
 					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 						<label for="servicetime" class="layui-form-label"><span class="x-red">*</span>预约时间</label>
 						<div class="layui-input-block">
-							<input type="text" class="layui-input" id="servicetime" name="servicetime">
+							<input type="text" class="layui-input" id="servicetime" name="servicetime" lay-verify="required">
 						</div>
 					</div>
 				</div>
@@ -119,13 +124,12 @@
 						<label for="consumptiontype" class="layui-form-label">
 								<span class="x-red">*</span>消费类型</label>
 						<div class="layui-inline layui-show-xs-block">
-                            <select name="consumptiontype" id="consumptiontype" lay-filter="consumptiontype">
+                            <select name="consumptiontype" id="consumptiontype" lay-filter="consumptiontype" lay-verify="required">
 							</select>
                         </div>
 					</div>
 					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-						<label for="charge" class="layui-form-label">
-							<span class="x-red">*</span>参考价格</label>
+						<label for="charge" class="layui-form-label"></span>参考价格</label>
 						<div class="layui-input-block">
 							<input type="text" id="charge" name="charge" required="" lay-verify="" disabled="disabled" class="layui-input">
 						</div>
@@ -150,13 +154,11 @@
 					</div>
 				</div>
 			</div>
-			<!--
 			<div class="layui-form-item">
 				<div class="layui-row layui-col-space5">
 					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 						<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
-							<label for="waiter" class="layui-form-label">
-								<span class="x-red">*</span>服务人员</label>
+							<label for="waiter" class="layui-form-label">服务人员</label>
 							<div class="layui-input-block">
 								<input type="text" id="waiter" name="waiter" required="" disabled="disabled" class="layui-input">
 							</div>
@@ -168,19 +170,18 @@
 						</div>
 					</div>
 					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-						<label for="waiterphone" class="layui-form-label"><span class="x-red">*</span>联系电话</label>
+						<label for="waiterphone" class="layui-form-label">联系电话</label>
 						<div class="layui-input-block">
 							<input type="text" class="layui-input" name="waiterphone" id="waiterphone">
 						</div>
 					</div>
 				</div>
 			</div>
-			-->
 			<div class="layui-form-item">
 				<label for="handler" class="layui-form-label">
 					<span class="x-red">*</span>办理人</label>
 				<div class="layui-input-block">
-					<input id="handler" name="handler" required="" lay-verify="handler" autocomplete="off" class="layui-input">
+					<input id="handler" name="handler" required="" lay-verify="required" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-form-item">
@@ -237,7 +238,24 @@
 	<!--<button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" onclick="onRefresh();" lay-event="refresh"><i class="layui-icon"  style="font-size: 20px">&#xe669;</i></button>-->
   </div>
 </script>
-
+<script>
+Date.prototype.Format = function(fmt) {
+	var o = {
+		"M+": this.getMonth() + 1,
+		"d+": this.getDate(),
+		"H+": this.getHours(),
+		"m+": this.getMinutes(),
+		"s+": this.getSeconds(),
+		"q+": Math.floor((this.getMonth()+3)/3),
+		"S": this.getMilliseconds()
+	};
+	
+	if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4-RegExp.$1.length))
+	for (var k in o)
+	if (new RegExp("("+k+")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1)?(o[k]):(("00"+o[k]).substr((""+o[k]).length)))
+	return fmt;
+}
+</script>
 <script>
 
 	var form;
@@ -254,14 +272,9 @@
 
         //预约时间日期
 		var date= new Date();
-		var year = date.getFullYear();      //年
-		var month = date.getMonth() + 1;    //月
-		var strDate = date.getDate();       //日
-		var hours = date.getHours();        //时
-		var minutes = date.getMinutes();    //分
 		laydate.render({
 			elem: '#servicetime'
-			,value: year+"-"+month+"-"+strDate+" "+hours+":"+minutes+":00"
+			,value: date.Format("yyyy-MM-dd HH:mm:00")
 			,isInitValue: true
 			,type: 'datetime'
 			,min: Date.now()
@@ -330,7 +343,6 @@
 			success:function (data){
 				if (data.code==0){
 					for (var i=0;i<data.data[0].length;i++) {
-						console.log(data.data[0][i]["Type"])
 						$("#consumptiontype").append(new Option(data.data[0][i]["Type"], data.data[0][i]["Type"]))
 					}
 					form.render('select');	
@@ -393,6 +405,7 @@
 		form.val("orderadd", {
 			name: data["Name"],
 			phone: data["Phone"],
+			chinaid: data["ChinaId"],
 			ascription: data["Community"],
 			addr: data["Addr"],
 		})
@@ -406,7 +419,6 @@
 		})
 	}
 	
-	/*
 	function DoSelectWorker(data) {
 		console.log(data)
 		form.val("orderadd", {
@@ -414,7 +426,6 @@
 			waiterphone: data["Phone"],
 		})
 	}
-	*/
 </script>
 
 </body>
