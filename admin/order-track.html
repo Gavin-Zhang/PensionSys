@@ -73,14 +73,16 @@
 	
 	<script id="container" type="text/html">
 		<div style="display:flex;">
-			<div style="flex:1;display:flex" id="dot_statue_1">
+			<!-- 订单已创建 -->
+			<div style="flex:1;display:flex">
 				<div style="flex:1"></div>
 				<div class="flex:1"></div>
 				<div class="dot1"></div>
 				<div class="item2"></div> 
 			</div>
-			<div style="flex:1;display:flex" id="dot_statue_2">
-				{{#  if(d.OrderStatus === "已下单"){ }}
+			<!-- 订单已分派 -->
+			<div style="flex:1;display:flex">
+				{{#  if(d.OrderStatus === "订单已创建"){ }}
 					<div class="item"></div>
 					<div class="dot"></div>
 					<div class="item"></div>
@@ -90,16 +92,26 @@
 					<div class="item2"></div>
 				{{#  } }} 
 			</div>
-			<div style="flex:1;display:flex" id="dot_statue_3">
-				{{#  if(d.OrderStatus === "已下单"){ }}
+			<!-- 服务已完成 -->
+			<div style="flex:1;display:flex" id="dot_statue_2">
+				{{#  if(d.OrderStatus === "订单已创建" || d.OrderStatus === "订单已分派"){ }}
 					<div class="item"></div>
 					<div class="dot"></div>
-				{{#  } else if(d.OrderStatus === "已分派"){ }}
+					<div class="item"></div>
+				{{#  } else { }}
+					<div class="item2"></div>
+					<div class="dot1"></div>
+					<div class="item2"></div>
+				{{#  } }} 
+			</div>
+			<!-- 订单已完成 -->
+			<div style="flex:1;display:flex" id="dot_statue_3">
+				{{#  if(d.OrderStatus !== "订单已完成"){ }}
 					<div class="item"></div>
 					<div class="dot"></div>
 				{{#  } else { }}
-					<div class="item1"></div>
-					<div class="dot2"></div>
+					<div class="item2"></div>
+					<div class="dot1"></div>
 				{{#  } }} 
 				<div class="flex:1"></div>
 			</div>
@@ -107,39 +119,50 @@
 		<div style="display:flex;margin-top:25px;">
 			<div style="flex:1;display:flex">
 				<div style="flex:1"></div>
-				<div class="">已下单</div>
+				<div class="">订单已创建</div>
 				<div class="item1"></div>
 			</div>
 			<div style="flex:1;display:flex">
 				<div class="item1"></div>
-				<div class="">已分派</div>
+				<div class="">订单已分派</div>
 				<div class="item1"></div>
 			</div>
 			<div style="flex:1;display:flex">
 				<div class="item1"></div>
-				<div class="">已完成</div>
+				<div class="">服务已完成</div>
+				<div class="item1"></div>
+			</div>
+			<div style="flex:1;display:flex">
+				<div class="item1"></div>
+				<div class="">服务已完成</div>
 				<div class="flex:1"></div>
 			</div>
 		</div>
 		<div style="display:flex;margin-top:5px;">
-			<div style="flex:1;display:flex" id="time_statue_1">
+			<div style="flex:1;display:flex">
 				<div class="flex:1"></div>
 				<div class="">{{= d.Created }}</div>
 				<div class="item1"></div>
 			</div>
-			<div style="flex:1;display:flex" id="time_statue_1">
-				{{#  if(d.OrderStatus === "已下单"){ }}
-				{{#  } else { }}
+			<div style="flex:1;display:flex">
+				{{#  if(d.OrderStatus !== "订单已创建"){ }}
 					<div class="item1"></div>
 					<div class="">{{= d.AssignTime }}</div>
 					<div class="item1"></div>
 				{{#  } }} 
 			</div>
-			<div style="flex:1;display:flex" id="time_statue_1">
-				{{#  if(d.OrderStatus === "已完成"){ }}
+			<div style="flex:1;display:flex">
+				{{#  if(d.OrderStatus !== "订单已创建" && d.OrderStatus !== "订单已分派"){ }}
+					<div class="item1"></div>
+					<div class="">{{= d.EndTime }}</div>
+					<div class="item1"></div>
+				{{#  } }} 
+			</div>
+			<div style="flex:1;display:flex">
+				{{#  if(d.OrderStatus === "服务已完成"){ }}
 					<div class="item1"></div>
 					<div class="">{{= d.FinishTime }}</div>
-					<div class="item1"></div>
+					<div class="flex:1"></div>
 				{{#  } }} 
 			</div>
 		</div>
@@ -212,51 +235,77 @@
 	</script>
 	
 	<script id="faretpl" type="text/html">
-		{{#  if(d.OrderStatus === "已分派"){ }}
-			<div class="layui-row layui-col-space1">
-				<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+		{{#  if (d.ConsumptionType !== "政府购买" && d.OrderStatus === "已分派") { }}
+			<div class="layui-row layui-col-space5">
+				<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 					<label for="fare" class="layui-form-label">
 						<span class="x-red">*</span>服务费用</label>
 					<div class="layui-input-block">
 						<input type="text" id="charge" name="charge" value="0" lay-verify="required|number" class="layui-input">
 					</div>
 				</div>
-				<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-					<label for="fare" class="layui-form-label">
-						<span class="x-red">*</span>车费</label>
+				<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+					<label class="layui-form-label">
+						<span class='x-red'>*</span>支付方式
+					</label>
 					<div class="layui-input-block">
-						<input type="text" id="fare" name="fare" value="0" lay-verify="required|number" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-					<label for="highrise" class="layui-form-label">
-						<span class="x-red">*</span>高层费用</label>
-					<div class="layui-input-block">
-						<input type="text" id="highrise" name="highrise" value="0" lay-verify="required|number" class="layui-input">
+						<select name="paymenttype" id="paymenttype" lay-verify="required" >
+						</select>
 					</div>
 				</div>
 			</div>
-		{{#  } else if(d.OrderStatus === "已完成"){ }}
-			<div class="layui-row layui-col-space1">
-				<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+		{{#  } else if (d.ConsumptionType !== "政府购买" && d.OrderStatus === "已完成"){ }}
+			<div class="layui-row layui-col-space5">
+				<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 					<label for="fare" class="layui-form-label">服务费用</label>
 					<div class="layui-input-block">
-						<input type="text" id="charge" name="charge" value="0" disabled="disabled" lay-verify="required|number" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-					<label for="fare" class="layui-form-label">车费</label>
-					<div class="layui-input-block">
-						<input type="text" id="fare" name="fare" value="0" disabled="disabled" lay-verify="required|number" class="layui-input">
+						<input type="text" name="charge" value="0" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-					<label for="highrise" class="layui-form-label">高层费用</label>
+					<label for="fare" class="layui-form-label">支付方式</label>
 					<div class="layui-input-block">
-						<input type="text" id="highrise" name="highrise" value="0" disabled="disabled" lay-verify="required|number" class="layui-input">
+						<input type="text" name="paymenttype" value="0" disabled="disabled" class="layui-input">
 					</div>
 				</div>
 			</div>
+		{{#  } }} 
+	</script>
+	
+	<script id="otherfaretpl" type="text/html">
+		{{#  if(d.ConsumptionType !== "政府购买"){ }}
+			{{#  if(d.OrderStatus === "已分派"){ }}
+				<div class="layui-row layui-col-space1">
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="fare" class="layui-form-label">
+							<span class="x-red">*</span>车费</label>
+						<div class="layui-input-block">
+							<input type="text" id="fare" name="fare" value="0" lay-verify="required|number" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="highrise" class="layui-form-label">
+							<span class="x-red">*</span>高层费用</label>
+						<div class="layui-input-block">
+							<input type="text" id="highrise" name="highrise" value="0" lay-verify="required|number" class="layui-input">
+						</div>
+					</div>
+				</div>
+			{{#  } else if(d.OrderStatus === "已完成"){ }}
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="fare" class="layui-form-label">车费</label>
+						<div class="layui-input-block">
+							<input type="text" id="fare" name="fare" value="0" disabled="disabled" lay-verify="required|number" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="highrise" class="layui-form-label">高层费用</label>
+						<div class="layui-input-block">
+							<input type="text" id="highrise" name="highrise" value="0" disabled="disabled" lay-verify="required|number" class="layui-input">
+						</div>
+					</div>
+				</div>
+			{{#  } }} 
 		{{#  } }} 
 	</script>
 	
@@ -318,6 +367,12 @@
 					<input id="addr" name="addr" disabled="disabled" class="layui-input">
 				</div>
 			</div>
+			<div class="layui-form-item">
+				<label for="consumptiontype" class="layui-form-label">消费类型</label>
+				<div class="layui-input-block">
+					<input id="consumptiontype" name="consumptiontype" disabled="disabled" class="layui-input">
+				</div>
+			</div>
 			<div class="layui-form-item" id="waiterinfodiv">
 				<!--
 				<div class="layui-row layui-col-space5">
@@ -360,6 +415,28 @@
 			</div>
 			<div class="layui-form-item" id="farediv">
 				<!--
+				<div class="layui-row layui-col-space5">
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="fare" class="layui-form-label">
+							<span class="x-red">*</span>服务费用</label>
+						<div class="layui-input-block">
+							<input type="text" id="charge" name="charge" value="0" lay-verify="required|number" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label class="layui-form-label">
+							<span class='x-red'>*</span>支付方式
+						</label>
+						<div class="layui-input-block">
+							<select name="paymenttype" id="paymenttype" lay-verify="required" >
+							</select>
+						</div>
+					</div>
+				</div>
+				-->
+			</div>
+			<div class="layui-form-item" id="otherfarediv">
+				<!--
 				<div class="layui-row layui-col-space1">
 					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 						<label for="fare" class="layui-form-label">
@@ -380,7 +457,7 @@
 			</div>
 
 			<div class="layui-form-item">
-				<button class="layui-btn layui-btn-fluid" type="button" lay-filter="add" lay-submit="">确定</button>
+				<button class="layui-btn layui-btn-fluid" id="ok" type="button" lay-filter="add" lay-submit="">确定</button>
 			</div>
 		</form>
 </div>
@@ -431,21 +508,29 @@
 			servicetime_div.innerHTML = html;
 		})
 		
-		// 服务时间
+		// 收费
 		var fare_tpl = faretpl.innerHTML
-		var fare_div = document.getElementById('farediv');
+		var fare_div = document.getElementById('farediv')
 		laytpl(fare_tpl).render(orderdata, function(html){
 			fare_div.innerHTML = html;
 		})
 		
-		//日期范围
-		laydate.render({
-			elem: '#servicetimes'
-			,type: 'datetime'
-			//设置开始日期、日期日期的 input 选择器
-			//数组格式为 2.6.6 开始新增，之前版本直接配置 true 或任意分割字符即可
-			,range: ['#servicebegin', '#serviceend']
+		// 其他收费
+		var otherfare_tpl = otherfaretpl.innerHTML
+		var othefare_div = document.getElementById('otherfarediv');
+		laytpl(otherfare_tpl).render(orderdata, function(html){
+			othefare_div.innerHTML = html;
+		})
+		
+		$.ajaxSetup({
+			headers: {'Access-Control-Allow-Origin' : Domain,},
+			xhrFields: {withCredentials: true},
 		});
+		
+		intiServiceTime(orderdata);
+		initPaymentType(orderdata);
+		initOtherFare(orderdata);
+		initButtion(orderdata);
 
 		form.val("ordertrack", {
 			"name": orderdata.Name,
@@ -455,7 +540,8 @@
 			"sex": GetSex(orderdata.ChinaId),
 			"addr": orderdata.Addr,
 			"waiter": orderdata.Waiter,
-			"waiterphone": orderdata.WaiterPhone})
+			"waiterphone": orderdata.WaiterPhone,
+			"consumptiontype": orderdata.ConsumptionType})
 
         //监听提交
         form.on('submit(add)', function(data){
@@ -486,7 +572,7 @@
 			} else if (orderdata.OrderStatus === "已分派") {
 				$.ajax({
 					type: "post",
-					url: BasePath + '/finisorder',
+					url: BasePath + '/finishorder',
 					data: data.field,
 					dataType: "json",
 					headers: {'Access-Control-Allow-Origin' : Domain,},
@@ -494,7 +580,7 @@
 					success: function(data){
 						console.log(data)
 						if(data.code==0){
-							layer.msg("分派成功", {icon: 6,time:2000},function () {
+							layer.msg("成功", {icon: 6,time:2000},function () {
 								window.parent.location.reload();
 								var index = parent.layer.getFrameIndex(window.name);
 								parent.layer.close(index);
@@ -510,6 +596,70 @@
         });
 		
     })
+	
+	function intiServiceTime(orderdata) {
+		if (orderdata.OrderStatus === "已分派") {
+			//日期范围
+			layui.laydate.render({
+				elem: '#servicetimes'
+				,type: 'datetime'
+				//设置开始日期、日期日期的 input 选择器
+				//数组格式为 2.6.6 开始新增，之前版本直接配置 true 或任意分割字符即可
+				,range: ['#servicebegin', '#serviceend']
+			});
+		} else {
+			layui.form.val("ordertrack", {
+				servicebegin: orderdata.BeginTime,
+				serviceend: orderdata.EndTime
+			})
+		}
+	}
+	
+	function initPaymentType(orderdata) {
+		if (orderdata.ConsumptionType !== "政府购买" && orderdata.OrderStatus === "已分派") {
+			$.ajax({
+				type: "post",
+				url: BasePath + '/getpaymenttype',
+				dataType: "json",
+				headers: {'Access-Control-Allow-Origin' : Domain,},
+				xhrFields: {withCredentials: true},
+				success: function(data){
+					console.log(data)
+					if(data.code==0){
+						for (var i=0;i<data.data[0].length;i++) {
+							$("#paymenttype").append(new Option(data.data[0][i]["Type"], data.data[0][i]["Type"]))
+						}
+						layui.form.render('select');
+					}else if(data.code==1001) {
+						parent.location.href = "../index.html";
+					}else{
+						layer.msg(data.msg, {icon:5,time:5000});
+					}
+				}
+			});
+		} else if (orderdata.ConsumptionType !== "政府购买" && orderdata.OrderStatus === "已完成") {
+			layui.form.val("ordertrack", {
+				paymenttype: orderdata.PaymentType,
+			})
+		}
+	}
+
+	function initOtherFare(orderdata) {
+		if (orderdata.ConsumptionType !== "政府购买" && orderdata.OrderStatus !== "已下单") {
+			layui.form.val("ordertrack", {
+				fare: orderdata.Fare,
+				highrise: orderdata.HighRise
+			})
+		}
+	}
+	
+	function initButtion(orderdata) {
+		if (orderdata.OrderStatus == "已完成") {
+			document.getElementById('ok').style.display = 'none';
+		} else {
+			document.getElementById('ok').style.display = 'block';
+		}
+	}
 	
 	function onSelWaiter() {
 		layer.open({
