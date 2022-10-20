@@ -112,10 +112,12 @@
 				,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
 				,id:"orders"
 				,title:"列表"
+				,limits:[10,20,30,50,100,150,200,300,400,500,1000]
 				,cols: [[
 					//{type:'radio', align: 'center'}
 					{field:'Idx', title: '工单编号', align:'center', hide: false}
 					,{field:'OrderStatus', title: '工单状态', align:'center', minWidth: 100}
+					,{field:'ConsumptionType', title: '消费类型', align:'center', minWidth: 100}
 					,{field:'Name', title: '老人姓名', align:'center', hide: false}
 					,{field:'Phone', title: '联系电话', align:'center', minWidth: 110}
 					,{field:'Waiter', title: '服务人员', align:'center'} 
@@ -124,7 +126,6 @@
 					,{field:'ServiceTime', title: '预定时间', align:'center', minWidth: 170}
 					,{field:'Addr', title: '地址', align:'center', minWidth: 100}
 					,{field:'Community', title: '所属社区', align:'center', minWidth: 100}
-					,{field:'ConsumptionType', title: '消费类型', align:'center', minWidth: 100}
 					,{field:'PaymentStatus', title: '支付状态', align:'center', minWidth: 100}
 					,{field:'Handler', title: '下单人', align:'center', minWidth: 100}
 					,{field:'Created', title: '下单时间', align:'center', minWidth: 170}
@@ -172,7 +173,7 @@
 					layui.sessionData("order-list", {key:"track", value:data})
 					layer.open({
 						type: 2,
-						area: ['900px', '500px'],
+						area: ['1100px', '600px'],
 						fixed: false, //不固定
 						maxmin: true,
 						title: "工单追踪",

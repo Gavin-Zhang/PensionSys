@@ -317,23 +317,46 @@
 	
 	<script id="servicetime" type="text/html">
 		{{#  if(d.OrderStatus === "待服务"){ }}
-			<label for="waiter" class="layui-form-label">
-				<span class="x-red">*</span>服务时间</label>
-			<div class="layui-input-inline"id="servicetimes">
-				<input type="text" autocomplete="off" id="servicebegin" name="servicebegin" lay-verify="required" class="layui-input" placeholder="开始日期">
-			</div>
-			<div class="layui-form-mid">-</div>
-			<div class="layui-input-inline">
-				<input type="text" autocomplete="off" id="serviceend" name="serviceend" lay-verify="required" class="layui-input" placeholder="结束日期">
+			<div class="layui-row layui-col-space5">
+				<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+					<label for="waiter" class="layui-form-label">
+						<span class="x-red">*</span>服务时间</label>
+					<div class="layui-input-inline"id="servicetimes">
+						<input type="text" autocomplete="off" id="servicebegin" name="servicebegin" lay-verify="required" class="layui-input" placeholder="开始日期">
+					</div>
+					<div class="layui-form-mid">-</div>
+					<div class="layui-input-inline">
+						<input type="text" autocomplete="off" id="serviceend" name="serviceend" lay-verify="required" class="layui-input" placeholder="结束日期">
+					</div>
+				</div>
 			</div>
 		{{#  } else if(d.OrderStatus === "待支付" || d.OrderStatus === "已完成"){ }}
-			<label for="waiter" class="layui-form-label">服务时间</label>
-			<div class="layui-input-inline" id="servicetimes">
-				<input type="text" autocomplete="off" name="servicebegin" disabled="disabled" class="layui-input" placeholder="开始日期">
-			</div>
-			<div class="layui-form-mid">-</div>
-			<div class="layui-input-inline">
-				<input type="text" autocomplete="off" name="serviceend" disabled="disabled" class="layui-input" placeholder="结束日期">
+			<div class="layui-row layui-col-space5">
+				<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+					<label for="servicebegin" class="layui-form-label">服务时间</label>
+					<div class="layui-input-inline" id="servicetimes">
+						<input type="text" autocomplete="off" name="servicebegin" disabled="disabled" class="layui-input" placeholder="开始日期">
+					</div>
+					<div class="layui-form-mid">-</div>
+					<div class="layui-input-inline">
+						<input type="text" autocomplete="off" name="serviceend" disabled="disabled" class="layui-input" placeholder="结束日期">
+					</div>
+				</div>
+				{{#  if(d.OrderStatus === "待支付"){ }}
+				<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+					<label for="paymenttime" class="layui-form-label"><span class="x-red">*</span>支付日期</label>
+					<div class="layui-input-inline" id="servicetimes">
+						<input type="text" autocomplete="off" id="paymenttime" name="paymenttime" lay-verify="required" class="layui-input" placeholder="支付日期">
+					</div>
+				</div>
+				{{#  } else if(d.OrderStatus === "已完成"){ }}
+				<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+					<label for="paymenttime" class="layui-form-label">支付日期</label>
+					<div class="layui-input-inline" id="servicetimes">
+						<input type="text" autocomplete="off" name="paymenttime" disabled="disabled" class="layui-input" placeholder="支付日期">
+					</div>
+				</div>
+				{{#  } }} 
 			</div>
 		{{#  } }} 
 	</script>
@@ -566,10 +589,6 @@
 		</form>
 </div>
 
-<script type="text/html" id="fieldtool">
-  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
-</script>
-
 <!--工具栏模板-->
 <script type="text/html" id="contactstools">
   <div class="layui-btn-group">
@@ -634,6 +653,7 @@
 		intiServiceTime(orderdata);
 		initPaymentType(orderdata);
 		initOtherFare(orderdata);
+		initPaymentTime(orderdata);
 		initButtion(orderdata);
 
 		form.val("ordertrack", {
@@ -649,6 +669,7 @@
 
         //监听提交
         form.on('submit(add)', function(data){
+			console.log(layui._typeof(data.field))
 			var orderdata = layui.sessionData("order-list")["track"];
 			if (orderdata.OrderStatus === "待分派") {
 				$.ajax({
@@ -662,9 +683,10 @@
 						console.log(data)
 						if(data.code==0){
 							layer.msg("分派成功", {icon: 6,time:2000},function () {
-								window.parent.location.reload();
-								var index = parent.layer.getFrameIndex(window.name);
-								parent.layer.close(index);
+								//window.parent.location.reload();
+								//var index = parent.layer.getFrameIndex(window.name);
+								//parent.layer.close(index);
+								GetOrderData()
 							});
 						}else if(data.code==1001) {
 							parent.location.href = "../index.html";
@@ -676,7 +698,7 @@
 			} else if (orderdata.OrderStatus === "待服务") {
 				$.ajax({
 					type: "post",
-					url: BasePath + '/finishorder',
+					url: BasePath + '/orderserviced',
 					data: data.field,
 					dataType: "json",
 					headers: {'Access-Control-Allow-Origin' : Domain,},
@@ -684,10 +706,35 @@
 					success: function(data){
 						console.log(data)
 						if(data.code==0){
-							layer.msg("成功", {icon: 6,time:2000},function () {
-								window.parent.location.reload();
-								var index = parent.layer.getFrameIndex(window.name);
-								parent.layer.close(index);
+							layer.msg("设置成功", {icon: 6,time:2000},function () {
+								//window.parent.location.reload();
+								//var index = parent.layer.getFrameIndex(window.name);
+								//parent.layer.close(index);
+								GetOrderData()
+							});
+						}else if(data.code==1001) {
+							parent.location.href = "../index.html";
+						}else{
+							layer.msg(data.msg, {icon:5,time:5000});
+						}
+					}
+				});
+			} else if (orderdata.OrderStatus === "待支付") {
+				$.ajax({
+					type: "post",
+					url: BasePath + '/orderpayment',
+					data: data.field,
+					dataType: "json",
+					headers: {'Access-Control-Allow-Origin' : Domain,},
+					xhrFields: {withCredentials: true},
+					success: function(data){
+						console.log(data)
+						if(data.code==0){
+							layer.msg("设置成功", {icon: 6,time:2000},function () {
+								//window.parent.location.reload();
+								//var index = parent.layer.getFrameIndex(window.name);
+								//parent.layer.close(index);
+								GetOrderData()
 							});
 						}else if(data.code==1001) {
 							parent.location.href = "../index.html";
@@ -720,7 +767,7 @@
 	}
 	
 	function initPaymentType(orderdata) {
-		if (orderdata.ConsumptionType !== "政府购买" && orderdata.OrderStatus === "待服务") {
+		if (orderdata.ConsumptionType !== "政府购买" && orderdata.OrderStatus === "待支付") {
 			$.ajax({
 				type: "post",
 				url: BasePath + '/getpaymenttype',
@@ -759,6 +806,20 @@
 		}
 	}
 	
+	function initPaymentTime(orderdata) {
+		if (orderdata.OrderStatus === "待支付") {
+			layui.laydate.render({
+				elem: '#paymenttime'
+				,type: 'date'
+				,value: new Date()
+			});
+		} else if (orderdata.OrderStatus === "已完成") {
+			layui.form.val("ordertrack", {
+				paymenttime: orderdata.PaymentTime.substr(0,10)
+			})
+		}
+	}
+	
 	function initButtion(orderdata) {
 		if (orderdata.OrderStatus == "已完成") {
 			document.getElementById('ok').style.display = 'none';
@@ -783,6 +844,31 @@
 </script>
 
 <script>
+	function GetOrderData(orderdata) {
+		var orderdata = layui.sessionData("order-list")["track"];
+		var data = {page:"1", limit:"1", idx:orderdata.Idx};
+		$.ajax({
+			type: "post",
+			url: BasePath + '/getorders',
+			data: data,
+			dataType: "json",
+			headers: {'Access-Control-Allow-Origin' : Domain,},
+			xhrFields: {withCredentials: true},
+			success: function(data){
+				console.log(data)
+				if(data.code==0){
+					console.log(data.data[0][0])
+					layui.sessionData("order-list", {key:"track", value:data.data[0][0]})
+					location.reload();
+				}else if(data.code==1001) {
+					parent.location.href = "../index.html";
+				}else{
+					layer.msg(data.msg, {icon:5,time:5000});
+				}
+			}
+		});
+	}
+	
 	
 	function DoSelectWorker(data) {
 		console.log(data)
@@ -791,7 +877,6 @@
 			waiterphone: data["Phone"],
 		})
 	}
-	
 </script>
 
 </body>
