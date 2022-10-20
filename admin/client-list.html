@@ -30,15 +30,22 @@
             <div class="layui-card">
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5">
-                        <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input"  autocomplete="off" placeholder="开始日" name="start" id="start">
+						<div class="layui-inline layui-show-xs-block">
+                            <input type="text" id="index" name="index"  placeholder="编号" autocomplete="off" class="layui-input">
+                        </div>
+						<div class="layui-inline layui-show-xs-block">
+                            <input type="text" id="username" name="username"  placeholder="姓名" autocomplete="off" class="layui-input">
+                        </div>
+						<div class="layui-inline layui-show-xs-block">
+                            <input type="text" id="phone" name="phone"  placeholder="联系方式" autocomplete="off" class="layui-input">
                         </div>
                         <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input"  autocomplete="off" placeholder="截止日" name="end" id="end">
+                            <input class="layui-input"  autocomplete="off" placeholder="登记开始日" name="registerstart" id="registerstart">
                         </div>
                         <div class="layui-inline layui-show-xs-block">
-                            <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                            <input class="layui-input"  autocomplete="off" placeholder="登记截止日" name="registerend" id="registerend">
                         </div>
+                        
                         <div class="layui-inline layui-show-xs-block">
                             <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
                         </div>
