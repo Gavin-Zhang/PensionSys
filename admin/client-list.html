@@ -11,7 +11,7 @@
     <script src="./lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="./js/index.js"></script>
 	<script type="text/javascript" src="../js/base.js"></script>
-
+	<script type="text/javascript" src="../js/printtpl.js"></script>
 </head>
 <body>
 <div class="x-nav">
@@ -31,37 +31,34 @@
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5">
 						<div class="layui-inline layui-show-xs-block">
-                            <input type="text" id="index" name="index"  placeholder="编号" autocomplete="off" class="layui-input">
-                        </div>
-						<div class="layui-inline layui-show-xs-block">
                             <input type="text" id="username" name="username"  placeholder="姓名" autocomplete="off" class="layui-input">
                         </div>
 						<div class="layui-inline layui-show-xs-block">
-                            <input type="text" id="phone" name="phone"  placeholder="联系方式" autocomplete="off" class="layui-input">
+                            <input type="text" id="phone" name="phone"  placeholder="联系方式"  autocomplete="off" class="layui-input">
                         </div>
+						<div class="layui-inline layui-show-xs-block">
+                            <input type="text" id="chinaid" name="chinaid"  placeholder="身份证" autocomplete="off" class="layui-input">
+                        </div>                        
                         <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input"  autocomplete="off" placeholder="登记开始日" name="registerstart" id="registerstart">
-                        </div>
-                        <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input"  autocomplete="off" placeholder="登记截止日" name="registerend" id="registerend">
-                        </div>
-                        
-                        <div class="layui-inline layui-show-xs-block">
-                            <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                            <button class="layui-btn"  lay-submit="" type="button" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div>	
+
 <table class="layui-hide" id="demo" lay-filter="test"></table>
 
 <!--工具栏模板-->
 <script type="text/html" id="clientlisttools">
   <div class="layui-btn-group">
-    <button class="layui-btn layui-btn layui-btn-sm" onclick="onAddClient();" lay-event="add">
+    <button class="layui-btn layui-btn-sm" onclick="onAddClient();" lay-event="add">
 		<i class="layui-icon">&#xe61f;</i>添加
+	</button>
+	<button class="layui-btn layui-btn-sm layui-btn-disabled" id="print" name="print" onclick="onPrint();" lay-event="print">
+		<i class="layui-icon">&#xe66d;</i>批量打印
 	</button>
 	<!--<button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" onclick="onRefresh();" lay-event="refresh"><i class="layui-icon"  style="font-size: 20px">&#xe669;</i></button>-->
   </div>
@@ -96,21 +93,30 @@
 			var data = obj.data //获得当前行数据
 			,layEvent = obj.event; //获得 lay-event 对应的值
 			if(layEvent === 'detail'){
-				layer.msg('查看操作');
+				layui.sessionData("client-list", {key:"detail", value:data})
+				layer.open({
+					type: 2,
+					area: ['900px', '600px'],
+					fixed: false, //不固定
+					maxmin: true,
+					title: "查看",
+					content: 'client-info.html',
+				});
+				return;
 			} else if(layEvent === 'modify'){
 				//var local = layui.sessionData("client-list")
 				//for(var client of local.clients) {
 				//	if (data["Idx"] === client["Idx"]) {
-					layui.sessionData("client-list", {key:"modify", value:data})
-						layer.open({
-							type: 2,
-							area: ['900px', '600px'],
-							fixed: false, //不固定
-							maxmin: true,
-							title: "编辑",
-							content: 'client-modify.html',
-						});
-						return;
+				layui.sessionData("client-list", {key:"modify", value:data})
+				layer.open({
+					type: 2,
+					area: ['900px', '600px'],
+					fixed: false, //不固定
+					maxmin: true,
+					title: "编辑",
+					content: 'client-modify.html',
+				});
+				return;
 				//	}
 				//}
 			}
@@ -130,8 +136,8 @@
 			,title:"列表"
 			,limits:[10,20,30,50,100,150,200,300,400,500,1000]
 			,cols: [[
-				//{type:'radio', align: 'center'}
-				{field:'Idx', title: '编号', align:'center', hide: false}
+				{type:'checkbox', align:'center', fixed: 'left'}
+				,{field:'Idx', title: '编号', align:'center', fixed: 'left', hide: false}
 				,{field:'Name', title: '姓名', align:'center', hide: false}
 				,{field:'Sex', title: '性别', align:'center', width: '5%', minWidth: 20}
 				,{field:'Age', title: '年龄', align:'center', width: '5%', minWidth: 20} 
@@ -146,7 +152,6 @@
 				if (res.code == 0) {
 					//layui.sessionData("client-list", {key:"clients", value:res.data[0]})
 					for(var tableitem of res.data[0]) {
-						console.log(tableitem)
 						tableitem["Sex"] = GetSex(tableitem.ChinaId)
 						tableitem["Age"] = GetAge(tableitem.ChinaId)
 						tableitem["Type"] = tableitem["Type"]
@@ -173,6 +178,76 @@
 
 			}
 		});
+		
+		//监听提交
+        form.on('submit(sreach)', function(data){
+			var chinaid = $('#chinaid').val()
+			var name = $('#username').val()
+			var phone = $('#phone').val()
+			
+			if (name=="" && phone=="" && chinaid=="") {
+				table.reload('clients', {where:{}})
+				return;
+			}
+			
+			var where = {};
+			if (name != "") {
+				where["name"] = name;
+			}
+			if (phone != "") {
+				where["phone"] = phone;
+			}
+			if (chinaid != "") {
+				where["chinaid"] = chinaid;
+			}			
+			
+            table.reload('clients', {
+				where: where
+			})
+        });
+		
+		form.verify({
+			chinaid: function(value, item){
+				if(!new RegExp("/^[1-9]\d{5}(19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[\d|X|x]$").test(value)){
+				  return '身份证不正确';
+				}
+			}
+		})
+		
+		/*
+		form.on('switch(tablecheckbox)', function(data){
+			console.log(data.elem); //得到checkbox原始DOM对象
+			console.log(data.elem.checked); //开关是否开启，true或者false
+			console.log(data.value); //开关value值，也可以通过data.elem.value得到
+			console.log(data.othis); //得到美化后的DOM对象
+		  
+			
+			if (data.elem.checked) {
+				document.getElementById("print").classList.remove("layui-btn-disabled");
+			} else {
+				document.getElementById("print").className += " layui-btn-disabled"
+			}
+		}); 
+		*/
+
+		table.on('checkbox(test)', function(obj){
+			let checkStatus = table.checkStatus('clients')
+			, data = checkStatus.data;
+
+			if (data.length > 0) {
+				console.log(document.getElementById("print"))
+				if (document.getElementById("print").classList.contains("layui-btn-disabled")) {
+					document.getElementById("print").classList.remove("layui-btn-disabled");
+				}
+				console.log(document.getElementById("print"))
+			} else {
+				console.log(document.getElementById("print"))
+				if (!document.getElementById("print").classList.contains("layui-btn-disabled")) {
+					document.getElementById("print").className += " layui-btn-disabled";
+				}
+				console.log(document.getElementById("print"))
+			}
+		});
     });
 	
 	function onAddClient() {
@@ -188,6 +263,21 @@
 				console.log(body.contents().find("#from"));
 				body.contents().find("#from").val("client-list");
 			}
+		});
+	}
+	
+	function onPrint() {
+		let checkStatus = layui.table.checkStatus('clients')
+		, data = checkStatus.data;
+		layui.sessionData("client-list", {key:"print", value:data})
+		
+		layer.open({
+			type: 2,
+			area: ['900px', '600px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "编辑",
+			content: 'client-print.html',
 		});
 	}
 	

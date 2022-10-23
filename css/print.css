@@ -1,0 +1,22 @@
+.borderSet {
+	border:1px solid #000000;
+	text-align:center;
+}
+.borderSetLeftAlign {
+	border:1px solid #000000;
+	text-align:left;
+}
+.borderSetLeftTopAlign {
+	border:1px solid #000000;
+	text-align:left;
+	vertical-align:top;
+}
+.titleSet {
+	text-align:center;
+	font-size: 30px;
+	font-weight: bold;
+}
+.indexSet {
+	text-align:right;
+	font-size: 15px;
+}
