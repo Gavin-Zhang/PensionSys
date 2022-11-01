@@ -34,6 +34,9 @@
                         <div class="layui-inline layui-show-xs-block">
                             <button class="layui-btn"  type="button" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
                         </div>
+						<div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn"  type="button" onclick="DoAssign();" lay-submit="">分派</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -67,13 +70,14 @@
 			,title:"列表"
 			,height: 'full-100'
 			,cols: [[
-				{field:'Idx', title: '编号', align:'center', hide: false}
-				,{field:'Name', title: '姓名', align:'center', width: '10%', hide: false}
-				,{field:'Sex', title: '性别', align:'center', width: '10%', minWidth: 20}
-				,{field:'Age', title: '年龄', align:'center', width: '10%', minWidth: 20} 
-				,{field:'ChinaId', title: '证件号码', align:'center', width: '20%', minWidth: 100}
-				,{field:'Phone', title: '联系方式', align:'center', width: '20%', minWidth: 100}
-				,{field:'Class', title: '类型', align:'center', width: '10%', minWidth: 100}
+				{type:'checkbox', align:'center', fixed: 'left'}
+				,{field:'Idx', title: '编号', align:'center', hide: false}
+				,{field:'Name', title: '姓名', align:'center', hide: false}
+				,{field:'Sex', title: '性别', align:'center'}
+				,{field:'Age', title: '年龄', align:'center'} 
+				//,{field:'ChinaId', title: '证件号码', align:'center', width: '20%', minWidth: 100}
+				,{field:'Phone', title: '联系方式', align:'center'}
+				,{field:'Class', title: '类型', align:'center'}
 			]]
 			,parseData: function(res){ //res 即为原始返回的数据
 				if (res.code == 0) {
@@ -106,7 +110,11 @@
 		
 		table.on('rowDouble(test)', function(obj){
 			console.log(obj.data)
-			parent.DoSelectWorker(obj.data)
+			
+			var data = new Array();
+			data[0] = obj.data;
+			
+			parent.DoSelectWorker(data)
 			var index = parent.layer.getFrameIndex(window.name);
 			parent.layer.close(index);
 		});
@@ -157,6 +165,14 @@
 				}
 			}
 		});
+	}
+	
+	function DoAssign() {
+		let checkStatus = layui.table.checkStatus('workers')
+		, data = checkStatus.data;
+		parent.DoSelectWorker(data)
+		var index = parent.layer.getFrameIndex(window.name);
+		parent.layer.close(index);
 	}
 </script>
 </body>

@@ -28,7 +28,13 @@
 "			<td colspan='2' class='borderSet layui-font-16'>{{= d.Sex || ''}}</td>\r\n" +
 "			<td colspan='2' class='borderSet layui-font-16'>年龄</td>\r\n" +
 "			<td class='borderSet  layui-font-16'>{{= d.Age || ''}}</td>\r\n" +
+"			{{# if(d.AvatarPath === '') { }}\r\n" +
 "			<td rowspan='5' class='borderSet  layui-font-16'>照<br/>片</td>\r\n" +
+"			{{#  } else { }}\r\n" +
+"			<td rowspan='5' class='borderSet  layui-font-16'>\r\n" +
+"				<img src={{ d.AvatarPath }} style='height:164px;width:118px' id='demo1'>\r\n" +
+"			</td>\r\n" +
+"			{{#  } }}\r\n" +
 "		</tr>\r\n" +
 "		<tr height='35' class='borderSet'>\r\n" +
 "			<td height='35'  class='borderSet layui-font-16'>身份证号</td>\r\n" +
@@ -278,4 +284,23 @@
 "			<td colspan='3'  class='borderSet layui-font-16'>登记日期</td>\r\n" +
 "			<td colspan='2'  class='borderSet layui-font-16'>{{= d.RegisterTime }}</td>\r\n" +
 "		</tr>\r\n" +
+"	</table>"
+
+
+;var dispatchtmpl = "\r\n\r\n" +
+"	<table width='793.83' border='0' cellpadding='0' cellspacing='0' style='page-break-after:always'>\r\n" +
+"		<col width='132.92'/>\r\n" +
+"		<col width='136.92'/>\r\n" +
+"		<col width='132.92'/>\r\n" +
+"		<col width='106.58'/>\r\n" +
+"		<col width='151.58'/>\r\n" +
+"	<tr height='24'>\r\n" +
+"		<td class='indexSet' height='24' width='793.83' colspan='6'>No:{{= d.Idx}}</td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='24'>\r\n" +
+"		<td class='titleSet' height='96' colspan='6' rowspan='4' >五龙背镇养老福利中心 - 服务派工单</td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='24'/>\r\n" +
+"	<tr height='24'/>\r\n" +
+"	<tr height='24'/>\r\n" +
 "	</table>"

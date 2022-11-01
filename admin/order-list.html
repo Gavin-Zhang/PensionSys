@@ -9,6 +9,7 @@
         <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
         <link rel="stylesheet" href="./css/font.css">
         <link rel="stylesheet" href="./css/index.css">
+		 <link rel="stylesheet" href="./lib/layui/css/layui.css">
         <script src="./lib/layui/layui.js" charset="utf-8"></script>
         <script type="text/javascript" src="./js/index.js"></script>
 		<script type="text/javascript" src="../js/base.js"></script>
@@ -78,13 +79,15 @@
 	<script type="text/html" id="fieldtool">
 		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="track">订单跟踪</a>
 		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="modify">编辑</a>
+		<a class="layui-btn layui-btn-xs" lay-event="operation">操作 <i class="layui-icon layui-icon-down"></i></a>
 	</script>
     <script>
-		layui.use(['laydate', 'form', 'table', 'layer'],
+		layui.use(['laydate', 'form', 'table', 'layer', 'dropdown'],
 			function() {
 				var laydate = layui.laydate;
 				var table = layui.table;
 				var layer = layui.layer;
+				var dropdown = layui.dropdown //下拉菜单
 
 				//执行一个laydate实例
 				laydate.render({
@@ -102,7 +105,7 @@
 			});
 			table.render({
 				elem: '#orderlist'
-				,height: 'full-200'//,height: 420
+				,height: 'full-150'//,height: 420
 				,url: BasePath + '/getorders'
 				,method: 'post'
 				,page: true //开启分页
@@ -115,13 +118,12 @@
 				,limits:[10,20,30,50,100,150,200,300,400,500,1000]
 				,cols: [[
 					//{type:'radio', align: 'center'}
-					{field:'Idx', title: '工单编号', align:'center', hide: false}
+					{type:'checkbox', align:'center', fixed: 'left'}
+					,{field:'Idx', title: '工单编号', align:'center', minWidth: 200, hide: false}
 					,{field:'OrderStatus', title: '工单状态', align:'center', minWidth: 100}
 					,{field:'ConsumptionType', title: '消费类型', align:'center', minWidth: 100}
 					,{field:'Name', title: '老人姓名', align:'center', hide: false}
 					,{field:'Phone', title: '联系电话', align:'center', minWidth: 110}
-					,{field:'Waiter', title: '服务人员', align:'center'} 
-					,{field:'WaiterPhone', title: '服务人员电话', align:'center', minWidth: 110}
 					,{field:'Service', title: '服务项目', align:'center', minWidth: 150}
 					,{field:'ServiceTime', title: '预定时间', align:'center', minWidth: 170}
 					,{field:'Addr', title: '地址', align:'center', minWidth: 100}
@@ -129,7 +131,7 @@
 					,{field:'PaymentStatus', title: '支付状态', align:'center', minWidth: 100}
 					,{field:'Handler', title: '下单人', align:'center', minWidth: 100}
 					,{field:'Created', title: '下单时间', align:'center', minWidth: 170}
-					,{title: '操作', align:'center', toolbar: '#fieldtool', minWidth: 180, fixed: 'right'}
+					,{title: '操作', align:'center', toolbar: '#fieldtool', minWidth: 250, fixed: 'right'}
 				]]
 				,parseData: function(res){ //res 即为原始返回的数据
 					if (res.code == 0) {
@@ -181,9 +183,44 @@
 					});
 				} else if(layEvent === 'modify'){
 					console.log(data)
+				}else if(layEvent === 'operation'){
+					dropdown.render({
+						elem: this //触发事件的 DOM 对象
+						,show: true //外部事件触发即显示
+						,data: [{title: '工单分派', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-release"> </i>{{d.title}} </label>', id: 'assign'},
+								{title: '打印派工', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-print"> </i>{{d.title}} </label>', id: 'print'},
+							    {title: '服务完成', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-form"> </i>{{d.title}} </label>', id: 'serivceover'},
+								{title: '工单结算', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-rmb"> </i>{{d.title}} </label>', id: 'settlement'}]
+						,click: function(menudata){
+							layui.sessionData("order-list", {key:"orderdata", value:data})
+							// 分派
+							if(menudata.id === 'assign'){
+								layer.open({
+									type: 2,
+									area: ['900px', '500px'],
+									fixed: false, //不固定
+									maxmin: true,
+									title: "工单分派",
+									content: 'order-assign.html'
+								});
+							}else if(menudata.id === 'serivceover'){
+								layer.open({
+									type: 2,
+									area: ['900px', '500px'],
+									fixed: false, //不固定
+									maxmin: true,
+									title: "服务完成",
+									content: 'order-serverover.html'
+								});
+							}
+						}
+						//,align: 'right' //右对齐弹出（v2.6.8 新增）
+						//,style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' //设置额外样式
+					})
 				}
 			});
 		});
+		
 		
 		function onAddOrder() {
 			layer.open({
@@ -192,10 +229,7 @@
 				fixed: false, //不固定
 				maxmin: true,
 				title: "新建工单",
-				content: 'order-add.html',
-				success:function(layero,index){
-					
-				}
+				content: 'order-add.html'
 			});
 		}
 		

@@ -9,7 +9,6 @@
 		<script src="./lib/layui/layui.js" charset="utf-8"></script>
         <link rel="stylesheet" href="./css/font.css">
         <link rel="stylesheet" href="./css/index.css">
-		<script type="text/javascript" src="../js/base.js"></script>
 		<script type="text/javascript" src="../js/printtpl.js"></script>
     </head>
 
@@ -29,6 +28,10 @@
 				text-align:left;
 				vertical-align:top;
 			}
+			.borderRightAlign {
+				border:1px solid #000000;
+				text-align:right;
+			}
 			.titleSet {
 				text-align:center;
 				font-size: 30px;
@@ -38,6 +41,30 @@
 				text-align:right;
 				font-size: 15px;
 			}
+			.other1 {
+				border-style:solid none solid none;
+				border-width:1px;
+				border-color:#000000;
+			}
+			.other2 {
+				border-style:solid solid solid none;
+				border-width:1px;
+				border-color:#000000;
+			}
+			.other3 {
+				border-style:solid none solid solid;
+				border-width:1px;
+				border-color:#000000;
+			}
+			.txtAlignCenter {
+				text-align:center;
+			}
+			.txtAlignLeft {
+				text-align:left;
+			}
+			.txtAlignRight {
+				text-align:right;
+			}
 		</style>
         <!--endprint-->
 	</body>
@@ -46,17 +73,13 @@
 		layui.use('laytpl', function(){
 			var laytpl = layui.laytpl;
 			
-			data = layui.sessionData("client-list")["print"];
+			data = layui.sessionData("order-list")["dispatch"];
 			for (var i=0; i<data.length; i++) {
 				var printdata = data[i]
-				printdata["ContactData"] = JSON.parse(JSON.parse(printdata.Contacts))		
-				printdata["AvatarPath"] = ""
-				if (printdata.Avatar !== "") {
-					printdata["AvatarPath"] = 	BasePath + "/avatarphoto/" + printdata.Avatar + ".jpg"
-				}
+				//printdata["ContactData"] = JSON.parse(JSON.parse(printdata.Contacts))		
 				var div = document.createElement("div");
 				div.id = "page-" + i;
-				layui.laytpl(clienttmpl).render(printdata, function(html){
+				layui.laytpl(clienttmpl).render(data[i], function(html){
 					div.innerHTML = html
 				})
 				document.body.appendChild(div)

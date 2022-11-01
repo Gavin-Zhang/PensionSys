@@ -17,17 +17,6 @@
     <script src="./lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="./js/index.js"></script>
 	<script type="text/javascript" src="../js/base.js"></script>
-
-    <!--<style>
-        .imgs{display: none;}
-        .picture{display: none;}
-    </style>-->
-
-    <!--百度编辑器
-    <script src="./ueditor/ueditor.config.js"></script>
-    <script src="./ueditor/ueditor.all.min.js"></script>
-    <script src="./ueditor/lang/zh-cn/zh-cn.js"></script>
-	-->
 <style type="text/css">
 
 </style>
@@ -35,6 +24,7 @@
 <body>
 <div class="layui-fluid">
 		<form class="layui-form layui-form-pane" id="orderadd" lay-filter="orderadd">
+			<input type="hidden" id="clientidx" name="clientidx">
 			<div class="layui-form-item">
 				<div class="layui-row">
 					<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
@@ -297,7 +287,8 @@ Date.prototype.Format = function(fmt) {
 
 
         //监听提交
-        form.on('submit(add)', function(data){	
+        form.on('submit(add)', function(data){
+			console.log(data.field)
 			var back;
             $.ajax({
                 type: "post",
@@ -403,6 +394,7 @@ Date.prototype.Format = function(fmt) {
 <script>
     function DoSelectClient(data) {
 		form.val("orderadd", {
+			clientidx: data["Idx"],
 			name: data["Name"],
 			phone: data["Phone"],
 			chinaid: data["ChinaId"],

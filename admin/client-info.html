@@ -9,6 +9,7 @@
 		<script src="./lib/layui/layui.js" charset="utf-8"></script>
         <link rel="stylesheet" href="./css/font.css">
         <link rel="stylesheet" href="./css/index.css">
+		<script type="text/javascript" src="../js/base.js"></script>
     </head>
 
     <body>
@@ -86,7 +87,13 @@
 					<td colspan="2" class='borderSet layui-font-16'>{{= d.Sex || ""}}</td>
 					<td colspan="2" class='borderSet layui-font-16'>年龄</td>
 					<td class='borderSet  layui-font-16'>{{= d.Age || ""}}</td>
+					{{# if(d.AvatarPath == "") { }}
 					<td rowspan="5" class='borderSet  layui-font-16'>照<br/>片</td>
+					{{#  } else { }}
+					<td rowspan="5" class='borderSet  layui-font-16'>
+						<img src={{ d.AvatarPath }} style="height:164px;width:118px" id="demo1">
+					</td>
+					{{#  } }}
 				</tr>
 				<tr height="35" class='borderSet'>
 					<td height="35"  class='borderSet layui-font-16'>身份证号</td>
@@ -348,21 +355,23 @@
 			var laytpl = layui.laytpl;
 			
 			client = layui.sessionData("client-list")["detail"];
-			client["ContactData"] = JSON.parse(JSON.parse(client.Contacts))			
+			client["ContactData"] = JSON.parse(JSON.parse(client.Contacts))
+			client["AvatarPath"] = ""
+			if (client.Avatar !== "") {
+				client["AvatarPath"] = 	BasePath + "/avatarphoto/" + client.Avatar + ".jpg"
+			}
 			var printtpl = printContent.innerHTML;
 			var printdiv = document.getElementById("printdiv");
 			laytpl(printtpl).render(client, function(html){
 				printdiv.innerHTML = html;
 			})
-			console.log(printtpl)
-			console.log(layui._typeof(printtpl))
 		})
 	
 		function doPrint() { 
 			const html = window.document.body.innerHTML; 
 			const start = "<!--startprint-->"; //开始打印标识字符串有17个字符
 			const end = "<!--endprint-->"; //结束打印标识字符串
-			let printHtml= html.substring(html.indexOf(start) + 17); //从开始打印标识之后的内容
+			let printHtml = html.substring(html.indexOf(start) + 17); //从开始打印标识之后的内容
 			printHtml = printHtml.substring(0, printHtml.indexOf(end)); //截取开始标识和结束标识之间的内容
 			window.document.body.innerHTML = printHtml; //把需要打印的指定内容赋给body.innerHTML
 			window.print(); //调用浏览器的打印功能打印指定区域
