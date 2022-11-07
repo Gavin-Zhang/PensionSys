@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        订单信息
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <script src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./js/index.js"></script>
+	<script type="text/javascript" src="../js/base.js"></script>
+</head>
+<body>
+
+<style>
+	.layui-print {
+		text-align:right;
+		margin-right: 15px;
+	}
+</style>
+
+<div class="layui-card">
+    <form class="layui-form layui-form-pane" action="" lay-filter="orderinfo">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">基本信息</li>
+                <li>服务及费用</li>
+                <li>服务人员及评价</li>
+            </ul>
+
+
+            <div class="layui-tab-content" >
+              <div class="layui-form-item">
+                <button class="layui-print layui-btn layui-btn-normal" type="button" style="float: right;" lay-filter="print">
+                  <i class="layui-icon layui-icon-print"></i>打印
+                </button>
+              </div>
+            <div class="layui-tab-item layui-show">
+              <table class="layui-table" lay-skin="nob">
+                <col class="layui-form-item"/>
+                <col class="layui-form-item"/>
+                <col class="layui-form-item"/>
+                <col class="layui-form-item"/>
+                <tr>
+    							<td class="layui-form-item" height="165px" width="118px" rowspan="5">
+    								<img style="height:164px;width:118px" id="avatar" name="avatar">
+    							</td>
+							<td class="layui-form-item">
+								<div class="layui-row layui-col-space5">
+									<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+										<div class="layui-form-item">
+											<label class="layui-form-label">订单编号</label>
+											<div class="layui-input-block">
+												<input type="text" id="orderidx" name="orderidx" disabled="disabled" autocomplete="off" value="" class="layui-input">
+											</div>
+										</div>
+									</div>
+									<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+										<div class="layui-form-item">
+											<label class="layui-form-label">订单状态</label>
+											<div class="layui-input-block">
+												<input type="text" name="orderstatus" id="orderstatus" disabled="disabled" autocomplete="off" value="" class="layui-input">
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="layui-form-item">
+								<div class="layui-row layui-col-space5">
+									<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+										<div class="layui-form-item">
+											<label class="layui-form-label">老人姓名</label>
+											<div class="layui-input-block">
+												<input type="text" id="name" name="name" disabled="disabled" autocomplete="off" value="" class="layui-input">
+											</div>
+										</div>
+									</div>
+									<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+										<div class="layui-row grid-demo">
+											<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+												<label class="layui-form-label">性别</label>
+												<div class="layui-input-block">
+													<input type="text" id="sex" name="sex" disabled="disabled" autocomplete="off" value="" class="layui-input">
+												</div>
+											</div>
+											<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+												<label class="layui-form-label">年龄</label>
+												<div class="layui-input-block">
+													<input type="text" id="age" name="age" disabled="disabled" autocomplete="off" value="" class="layui-input">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="layui-form-item">
+								<div class="layui-row layui-col-space5">
+									<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+										<div class="layui-form-item">
+											<label class="layui-form-label">联系电话</label>
+											<div class="layui-input-block">
+												<input type="text" id="phone" name="phone" disabled="disabled" autocomplete="off" value="" class="layui-input">
+											</div>
+										</div>
+									</div>
+									<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+										<div class="layui-form-item">
+											<label class="layui-form-label">归属社区</label>
+											<div class="layui-input-block">
+												<input type="text" name="community" id="community" disabled="disabled" autocomplete="off" value="" class="layui-input">
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="layui-form-item">
+								<div class="layui-form-item">
+									<label class="layui-form-label">服务地址</label>
+									<div class="layui-input-block">
+										<input type="text" id="addr" name="addr" disabled="disabled" autocomplete="off" value="" class="layui-input">
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="layui-form-item">
+								<div class="layui-form-item">
+									<label class="layui-form-label">备注</label>
+									<div class="layui-input-block">
+										<textarea id="remarks" name="remarks" placeholder="" class="layui-textarea"></textarea>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="layui-tab-item">
+					<td class="layui-form-item">
+						<div class="layui-row layui-col-space5">
+							<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+								<div class="layui-form-item">
+									<label class="layui-form-label">服务项目</label>
+									<div class="layui-input-block">
+										<input type="text" id="service" name="service" disabled="disabled" autocomplete="off" value="" class="layui-input">
+									</div>
+								</div>
+							</div>
+							<div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+								<div class="layui-form-item">
+									<label class="layui-form-label">服务时间</label>
+									<div class="layui-input-inline" id="servicetimes">
+										<input type="text" autocomplete="off" id="servicebegin" name="servicebegin" disabled="disabled" class="layui-input" placeholder="开始日期">
+									</div>
+									<div class="layui-form-mid">-</div>
+									<div class="layui-input-inline">
+										<input type="text" autocomplete="off" id="serviceend" name="serviceend" disabled="disabled" class="layui-input" placeholder="结束日期">
+									</div>
+								</div>
+							</div>
+						</div>
+					</td>
+
+          <td class="layui-form-item">
+					<table class="layui-hide" id="costlist" lay-filter="cost"></table>
+          </td>
+
+					<td class="layui-form-item">
+						<div class="layui-row layui-col-space5">
+              <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+								<div class="layui-form-item">
+									<label class="layui-form-label">消费类型</label>
+									<div class="layui-input-block">
+										<input type="text" id="consumptiontype" name="consumptiontype" disabled="disabled" autocomplete="off" value="" class="layui-input">
+									</div>
+								</div>
+							</div>
+							<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+								<div class="layui-form-item">
+									<label class="layui-form-label">支付状态</label>
+									<div class="layui-input-block">
+										<input type="text" id="paystatus" name="paystatus" disabled="disabled" autocomplete="off" value="" class="layui-input">
+									</div>
+								</div>
+							</div>
+							<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+								<div class="layui-form-item">
+									<label class="layui-form-label">支付日期</label>
+									<div class="layui-input-block">
+										<input type="text" name="paydate" id="paydate" disabled="disabled" placeholder="未支付" autocomplete="off" value="" class="layui-input">
+									</div>
+								</div>
+							</div>
+							<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+								<div class="layui-form-item">
+									<label class="layui-form-label">支付方式</label>
+									<div class="layui-input-block">
+										<input type="text" name="paytype" id="paytype" disabled="disabled" autocomplete="off" value="" class="layui-input">
+									</div>
+								</div>
+							</div>
+						</div>
+					</td>
+				</div>
+				<div class="layui-tab-item">
+          <table class="layui-hide" id="workerlist" lay-filter="workers"></table>
+          <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>服务态度</label>
+            <div id="service_attitude"></div>
+          </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>服务质量</label>
+            <div id="service_quality"></div>
+          </div>
+				</div>
+			</div>
+        </div>
+    </form>
+</div>
+
+<script type="text/html" id="fieldtool">
+  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
+</script>
+<script>
+Date.prototype.Format = function(fmt) {
+	var o = {
+		"M+": this.getMonth() + 1,
+		"d+": this.getDate(),
+		"H+": this.getHours(),
+		"m+": this.getMinutes(),
+		"s+": this.getSeconds(),
+		"q+": Math.floor((this.getMonth()+3)/3),
+		"S": this.getMilliseconds()
+	};
+
+	if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4-RegExp.$1.length))
+	for (var k in o)
+	if (new RegExp("("+k+")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1)?(o[k]):(("00"+o[k]).substr((""+o[k]).length)))
+	return fmt;
+}
+</script>
+<script>
+
+    layui.use(['element','table', 'rate'], function(){
+        var  $ = layui.jquery;//jquery
+        var lement = layui.element;//面包导航
+    		var table = layui.table;
+        var rate = layui.rate;
+
+        $.ajaxSetup({
+          headers: {'Access-Control-Allow-Origin' : Domain,},
+          xhrFields: {withCredentials: true},
+        });
+
+        table.render({
+          elem: '#costlist'
+          ,data: []
+          ,method: 'post'
+  				,id: "costtable"
+          ,defaultToolbar: ['filter', 'exports', 'print']
+  				,title: "列表"
+          ,totalRow: true
+          ,cols: [[
+  					{field: 'class', title: '类别', align:'center', totalRowText: '合计：'}
+  					,{field: 'cost', title: '费用', align:'center', totalRow: '{{= d.TOTAL_NUMS }} 元'}
+  				]]
+        })
+
+        var order = layui.sessionData("order-list").orderdata
+        init_base_info(order);
+        init_service_info(order);
+    })
+
+    function init_base_info(order) {
+      layui.form.val("orderinfo", {
+				orderidx: order.Idx,
+        orderstatus: order.OrderStatus,
+        name: order.Name,
+        sex: GetSex(order.ChinaId),
+        age: GetAge(order.ChinaId),
+        phone: order.Phone,
+        community: order.Community,
+        addr: order.Addr,
+        remarks: order.Remarks})
+
+        var param = new Object()
+        param["idx"] = order.ClientIdx
+        $.ajax({
+  				type: "post",
+  				url: BasePath + '/getclient',
+  				data: param,
+  				dataType: "json",
+  				success: function(data){
+              if(data.code==0 && data.Count != 0){
+                    var path  = BasePath + "/avatarphoto/" + data.data[0].Avatar + ".jpg"
+                    $("img").attr("src", path)
+              }else if(data.code==1001) {
+                parent.location.href = "../index.html";
+              }else{
+                  layer.msg(data.msg, {icon:5,time:5000});
+              }
+            }
+        });
+    }
+
+    function init_service_info(order) {
+        layui.form.val("orderinfo", {
+          service: order.Service,
+          consumptiontype: order.ConsumptionType,
+          paystatus: order.PaymentStatus,
+          paytype: order.PaymentType,
+          servicebegin: order.BeginTime,
+          serviceend: order.EndTime,
+        })
+
+        if (Date.parse(order.PaymentTime) > 0) {
+          var date = new Date(order.PaymentTime)
+          layui.form.val("orderinfo", {
+            paydate: date.Format("yyyy-MM-dd")})
+        }
+
+        var costs = layui.table.cache["costtable"];
+        	console.log(layui._typeof(costs))
+        costs.push({
+          class: "服务费用",
+          cost: order.Charge})
+        costs.push({
+          class: "车费",
+          cost: order.Fare})
+        costs.push({
+          class: "高层费用",
+          cost: order.HighRise})
+        layui.table.reload("costtable", {data: costs})
+    }
+</script>
+</body>
+</html>

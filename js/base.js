@@ -64,7 +64,7 @@ function GetAge(identityCard) {
 	}
 	return age;
 }
-	
+
 function GetSex(identityCard) {
 	var len = (identityCard + "").length;
 	if (len == 0 || ((len != 15) && (len != 18))) {
@@ -82,6 +82,3 @@ function GetSex(identityCard) {
 	}
 	return "女";
 }
-	
-	
-	

@@ -145,29 +145,6 @@
 				</div>
 			</div>
 			<div class="layui-form-item">
-				<div class="layui-row layui-col-space5">
-					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-						<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
-							<label for="waiter" class="layui-form-label">服务人员</label>
-							<div class="layui-input-block">
-								<input type="text" id="waiter" name="waiter" required="" disabled="disabled" class="layui-input">
-							</div>
-						</div>
-						<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-							<button class="layui-btn layui-btn-normal" type="button" onclick="onSelWaiter();" lay-event="seclectw">
-								<i class="layui-icon">&#xe615;</i>
-							</button>
-						</div>
-					</div>
-					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-						<label for="waiterphone" class="layui-form-label">联系电话</label>
-						<div class="layui-input-block">
-							<input type="text" class="layui-input" name="waiterphone" id="waiterphone">
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="layui-form-item">
 				<label for="handler" class="layui-form-label">
 					<span class="x-red">*</span>办理人</label>
 				<div class="layui-input-block">
@@ -301,7 +278,7 @@ Date.prototype.Format = function(fmt) {
 					back = data
                     if(data.code==0){
 						console.log("data.code==0")
-                        layer.msg("注册成功", {icon: 6,time:2000},function () {
+                        layer.msg("创建完成", {icon: 6,time:2000},function () {
                             window.parent.location.reload();
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);

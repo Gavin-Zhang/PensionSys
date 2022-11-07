@@ -13,7 +13,7 @@
 "		<col width='153'/>\r\n" +
 "		<col width='81'/>\r\n" +
 "		<tr height='30.00'>\r\n" +
-"			<td height='30.00' width='795' colspan='11' class='indexSet'>No:{{= d.Idx}}</td>\r\n" +
+"			<td height='30.00' width='795' colspan='11' class='indexSet'>No: {{= d.Idx}}</td>\r\n" +
 "		</tr>\r\n" +
 "		<tr height='51.00'>\r\n" +
 "			<td height='51.00' width='795' colspan='11' class='titleSet'>居家和社区养老服务对象登记表</td>\r\n" +
@@ -291,11 +291,11 @@
 "	<table width='793.83' border='0' cellpadding='0' cellspacing='0' style='page-break-after:always'>\r\n" +
 "		<col width='132.92'/>\r\n" +
 "		<col width='136.92'/>\r\n" +
-"		<col width='132.92'/>\r\n" +
+"		<col width='102.92'/>\r\n" +
+"		<col width='116.58'/>\r\n" +
 "		<col width='106.58'/>\r\n" +
-"		<col width='151.58'/>\r\n" +
 "	<tr height='24'>\r\n" +
-"		<td class='indexSet' height='24' width='793.83' colspan='6'>No:{{= d.Idx}}</td>\r\n" +
+"		<td class='indexSet' height='24' width='793.83' colspan='6'>No: {{= d.Idx}}</td>\r\n" +
 "	</tr>\r\n" +
 "	<tr height='24'>\r\n" +
 "		<td class='titleSet' height='96' colspan='6' rowspan='4' >五龙背镇养老福利中心 - 服务派工单</td>\r\n" +
@@ -303,4 +303,136 @@
 "	<tr height='24'/>\r\n" +
 "	<tr height='24'/>\r\n" +
 "	<tr height='24'/>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		<td class='borderSet layui-font-16' height='58.33'>服务对象</td>\r\n" +
+"		<td class='borderSet layui-font-16'>{{= d.Name}}</td>\r\n" +
+"		<td class='borderSet layui-font-16'>联系电话</td>\r\n" +
+"		<td class='borderSet layui-font-16'>{{= d.Phone}}</td>\r\n" +
+"		<td class='borderSet layui-font-16'>约定时间</td>\r\n" +
+"		<td class='borderSet layui-font-16'>{{= d.ServiceTime}}</td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		<td class='borderSet layui-font-16' height='58.33'>地<span style='mso-spacerun:yes;'>&nbsp;&nbsp; </span>址</td>\r\n" +
+"		<td class='borderSetLeftAlign layui-font-16' colspan='5'><span>&nbsp;&nbsp;&nbsp;&nbsp;</span>{{= d.Addr}}</td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		<td class='borderSet layui-font-16' height='58.33'>服务内容</td>\r\n" +
+"		<td class='borderSetLeftAlign layui-font-16' colspan='5'><span>&nbsp;&nbsp;&nbsp;&nbsp;</span>{{= d.Service}}</td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		<td class='borderSet layui-font-16' height='408.33' rowspan='6'>服务人员</td>\r\n" +
+"		<td class='borderSet layui-font-16'>姓名</td>\r\n" +
+"		<td class='borderSet layui-font-16' colspan='2'>联系电话</td>\r\n" +
+"		<td class='borderSet layui-font-16' colspan='2'>签字</td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		{{# if(typeof d.Workers[0]==='undefined'){ }}\r\n" +
+"			<td class='borderSet layui-font-16'></td>\r\n" +
+"			<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
+"		{{#  } else { }}\r\n" +
+"			<td class='borderSet layui-font-16'>{{= d.Workers[0].Name}}</td>\r\n" +
+"			<td class='borderSet layui-font-16' colspan='2'>{{= d.Workers[0].Phone}}</td>\r\n" +
+"		{{#  } }}\r\n" +
+"		<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		{{# if(typeof d.Workers[1]==='undefined'){ }}\r\n" +
+"			<td class='borderSet layui-font-16'></td>\r\n" +
+"			<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
+"		{{#  } else { }}\r\n" +
+"			<td class='borderSet layui-font-16'>{{= d.Workers[1].Name}}</td>\r\n" +
+"			<td class='borderSet layui-font-16' colspan='2'>{{= d.Workers[1].Phone}}</td>\r\n" +
+"		{{#  } }}\r\n" +
+"		<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		{{# if(typeof d.Workers[2]==='undefined'){ }}\r\n" +
+"			<td class='borderSet layui-font-16'></td>\r\n" +
+"			<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
+"		{{#  } else { }}\r\n" +
+"			<td class='borderSet layui-font-16'>{{= d.Workers[2].Name}}</td>\r\n" +
+"			<td class='borderSet layui-font-16' colspan='2'>{{= d.Workers[2].Phone}}</td>\r\n" +
+"		{{#  } }}\r\n" +
+"		<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		{{# if(typeof d.Workers[3]==='undefined'){ }}\r\n" +
+"			<td class='borderSet layui-font-16'></td>\r\n" +
+"			<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
+"		{{#  } else { }}\r\n" +
+"			<td class='borderSet layui-font-16'>{{= d.Workers[3].Name}}</td>\r\n" +
+"			<td class='borderSet layui-font-16' colspan='2'>{{= d.Workers[3].Phone}}</td>\r\n" +
+"		{{#  } }}\r\n" +
+"		<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		{{# if(typeof d.Workers[4]==='undefined'){ }}\r\n" +
+"			<td class='borderSet layui-font-16'></td>\r\n" +
+"			<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
+"		{{#  } else { }}\r\n" +
+"			<td class='borderSet layui-font-16'>{{= d.Workers[4].Name}}</td>\r\n" +
+"			<td class='borderSet layui-font-16' colspan='2'>{{= d.Workers[4].Phone}}</td>\r\n" +
+"		{{#  } }}\r\n" +
+"		<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		<td class='borderSet layui-font-16' height='58.33'>服务时间</td>\r\n" +
+"		<td class='other3 txtAlignRight layui-font-16' colspan='2'>日\r\n" +
+"			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>时\r\n" +
+"			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>分<span>&nbsp;</span></td>\r\n" +
+"		<td class='other txtAlignCenter layui-font-16'>至</td>\r\n" +
+"		<td class='other2 txtAlignRight layui-font-16' colspan='2'>日\r\n" +
+"			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>时\r\n" +
+"			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>分<span>&nbsp;</span></td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		<td class='borderSet layui-font-16' height='175' rowspan='3'>费用</td>\r\n" +
+"		<td class='borderSet layui-font-16' rowspan='3'>{{= d.ConsumptionType }}</td>\r\n" +
+"		<td class='borderSet layui-font-16' >服务费用</td>\r\n" +
+"		{{# if(d.ConsumptionType==='政府购买') {}}\r\n" +
+"			<td class='borderSet layui-font-16'>无</td>\r\n" +
+"		{{#  } else { }}\r\n" +
+"			<td class='borderSet layui-font-16'></td>\r\n" +
+"		{{#  } }}\r\n" +
+"		<td class='borderSetLeftTopAlign layui-font-16' rowspan='3'>\r\n" +
+"			合计:<br/><br/><br/><br/>\r\n" +
+"			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>\r\n" +
+"		{{# if(d.ConsumptionType==='政府购买') {}}\r\n" +
+"			无\r\n" +
+"		{{#  } }}\r\n" +
+"		<td class='borderSetLeftTopAlign layui-font-16' rowspan='6'>客户签字：</td>\r\n" +
+"		</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		<td class='borderSet layui-font-16'>交通费用</td>\r\n" +
+"		{{# if(d.ConsumptionType==='政府购买') {}}\r\n" +
+"			<td class='borderSet layui-font-16'>无</td>\r\n" +
+"		{{#  } else { }}\r\n" +
+"			<td class='borderSet layui-font-16'></td>\r\n" +
+"		{{#  } }}\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		<td class='borderSet layui-font-16'>高层费用</td>\r\n" +
+"		{{# if(d.ConsumptionType==='政府购买') {}}\r\n" +
+"			<td class='borderSet layui-font-16'>无</td>\r\n" +
+"		{{#  } else { }}\r\n" +
+"			<td class='borderSet layui-font-16'></td>\r\n" +
+"		{{#  } }}\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		<td class='borderSet layui-font-16' height='117' rowspan='2'>客户意见</td>\r\n" +
+"		<td class='borderSet layui-font-16'><span>&nbsp;&nbsp;</span>服务态度</td>\r\n" +
+"		<td class='borderSetLeftAlign layui-font-16' colspan='3'>\r\n" +
+"		很好☐<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>\r\n" +
+"		较好☐<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>\r\n" +
+"		一般☐<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>\r\n" +
+"		不好☐</td>\r\n" +
+"	</tr>\r\n" +
+"	<tr height='58.33'>\r\n" +
+"		<td class='borderSet layui-font-16'><span>&nbsp;&nbsp;</span>服务质量</td>\r\n" +
+"		<td class='borderSetLeftAlign layui-font-16' colspan='3'>\r\n" +
+"		很好☐<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>\r\n" +
+"		较好☐<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>\r\n" +
+"		一般☐<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>\r\n" +
+"		不好☐</td>\r\n" +
+"	</tr>\r\n" +
 "	</table>"

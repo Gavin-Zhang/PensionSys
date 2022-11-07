@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html class="x-admin-sm">
-    
+
     <head>
         <meta charset="UTF-8">
         <title>订单列表</title>
@@ -14,7 +14,7 @@
         <script type="text/javascript" src="./js/index.js"></script>
 		<script type="text/javascript" src="../js/base.js"></script>
     </head>
-    
+
     <body>
         <div class="x-nav">
             <span class="layui-breadcrumb">
@@ -67,7 +67,7 @@
             </div>
         </div>
     </body>
-	
+
 	<!--工具栏模板-->
 	<script type="text/html" id="orderstools">
 	  <div class="layui-btn-group">
@@ -135,7 +135,7 @@
 				]]
 				,parseData: function(res){ //res 即为原始返回的数据
 					if (res.code == 0) {
-					
+
 						for(var tableitem of res.data[0]) {
 							tableitem["ServiceTime"] = tableitem["ServiceTime"].substr(0,19).replace('T', ' ');
 							tableitem["Created"] = tableitem["Created"].substr(0,19).replace('T', ' ');
@@ -144,7 +144,7 @@
 							tableitem["EndTime"] = formattime(tableitem["EndTime"]);
 							tableitem["FinishTime"] = formattime(tableitem["FinishTime"]);
 						}
-					
+
 						return {
 						  "code": res.code, //解析接口状态
 						  "msg": res.message, //解析提示文本
@@ -167,7 +167,7 @@
 
 				}
 			});
-			
+
 			table.on('tool(orderlist)', function(obj){
 				var data = obj.data //获得当前行数据
 				,layEvent = obj.event; //获得 lay-event 对应的值
@@ -175,24 +175,33 @@
 					layui.sessionData("order-list", {key:"track", value:data})
 					layer.open({
 						type: 2,
-						area: ['1100px', '600px'],
+						area: ['1100px', '500px'],
 						fixed: false, //不固定
 						maxmin: true,
 						title: "工单追踪",
 						content: 'order-track.html',
 					});
 				} else if(layEvent === 'modify'){
-					console.log(data)
+					layui.sessionData("order-list", {key:"orderdata", value:data})
+          layer.open({
+						type: 2,
+						area: ['1100px', '500px'],
+						fixed: false, //不固定
+						maxmin: true,
+						title: "查看工单",
+						content: 'order-info.html',
+					});
 				}else if(layEvent === 'operation'){
 					dropdown.render({
 						elem: this //触发事件的 DOM 对象
-						,show: true //外部事件触发即显示
+						,show: true //外部事件触发即显示layui-icon-return
 						,data: [{title: '工单分派', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-release"> </i>{{d.title}} </label>', id: 'assign'},
-								{title: '打印派工', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-print"> </i>{{d.title}} </label>', id: 'print'},
+								{title: '打印派工', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-print"> </i>{{d.title}} </label>', id: 'dispatch'},
 							    {title: '服务完成', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-form"> </i>{{d.title}} </label>', id: 'serivceover'},
 								{title: '工单结算', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-rmb"> </i>{{d.title}} </label>', id: 'settlement'}]
 						,click: function(menudata){
 							layui.sessionData("order-list", {key:"orderdata", value:data})
+							console.log(data.OrderStatus)
 							// 分派
 							if(menudata.id === 'assign'){
 								layer.open({
@@ -203,7 +212,27 @@
 									title: "工单分派",
 									content: 'order-assign.html'
 								});
+							}else if(menudata.id === 'dispatch') {
+								if (data.OrderStatus !== "待服务") {
+									layer.alert('工单当前状态不能打印派工单！', {icon: 2});
+									return;
+								}
+								var orders = new Array()
+								orders.push(data)
+								layui.sessionData("order-list", {key:"dispatch", value:orders})
+								layer.open({
+									type: 2,
+									area: ['900px', '500px'],
+									fixed: false, //不固定
+									maxmin: true,
+									title: "打印派工",
+									content: 'order-dispatch.html'
+								});
 							}else if(menudata.id === 'serivceover'){
+								if (data.OrderStatus === "待分派") {
+									layer.alert('工单待分派，不能提前完成！', {icon: 2});
+									return;
+								}
 								layer.open({
 									type: 2,
 									area: ['900px', '500px'],
@@ -211,6 +240,19 @@
 									maxmin: true,
 									title: "服务完成",
 									content: 'order-serverover.html'
+								});
+							}else if(menudata.id === "settlement") {
+								if (data.OrderStatus === "待分派" || data.OrderStatus === "待服务") {
+									layer.alert('工单当前状态不能结算！', {icon: 2});
+									return;
+								}
+								layer.open({
+									type: 2,
+									area: ['900px', '500px'],
+									fixed: false, //不固定
+									maxmin: true,
+									title: "工单结算",
+									content: 'order-payment.html'
 								});
 							}
 						}
@@ -220,8 +262,8 @@
 				}
 			});
 		});
-		
-		
+
+
 		function onAddOrder() {
 			layer.open({
 				type: 2,
@@ -232,7 +274,7 @@
 				content: 'order-add.html'
 			});
 		}
-		
+
 		function formattime(t) {
 			if (t === "0001-01-01T00:00:00Z") {
 				return ""

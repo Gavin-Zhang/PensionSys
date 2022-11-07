@@ -2,13 +2,18 @@
 <html class="x-admin-sm">
     <head>
         <meta charset="UTF-8">
-        <meta name="renderer" content="webkit|ie-comp|ie-stand">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
-        <meta http-equiv="Cache-Control" content="no-siteapp" />
+        <meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="format-detection" content="telephone=no">
+
+		<link rel="stylesheet" href="./css/font.css">
+		<link rel="stylesheet" href="./css/index.css">
 		<script src="./lib/layui/layui.js" charset="utf-8"></script>
-        <link rel="stylesheet" href="./css/font.css">
-        <link rel="stylesheet" href="./css/index.css">
+		<script type="text/javascript" src="./js/index.js"></script>
+		<script type="text/javascript" src="../js/base.js"></script>
 		<script type="text/javascript" src="../js/printtpl.js"></script>
     </head>
 
@@ -71,15 +76,24 @@
 	
 	<script>
 		layui.use('laytpl', function(){
+			var  $ = layui.jquery;//jquery
 			var laytpl = layui.laytpl;
 			
+			$.ajaxSetup({
+				headers: {'Access-Control-Allow-Origin' : Domain,},
+				xhrFields: {withCredentials: true},
+			});
+			
 			data = layui.sessionData("order-list")["dispatch"];
+			
 			for (var i=0; i<data.length; i++) {
 				var printdata = data[i]
-				//printdata["ContactData"] = JSON.parse(JSON.parse(printdata.Contacts))		
+				printdata["Workers"] = new Array();
+				GetWorkers(printdata)
+				console.log(printdata)	
 				var div = document.createElement("div");
 				div.id = "page-" + i;
-				layui.laytpl(clienttmpl).render(data[i], function(html){
+				layui.laytpl(dispatchtmpl).render(printdata, function(html){
 					div.innerHTML = html
 				})
 				document.body.appendChild(div)
@@ -91,5 +105,36 @@
                 parent.layer.close(index);
 			})
 		})
+	</script>
+	
+	<script>
+		function GetWorkers(orderdata) {
+			var data = {orderidx: orderdata.Idx};
+			$.ajax({
+				type: "post",
+				url: BasePath + '/getorderworkers',
+				data: data,
+				dataType: "json",
+				async: false, // 改异步为同步
+				success: function(data){
+					console.log(data)
+					if(data.code==0){	
+						if (data.count == 0) {
+							return
+						}
+						var table_data = layui.table.cache["worker"];
+						for (var worker of data.data[0]) {
+							orderdata.Workers.push({
+								"Name": worker["name"],
+								"Phone": worker["phone"]})
+						}
+					}else if(data.code==1001) {
+						parent.location.href = "../index.html";
+					}else{
+						layer.msg("获取服务人员列表失败", {icon:5,time:5000});
+					}
+				}
+			});
+		}
 	</script>
 </html>
