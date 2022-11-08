@@ -34,11 +34,11 @@
 					</tr></thead>
 				<tbody id="demoList"></tbody>
 			</table>
-			<button type="button" class="layui-btn layui-btn-normal" id="testList">选择多文件</button> 
+			<button type="button" class="layui-btn layui-btn-normal" id="testList">选择多文件</button>
 			<button type="button" class="layui-btn" id="testListAction">开始上传</button>
 		</div>
-		
-		<form class="layui-form layui-form-pane" lay-filter="orderassign"> 
+
+		<form class="layui-form layui-form-pane" lay-filter="orderassign">
 			<div class="layui-form-item">
 				<label class="layui-form-label"><span class="x-red">*</span>服务时间</label>
 				<div class="layui-inline" id="servicetimes">
@@ -71,15 +71,16 @@
 		var form = layui.form;
 		var laydate = layui.laydate;
 		var rate = layui.rate;
-		
+
 		$.ajaxSetup({
 			headers: {'Access-Control-Allow-Origin' : Domain,},
             xhrFields: {withCredentials: true},
         });
-		
+
 		var orderdata = layui.sessionData("order-list").orderdata
-		console.log(orderdata)
 		var rate_data = new Array();
+    rate_data["service_attitude"] = 4
+    rate_data["service_quality"] = 4
 		if (orderdata.OrderStatus === "待支付" || orderdata.OrderStatus === "已完成") {
 			var param = new Object();
 			param["orderidx"] = orderdata.Idx
@@ -135,7 +136,7 @@
 			rate.render({
 				elem: '#service_attitude'
 				,length: 4
-				,value: 4 //初始值
+				,value: rate_data["service_attitude"] //初始值
 				,text: true //开启文本
 				,setText: function(value){ //自定义文本的回调
 					var arrs = {
@@ -150,11 +151,11 @@
 					rate_data["service_attitude"] = value
 				}
 			});
-			
+
 			rate.render({
 				elem: '#service_quality'
 				,length: 4
-				,value: 4 //初始值
+				,value: rate_data["service_quality"] //初始值
 				,text: true //开启文本
 				,setText: function(value){ //自定义文本的回调
 					var arrs = {
@@ -175,7 +176,7 @@
 			form.val("orderassign", {
 				servicebegin: orderdata.BeginTime,
 				serviceend: orderdata.EndTime})
-				
+
 			$('#ok').attr("disabled",true);
 			$('#ok').addClass("layui-btn-disabled");
 			$('#testList').attr("disabled",true);
@@ -207,7 +208,7 @@
 			,auto: false
 			,bindAction: '#testListAction'
 			,data: {idx: orderdata["Idx"]}
-			,choose: function(obj){   
+			,choose: function(obj){
 				var that = this;
 				var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
 				//读取本地文件
@@ -236,11 +237,11 @@
 				console.log(obj)
 			}
 			,error: function(index, upload){ //错误回调
-				
+
 			}
 			,progress: function(n, elem, e, index){ //注意：index 参数为 layui 2.6.6 新增
 				element.progress('progress-demo-'+ index, n + '%'); //执行进度条。n 即为返回的进度百分比
-			}	
+			}
 		});
 
 		form.on('submit(ok)', function(data){
@@ -249,7 +250,7 @@
 			data.field["idx"] = orderdata["Idx"]
 			data.field["attitude"]=rate_data["service_attitude"]
 			data.field["quality"]=rate_data["service_quality"]
-			
+
             $.ajax({
 				type: "post",
 				url: BasePath + '/orderserviced',
@@ -273,8 +274,8 @@
 				}
 			});
         });
-		
-		
+
+
     })
 </script>
 

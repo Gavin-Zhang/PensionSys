@@ -78,7 +78,7 @@
 	</script>
 	<script type="text/html" id="fieldtool">
 		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="track">订单跟踪</a>
-		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="modify">编辑</a>
+		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="look">查看</a>
 		<a class="layui-btn layui-btn-xs" lay-event="operation">操作 <i class="layui-icon layui-icon-down"></i></a>
 	</script>
     <script>
@@ -181,7 +181,7 @@
 						title: "工单追踪",
 						content: 'order-track.html',
 					});
-				} else if(layEvent === 'modify'){
+				} else if(layEvent === 'look'){
 					layui.sessionData("order-list", {key:"orderdata", value:data})
           layer.open({
 						type: 2,

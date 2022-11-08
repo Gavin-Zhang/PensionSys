@@ -33,6 +33,7 @@
                 <li class="layui-this">基本信息</li>
                 <li>服务及费用</li>
                 <li>服务人员及评价</li>
+                <li>照片</li>
             </ul>
 
 
@@ -269,7 +270,6 @@ Date.prototype.Format = function(fmt) {
           ,data: []
           ,method: 'post'
   				,id: "costtable"
-          ,defaultToolbar: ['filter', 'exports', 'print']
   				,title: "列表"
           ,totalRow: true
           ,cols: [[
@@ -278,9 +278,23 @@ Date.prototype.Format = function(fmt) {
   				]]
         })
 
+        table.render({
+          elem: '#workerlist'
+          ,data: []
+          ,method: 'post'
+          ,id: "workertable"
+          ,title: "列表"
+          ,cols: [[
+            {field: 'name', title: '姓名', align:'center'}
+            ,{field: 'phone', title: '联系电话', align:'center'}
+            ,{field: 'class', title: '类型', align:'center'}
+          ]]
+        })
+
         var order = layui.sessionData("order-list").orderdata
         init_base_info(order);
         init_service_info(order);
+        init_worker_info(order);
     })
 
     function init_base_info(order) {
@@ -344,6 +358,85 @@ Date.prototype.Format = function(fmt) {
           cost: order.HighRise})
         layui.table.reload("costtable", {data: costs})
     }
+
+    function init_worker_info(order) {
+      var data = {orderidx: order.Idx};
+      $.ajax({
+  			type: "post",
+  			url: BasePath + '/getorderworkers',
+  			data: data,
+  			dataType: "json",
+  			success: function(data){
+  				console.log(data)
+  				if(data.code==0){
+  					if (data.count == 0) {
+  						return
+  					}
+  					var table_data = layui.table.cache["workertable"];
+  					for (var worker of data.data[0]) {
+  						table_data.push({
+  							"name": worker["name"],
+  							"phone": worker["phone"],
+  							"class": worker["class"]});
+  					}
+  					layui.table.reload("workertable", {data: table_data})
+  				}else if(data.code==1001) {
+  					parent.location.href = "../index.html";
+  				}else{
+  					layer.msg(data.msg, {icon:5,time:5000});
+  				}
+  			}
+  		});
+
+			$.ajax({
+				type: "post",
+				url: BasePath + '/orderevaluation',
+				data: data,
+				dataType: "json",
+				success: function(data){
+					console.log(data)
+					if(data.code==0){
+						layui.rate.render({
+							elem: '#service_attitude'
+							,length: 4
+							,value: parseInt(data.data[0].Attitude) //初始值
+							,readonly: true
+							,text: true //开启文本
+							,setText: function(value){ //自定义文本的回调
+								var arrs = {
+									'1': '不好'
+									,'2': '一般'
+									,'3': '较好'
+									,'4': '很好'
+								};
+								this.span.text(arrs[value] || ( value + "星"));
+							}
+						});
+						layui.rate.render({
+							elem: '#service_quality'
+							,length: 4
+							,value: parseInt(data.data[0].Quality) //初始值
+							,readonly: true
+							,text: true //开启文本
+							,setText: function(value){ //自定义文本的回调
+								var arrs = {
+									'1': '不好'
+									,'2': '一般'
+									,'3': '较好'
+									,'4': '很好'
+								};
+								this.span.text(arrs[value] || ( value + "星"));
+							}
+						});
+					}else if(data.code==1001) {
+						parent.location.href = "../index.html";
+					}else{
+						layer.msg(data.msg, {icon:5,time:5000});
+					}
+				}
+			});
+    }
+
 </script>
 </body>
 </html>
