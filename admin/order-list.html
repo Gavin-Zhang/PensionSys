@@ -34,30 +34,13 @@
                         <div class="layui-card-body ">
                             <form class="layui-form layui-col-space5">
                                 <div class="layui-input-inline layui-show-xs-block">
-                                    <input class="layui-input" placeholder="预约开始日" name="appointmentstart" id="start"></div>
+                                    <input type="text" name="orderidx" id="orderidx" placeholder="请输入订单号" autocomplete="off" class="layui-input"></div>
                                 <div class="layui-input-inline layui-show-xs-block">
-                                    <input class="layui-input" placeholder="预约截止日" name="appointmentend" id="end"></div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                    <select name="contrller">
-                                        <option>支付方式</option>
-                                        <option>支付宝</option>
-                                        <option>微信</option>
-                                        <option>货到付款</option></select>
-                                </div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                    <select name="contrller">
-                                        <option value="">订单状态</option>
-                                        <option value="0">待确认</option>
-                                        <option value="1">已确认</option>
-                                        <option value="2">已收货</option>
-                                        <option value="3">已取消</option>
-                                        <option value="4">已完成</option>
-                                        <option value="5">已作废</option></select>
-                                </div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                    <input type="text" name="username" placeholder="请输入订单号" autocomplete="off" class="layui-input"></div>
-                                <div class="layui-input-inline layui-show-xs-block">
-                                    <button class="layui-btn" lay-submit="" lay-filter="sreach">
+                                    <input type="text" name="name" id="name" placeholder="老人姓名" autocomplete="off" class="layui-input"></div>
+								<div class="layui-input-inline layui-show-xs-block">
+                                    <input type="text" name="phone" id="phone" placeholder="联系电话" autocomplete="off" class="layui-input"></div>
+								<div class="layui-input-inline layui-show-xs-block">
+                                    <button class="layui-btn" type="button" lay-submit="" lay-filter="sreach">
                                         <i class="layui-icon">&#xe615;</i></button>
                                 </div>
                             </form>
@@ -81,12 +64,24 @@
 		<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="look">查看</a>
 		<a class="layui-btn layui-btn-xs" lay-event="operation">操作 <i class="layui-icon layui-icon-down"></i></a>
 	</script>
+	<script type="text/html" id="orderStatusTpl">
+		{{#  if(d.OrderStatus === '待分派'){ }}
+			<span style="color: #FF3232;">{{ d.OrderStatus }}</span>
+		{{#  } else if(d.OrderStatus === '待服务') { }}
+			<span style="color: #0281FF;">{{ d.OrderStatus }}</span>
+		{{#  } else if(d.OrderStatus === '待支付') { }}
+			<span style="color: #20FF20;">{{ d.OrderStatus }}</span>
+		{{#  } else if(d.OrderStatus === '已完成') { }}
+			{{ d.OrderStatus }}
+		{{#  } }}
+	</script>
     <script>
 		layui.use(['laydate', 'form', 'table', 'layer', 'dropdown'],
 			function() {
 				var laydate = layui.laydate;
 				var table = layui.table;
 				var layer = layui.layer;
+				var form = layui.form;
 				var dropdown = layui.dropdown //下拉菜单
 
 				//执行一个laydate实例
@@ -103,6 +98,8 @@
 				headers: {'Access-Control-Allow-Origin' : Domain,},
 				xhrFields: {withCredentials: true},
 			});
+			init_payment_type()
+			
 			table.render({
 				elem: '#orderlist'
 				,height: 'full-150'//,height: 420
@@ -118,9 +115,8 @@
 				,limits:[10,20,30,50,100,150,200,300,400,500,1000]
 				,cols: [[
 					//{type:'radio', align: 'center'}
-					{type:'checkbox', align:'center', fixed: 'left'}
-					,{field:'Idx', title: '工单编号', align:'center', minWidth: 200, hide: false}
-					,{field:'OrderStatus', title: '工单状态', align:'center', minWidth: 100}
+					{field:'Idx', title: '工单编号', align:'center', minWidth: 200, hide: false}
+					,{field:'OrderStatus', title: '工单状态', align:'center', minWidth: 100, templet:'#orderStatusTpl'}
 					,{field:'ConsumptionType', title: '消费类型', align:'center', minWidth: 100}
 					,{field:'Name', title: '老人姓名', align:'center', hide: false}
 					,{field:'Phone', title: '联系电话', align:'center', minWidth: 110}
@@ -143,6 +139,8 @@
 							tableitem["BeginTime"] = formattime(tableitem["BeginTime"]);
 							tableitem["EndTime"] = formattime(tableitem["EndTime"]);
 							tableitem["FinishTime"] = formattime(tableitem["FinishTime"]);
+							tableitem["Sex"] = GetSex(tableitem["ChinaId"])
+							tableitem["Age"] = GetAge(tableitem["ChinaId"])
 						}
 
 						return {
@@ -171,6 +169,7 @@
 			table.on('tool(orderlist)', function(obj){
 				var data = obj.data //获得当前行数据
 				,layEvent = obj.event; //获得 lay-event 对应的值
+				console.log(layui._typeof(data))
 				if(layEvent === 'track'){
 					layui.sessionData("order-list", {key:"track", value:data})
 					layer.open({
@@ -183,9 +182,9 @@
 					});
 				} else if(layEvent === 'look'){
 					layui.sessionData("order-list", {key:"orderdata", value:data})
-          layer.open({
+					layer.open({
 						type: 2,
-						area: ['1100px', '500px'],
+						area: ['1100px', '630px'],
 						fixed: false, //不固定
 						maxmin: true,
 						title: "查看工单",
@@ -261,7 +260,56 @@
 					})
 				}
 			});
+			
+			var sreachdata = {name:"", phone:"", orderidx:""}
+			form.on('submit(sreach)', function(data){
+				var orderidx = $('#orderidx').val()
+				var name = $('#name').val()
+				var phone = $('#phone').val()
+
+				if (sreachdata.name === name && sreachdata.phone===phone && sreachdata.orderidx===orderidx) {
+					return
+				}
+				
+				var where = {};
+				if (sreachdata.name !== name) {
+					sreachdata.name = name;
+					if (sreachdata.name !== "") {
+						where["name"] = name;
+					}
+				}
+				if (sreachdata.phone !== phone) {
+					sreachdata.phone = phone;
+					if (sreachdata.phone !== "") {
+						where["phone"] = phone;
+					}
+				}
+				if (sreachdata.orderidx !== orderidx) {
+					sreachdata.orderidx = orderidx;
+					if (sreachdata.orderidx !== "") {
+						where["orderidx"] = orderidx;
+					}
+				}
+				table.reload('orders', {where: where})
+			});
+			
 		});
+		
+		function init_payment_type() {
+			$.ajax({
+				url: BasePath + "/getpaymenttype",
+				type:"post",
+				dataType:"json",
+				success:function (data){
+					if (data.code==0){
+						for (var i=0;i<data.data[0].length;i++) {
+							$("#paytype").append(new Option(data.data[0][i]["Type"], data.data[0][i]["Type"]))
+						}
+						layui.form.render('select');
+					}
+				}
+			});
+		}
 
 
 		function onAddOrder() {
@@ -281,5 +329,6 @@
 			}
 			return t.substr(0,19).replace('T', ' ');
 		}
+		
 	</script>
 </html>

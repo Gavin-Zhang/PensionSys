@@ -17,27 +17,33 @@
 		<!--startprint-->
 		<style>
 			.borderSet {
-				border:1px solid #000000;
-				text-align:center;
-			}
-			.borderSetLeftAlign {
-				border:1px solid #000000;
-				text-align:left;
-			}
-			.borderSetLeftTopAlign {
-				border:1px solid #000000;
-				text-align:left;
-				vertical-align:top;
-			}
-			.titleSet {
-				text-align:center;
-				font-size: 30px;
-				font-family:"黑体";
-			}
-			.indexSet {
-				text-align:right;
-				font-size: 15px;
-			}
+			border:1px solid #000000;
+			text-align:center;
+		}
+		.borderSetLeftAlign {
+			border:1px solid #000000;
+			text-align:left;
+			text-indent: -2em;
+		}
+		.borderSetLeftTopAlign {
+			border:1px solid #000000;
+			text-align:left;
+			vertical-align:top;
+			text-indent: -2em;
+		}
+		.borderRightAlign {
+			border:1px solid #000000;
+			text-align:right;
+		}
+		.titleSet {
+			text-align:center;
+			font-size: 30px;
+			font-family:"黑体";
+		}
+		.indexSet {
+			text-align:right;
+			font-size: 15px;
+		}
 		</style>
         <!--endprint-->
 	</body>
@@ -46,26 +52,33 @@
 		layui.use('laytpl', function(){
 			var laytpl = layui.laytpl;
 			
-			data = layui.sessionData("client-list")["print"];
-			for (var i=0; i<data.length; i++) {
-				var printdata = data[i]
-				printdata["ContactData"] = JSON.parse(JSON.parse(printdata.Contacts))		
-				printdata["AvatarPath"] = ""
-				if (printdata.Avatar !== "") {
-					printdata["AvatarPath"] = 	BasePath + "/avatarphoto/" + printdata.Avatar + ".jpg"
-				}
+			data = JSON.parse(layui.sessionData("order-list")["printdata"]);
+			var div = document.createElement("div");
+			div.id = "page-order";
+			layui.laytpl(ordertmpl).render(data, function(html){
+				div.innerHTML = html
+			})
+			document.body.appendChild(div)
+			
+			for (i = 0; i<data.photos.length/2; i++) {
+				var photodata = new Array();
+				photodata.push(data.photos[i*2])
+				photodata.push(data.photos[i*2+1])
+				data["photodata"] = photodata
+				
 				var div = document.createElement("div");
-				div.id = "page-" + i;
-				layui.laytpl(clienttmpl).render(printdata, function(html){
+				div.id = "page-order-photo " + i;
+				layui.laytpl(orderphototmpl).render(data, function(html){
 					div.innerHTML = html
 				})
 				document.body.appendChild(div)
 			}
-			console.log(document)
+
 			window.print();
 			setTimeout(() => {
 				var index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
+				parent.DoClose();
 			})
 		})
 	</script>

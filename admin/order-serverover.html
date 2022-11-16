@@ -79,8 +79,8 @@
 
 		var orderdata = layui.sessionData("order-list").orderdata
 		var rate_data = new Array();
-    rate_data["service_attitude"] = 4
-    rate_data["service_quality"] = 4
+		rate_data["service_attitude"] = 4
+		rate_data["service_quality"] = 4
 		if (orderdata.OrderStatus === "待支付" || orderdata.OrderStatus === "已完成") {
 			var param = new Object();
 			param["orderidx"] = orderdata.Idx
@@ -207,7 +207,7 @@
 			,number: 0
 			,auto: false
 			,bindAction: '#testListAction'
-			,data: {idx: orderdata["Idx"]}
+			,data: {idx: orderdata["Idx"], clientidx: orderdata["ClientIdx"]}
 			,choose: function(obj){
 				var that = this;
 				var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列

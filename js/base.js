@@ -1,6 +1,7 @@
 ﻿
 ;var BasePath = "http://localhost:8001";
-;var AvatarPath = "http://localhost:8001/avatarphoto/";
+;var AvatarPath = BasePath + "/avatarphoto/";
+;var PhotoPath =  BasePath + "/imagephoto/";
 ;var Domain = 'http://localhost';
 ;var CookieName = "bm-cookie";
 

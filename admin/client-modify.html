@@ -43,164 +43,166 @@
 
 			<input type="hidden" id="data">
 			<div class="layui-tab-item layui-show">
-				<!--<form class="layui-form layui-form-pane" action="" id="add">-->
-				<div class="layui-form-item">
-					<label class="layui-form-label">
-						<span class='x-red'>*</span>姓名
-					</label>
-					<div class="layui-input-block">
-						<input type="text" name="name" id="name" lay-verify="required" autocomplete="off" value="" placeholder="空制在6个汉字，12个字符以内"
-							   class="layui-input">
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<div class="layui-upload">
-						<div class="layui-upload-list" id="avatardiv">
-							<!--
-							<img class="layui-upload-img" style="height:164px;width:118px" id="demo1">
-							<div style="width: 118px;">
-								<div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
-									<div class="layui-progress-bar" lay-percent=""></div>
-								</div>	
-							</div>
-							<a name="list-progress"> </a>
-							<button type="button" class="layui-btn" style="width:118px" id="test1">上传头像</button>
-							-->
-						</div>
-					</div>
-				</div>
-				
-				<div class="layui-form-item">
-					<label class="layui-form-label">
-						<span class='x-red'>*</span>身份证号
-					</label>
-					<div class="layui-input-block">
-						<input type="text" name="chinaid" id="chinaid" lay-verify="required|identity" autocomplete="off" value="" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">
-						<span class='x-red'>*</span>性别
-					</label>
-					<div class="layui-input-block">
-						<input type="text" name="sex" id="sex" lay-verify="" autocomplete="off" placeholder="根据身份证信息自动填写" value="" class="layui-input" disabled="disabled">
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">
-						<span class='x-red'>*</span>年龄
-					</label>
-					<div class="layui-input-block">
-						<input type="text" lay-verify="required|number" placeholder="根据身份证信息自动填写" disabled="disabled" name="age" id="age" autocomplete="off" value="" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">
-						<span class='x-red'>*</span>联系电话
-					</label>
-					<div class="layui-input-block">
-						<input type="text" lay-verify="required|phone" oninput="value=value.replace(/[^\d]/g, '')" name="phone" id="phone" autocomplete="off" value="" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">
-						<span class='x-red'>*</span>住址
-					</label>
-					<div class="layui-input-block">
-						<input type="text" lay-verify="required" name="addr" id="addr" autocomplete="off" value="" class="layui-input">
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">
-						<span class='x-red'>*</span>所属社区
-					</label>
-					<div class="layui-input-block">
-						<select name="ascription" id="ascription">
-							<option value="0">---请选择所属社区---</option>
-							<option value="温泉社区">温泉社区</option>
-							<option value="玉龙社区">玉龙社区</option>
-							<option value="毛绢社区">毛绢社区</option>
-							<option value="营胜村">营胜村</option>
-							<option value="五龙背村">五龙背村</option>
-							<option value="新建村">新建村</option>
-							<option value="新康村">新康村</option>
-							<option value="孙家村">孙家村</option>
-						</select>
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">
-						<span class='x-red'>*</span>类型
-					</label>
-					<div class="layui-input-block">
-						<input type="radio" name="type" value="社会老人" title="社会老人" >
-						<input type="radio" name="type" value="低保老人" title="低保老人" >
-						<input type="radio" name="type" value="五保老人" title="五保老人" >
-						<input type="radio" name="type" value="其他" title="其他" checked>
-					</div>
-				</div>
-				<!--  <form class="layui-form layui-form-pane" action="" id="add">-->
-				<fieldset class="layui-elem-field">
-					<legend class="layui-font-14">联系人</legend>
-					<div class="layui-field-box">
-						<div class="layui-form-item">
-							<table class="layui-hide" id="contacts", name="contacts" lay-filter="test"></table>
-						</div>
-					</div>
-				</fieldset>
-				<fieldset class="layui-elem-field">
-					<legend class="layui-font-14">健康情况</legend>
-					<div class="layui-field-box">
-						<div class="layui-form-item">
-							<fieldset class="layui-elem-field">
-							  <legend class="layui-font-14">慢性病</legend>
-							  <div class="layui-field-box">
-								<div class="seach-box">
-									<input type="checkbox" name="高血压" 		id="高血压" title="高血压">
-									<input type="checkbox" name="高血糖" 		id="高血糖" title="高血糖"> 
-									<input type="checkbox" name="冠心病" 		id="冠心病" title="冠心病">
-									<input type="checkbox" name="哮喘" 			id="哮喘" title="哮喘">
-									<input type="checkbox" name="通风" 			id="通风" title="通风">
-									<input type="checkbox" name="慢性支气管炎" id="慢性支气管炎" title="慢性支气管炎">
-									<input type="checkbox" name="慢性肝炎" 		id="慢性肝炎" title="慢性肝炎">
-									<input type="checkbox" name="慢性贫血" 		id="慢性贫血" title="慢性贫血">
-									<input type="checkbox" name="慢性关节炎" 	id="慢性关节炎" title="慢性关节炎">
-									<input type="checkbox" name="慢性颈椎疼痛"	id="慢性颈椎疼痛" title="慢性颈椎疼痛">
-									<input type="checkbox" name="其他" 			id="其他" title="其他">
+				<table class="layui-table" lay-skin="line">
+					<col class="layui-form-item"/>
+					<col class="layui-form-item"/>
+					<col class="layui-form-item"/>
+					<tr>
+						<td class="layui-form-item" width="118px" rowspan="4">
+							<div class="layui-upload">
+								<div class="layui-upload-list" id="avatardiv">
+
 								</div>
-							  </div>
-							</fieldset>
-						</div>
-						<div class="layui-form-item">
-							<textarea name="healthdescription" placeholder="健康描述" class="layui-textarea"></textarea>
-						</div>
-					</div>
-				</fieldset>
-				<!--</form>-->
-				<div class="layui-form-item">
-					<textarea name="other" placeholder="其他" class="layui-textarea"></textarea>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">登记人</label>
-					<div class="layui-input-block">
-						<input type="text" id="registrant" disabled="disabled" name="registrant" autocomplete="off" value="" placeholder="空制在6个汉字，12个字符以内"
-							   class="layui-input">
-					</div>
-				</div>
-				<div class="layui-form-item">
-					<label class="layui-form-label">登记时间</label>
-					<div class="layui-input-inline">
-						<input type="text" class="layui-input" disabled="disabled" id="registrant_time" name="registrant_time" placeholder="yyyy-MM-dd">
-					</div>
-				</div>
-				
-				<div class="layui-form-item">
-					<button class="layui-btn layui-btn-fluid"  type="button" lay-filter="add" lay-submit="">
-						保存
-					</button>
+							</div>
+						</td>
+						<td class="layui-form-item">
+							<label class="layui-form-label">
+								<span class='x-red'>*</span>姓名
+							</label>
+							<div class="layui-input-block">
+								<input type="text" name="name" id="name" lay-verify="required" autocomplete="off" value="" placeholder="空制在6个汉字，12个字符以内"
+									   class="layui-input">
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="layui-form-item">
+							<label class="layui-form-label">
+								<span class='x-red'>*</span>身份证号
+							</label>
+							<div class="layui-input-block">
+								<input type="text" name="chinaid" id="chinaid" lay-verify="required|identity" autocomplete="off" value="" class="layui-input">
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="layui-form-item">
+							<label class="layui-form-label">
+								<span class='x-red'>*</span>性别
+							</label>
+							<div class="layui-input-block">
+								<input type="text" name="sex" id="sex" lay-verify="" autocomplete="off" placeholder="根据身份证信息自动填写" value="" class="layui-input" disabled="disabled">
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="layui-form-item">
+							<label class="layui-form-label">
+								<span class='x-red'>*</span>年龄
+							</label>
+							<div class="layui-input-block">
+								<input type="text" lay-verify="required|number" placeholder="根据身份证信息自动填写" disabled="disabled" name="age" id="age" autocomplete="off" value="" class="layui-input">
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					<span class='x-red'>*</span>联系电话
+				</label>
+				<div class="layui-input-block">
+					<input type="text" lay-verify="required|phone" oninput="value=value.replace(/[^\d]/g, '')" name="phone" id="phone" autocomplete="off" value="" class="layui-input">
 				</div>
 			</div>
-        </div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					<span class='x-red'>*</span>住址
+				</label>
+				<div class="layui-input-block">
+					<input type="text" lay-verify="required" name="addr" id="addr" autocomplete="off" value="" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					<span class='x-red'>*</span>所属社区
+				</label>
+				<div class="layui-input-block">
+					<select name="ascription" id="ascription">
+						<option value="0">---请选择所属社区---</option>
+						<option value="温泉社区">温泉社区</option>
+						<option value="玉龙社区">玉龙社区</option>
+						<option value="毛绢社区">毛绢社区</option>
+						<option value="营胜村">营胜村</option>
+						<option value="五龙背村">五龙背村</option>
+						<option value="新建村">新建村</option>
+						<option value="新康村">新康村</option>
+						<option value="孙家村">孙家村</option>
+					</select>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">
+					<span class='x-red'>*</span>类型
+				</label>
+				<div class="layui-input-block">
+					<input type="radio" name="type" value="社会老人" title="社会老人" >
+					<input type="radio" name="type" value="低保老人" title="低保老人" >
+					<input type="radio" name="type" value="五保老人" title="五保老人" >
+					<input type="radio" name="type" value="其他" title="其他" checked>
+				</div>
+			</div>
+			<!--  <form class="layui-form layui-form-pane" action="" id="add">-->
+			<fieldset class="layui-elem-field">
+				<legend class="layui-font-14">联系人</legend>
+				<div class="layui-field-box">
+					<div class="layui-form-item">
+						<table class="layui-hide" id="contacts", name="contacts" lay-filter="test"></table>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="layui-elem-field">
+				<legend class="layui-font-14">健康情况</legend>
+				<div class="layui-field-box">
+					<div class="layui-form-item">
+						<fieldset class="layui-elem-field">
+						  <legend class="layui-font-14">慢性病</legend>
+						  <div class="layui-field-box">
+							<div class="seach-box">
+								<input type="checkbox" name="高血压" 		id="高血压" title="高血压">
+								<input type="checkbox" name="高血糖" 		id="高血糖" title="高血糖"> 
+								<input type="checkbox" name="冠心病" 		id="冠心病" title="冠心病">
+								<input type="checkbox" name="哮喘" 			id="哮喘" title="哮喘">
+								<input type="checkbox" name="通风" 			id="通风" title="通风">
+								<input type="checkbox" name="慢性支气管炎" id="慢性支气管炎" title="慢性支气管炎">
+								<input type="checkbox" name="慢性肝炎" 		id="慢性肝炎" title="慢性肝炎">
+								<input type="checkbox" name="慢性贫血" 		id="慢性贫血" title="慢性贫血">
+								<input type="checkbox" name="慢性关节炎" 	id="慢性关节炎" title="慢性关节炎">
+								<input type="checkbox" name="慢性颈椎疼痛"	id="慢性颈椎疼痛" title="慢性颈椎疼痛">
+								<input type="checkbox" name="其他" 			id="其他" title="其他">
+							</div>
+						  </div>
+						</fieldset>
+					</div>
+					<div class="layui-form-item">
+						<textarea name="healthdescription" placeholder="健康描述" class="layui-textarea"></textarea>
+					</div>
+				</div>
+			</fieldset>
+			<!--</form>-->
+			<div class="layui-form-item">
+				<textarea name="other" placeholder="其他" class="layui-textarea"></textarea>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">登记人</label>
+				<div class="layui-input-block">
+					<input type="text" id="registrant" disabled="disabled" name="registrant" autocomplete="off" value="" placeholder="空制在6个汉字，12个字符以内"
+						   class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label">登记时间</label>
+				<div class="layui-input-inline">
+					<input type="text" class="layui-input" disabled="disabled" id="registrant_time" name="registrant_time" placeholder="yyyy-MM-dd">
+				</div>
+			</div>
+			
+			<div class="layui-form-item">
+				<button class="layui-btn layui-btn-fluid"  type="button" lay-filter="add" lay-submit="">
+					保存
+				</button>
+			</div>
+		</div>
     </form>
 </div>
 
