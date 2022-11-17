@@ -352,7 +352,7 @@
 
         //监听提交
         form.on('submit(add)', function(data){
-			data.field["idx"] = layui.sessionData("client-list").Modify["Idx"]
+			data.field["idx"] = layui.sessionData("client-list").modify["Idx"]
 			
 			var slow = [];
 			var child = $(".seach-box input[type='checkbox']");
