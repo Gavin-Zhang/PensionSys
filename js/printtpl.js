@@ -653,17 +653,17 @@
 "			<tr height='24'/>\r\n" +
 "			<tr height='24'/>\r\n" +
 "			<tr height='610'>\r\n" +
-"				<td class='borderSet' height='610' colspan='6'>\r\n" +
+"				<td class='borderSet1101' height='610' colspan='6'>\r\n" +
 "					{{# if (typeof d.photodata[0] !== 'undefined') {}}\r\n" +
 "						<img src={{ d.photodata[0].url }} style='height:600px;width:800px' id='demo1'>\r\n" +
 "					{{#  } }}\r\n" +
 "				</td>\r\n" +
 "			</tr>\r\n" +
 "			<tr height='30' >\r\n" +
-"				<td height='30' colspan='6'></td>\r\n" +
+"				<td class='borderSet0101' height='30' colspan='6'></td>\r\n" +
 "			</tr>\r\n" +
 "			<tr height='610'>\r\n" +
-"				<td class='borderSet' height='610' colspan='6'>\r\n" +
+"				<td class='borderSet0111' height='610' colspan='6'>\r\n" +
 "					{{# if (typeof d.photodata[1] !== 'undefined') {}}\r\n" +
 "						<img src={{ d.photodata[1].url }} style='height:600px;width:800px' id='demo1'>\r\n" +
 "					{{#  } }}\r\n" +

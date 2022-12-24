@@ -326,45 +326,6 @@
 			laytpl(getTpl).render(data, function(html){
 				view.innerHTML = html;
 			})
-			
-            var remember = '';
-            $(document).ready(function(){
-                layer.prompt({
-                    formType: 2,
-                    anim: 3,
-                    offset: 'rb',
-                    value: "",
-                    title: '便签',
-                    skin: 'demo-class',
-                    area: ['280px', '150px'],
-                    id: 'remember' ,//设定一个id，防止重复弹出
-                    btn: ['确定', '取消'],
-                    shade: 0,
-                    moveType: 1, //拖拽模式，0或者1
-                    btn2: function(index, layero){
-                        $.ajax({
-                            url:"delremember.html"
-                            ,type:"post"
-                            ,success:function(res) {
-                                layer.msg(res.msg);
-                                if(res.code == 1) {
-                                    $('#remember textarea').val('');
-                                }
-                            }
-                        })
-                        return false;
-                    }
-                },function(value, index, elem){
-                    $.ajax({
-                        url:"/admin/main/remember.shtml"
-                        ,type:"post"
-                        ,data:{message:value}
-                        ,success:function(res) {
-                            layer.msg(res.msg);
-                        }
-                    })
-                })
-            });
         });
 
         function getTime(){
