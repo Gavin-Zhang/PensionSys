@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>
+        订单信息
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript" src="./js/base.js"></script>
+</head>
+<body>
+
+<style>
+	.layui-print {
+		text-align:right;
+		margin-right: 15px;
+	}
+	
+	.layui-table-cell {
+		text-align: center;
+		height: auto;
+		white-space: normal;
+}
+</style>
+
+<div class='layui-card'>
+    <form class='layui-form layui-form-pane' action='' lay-filter='orderinfo'>
+        <div class='layui-tab layui-tab-brief' lay-filter='docDemoTabBrief'>
+            <ul class='layui-tab-title'>
+                <li class='layui-this'>基本信息</li>
+                <li>服务</li>
+                <li>照片</li>
+            </ul>
+
+
+            <div class='layui-tab-content' >
+              <div class='layui-form-item'>
+                <button class='layui-print layui-btn layui-btn-normal' id='print' name='print' type='button' onclick='DoPrint();' style='float: right;' lay-filter='print'>
+                  <i class='layui-icon layui-icon-print'></i>打印
+                </button>
+              </div>
+            <div class='layui-tab-item layui-show'>
+              <table class='layui-table' lay-skin='nob'>
+                <col class='layui-form-item'/>
+                <col class='layui-form-item'/>
+                <tr>
+    							<td class='layui-form-item' height='165px' width='118px' rowspan='3'>
+    								<img style='height:164px;width:118px' id='avatar' name='avatar'>
+    							</td>
+							<td class='layui-form-item'>
+								<div class='layui-row layui-col-space5'>
+									<div class='layui-col-xs6 layui-col-sm6 layui-col-md6'>
+										<div class='layui-form-item'>
+											<label class='layui-form-label'>记录编号</label>
+											<div class='layui-input-block'>
+												<input type='text' id='reocrdidx' name='reocrdidx' disabled='disabled' autocomplete='off' value='' class='layui-input'>
+											</div>
+										</div>
+									</div>
+									<div class='layui-col-xs6 layui-col-sm6 layui-col-md6'>
+										<div class='layui-form-item'>
+											<label class='layui-form-label'>联系电话</label>
+											<div class='layui-input-block'>
+												<input type='text' name='phone' id='phone' disabled='disabled' autocomplete='off' value='' class='layui-input'>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class='layui-form-item'>
+								<div class='layui-row layui-col-space5'>
+									<div class='layui-col-xs6 layui-col-sm6 layui-col-md6'>
+										<div class='layui-form-item'>
+											<label class='layui-form-label'>老人姓名</label>
+											<div class='layui-input-block'>
+												<input type='text' id='name' name='name' disabled='disabled' autocomplete='off' value='' class='layui-input'>
+											</div>
+										</div>
+									</div>
+									<div class='layui-col-xs6 layui-col-sm6 layui-col-md6'>
+										<div class='layui-row grid-demo'>
+											<div class='layui-col-xs6 layui-col-sm6 layui-col-md6'>
+												<label class='layui-form-label'>性别</label>
+												<div class='layui-input-block'>
+													<input type='text' id='sex' name='sex' disabled='disabled' autocomplete='off' value='' class='layui-input'>
+												</div>
+											</div>
+											<div class='layui-col-xs6 layui-col-sm6 layui-col-md6'>
+												<label class='layui-form-label'>年龄</label>
+												<div class='layui-input-block'>
+													<input type='text' id='age' name='age' disabled='disabled' autocomplete='off' value='' class='layui-input'>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class='layui-form-item'>
+								<div class='layui-form-item'>
+									<label class='layui-form-label'>服务地址</label>
+									<div class='layui-input-block'>
+										<input type='text' id='addr' name='addr' disabled='disabled' autocomplete='off' value='' class='layui-input'>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class='layui-form-item' colspan='2'>
+								<div class='layui-form-item'>
+									<label class='layui-form-label'>备注</label>
+									<div class='layui-input-block'>
+										<textarea id='remarks' name='remarks' placeholder='' class='layui-textarea'></textarea>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class='layui-tab-item'>
+					<td class='layui-form-item'>
+						<div class='layui-form-item'>
+							<label class='layui-form-label'>服务描述</label>
+							<div class='layui-input-block'>
+								<textarea id='service' name='service' disabled='disabled' placeholder='' class='layui-textarea'></textarea>
+							</div>
+						</div>
+						<div class='layui-form-item'>
+							<label class='layui-form-label'>服务时间</label>
+							<div class='layui-input-inline' id='servicetimes'>
+								<input type='text' autocomplete='off' id='servicebegin' name='servicebegin' disabled='disabled' class='layui-input' placeholder='开始日期'>
+							</div>
+							<div class='layui-form-mid'>-</div>
+							<div class='layui-input-inline'>
+								<input type='text' autocomplete='off' id='serviceend' name='serviceend' disabled='disabled' class='layui-input' placeholder='结束日期'>
+							</div>
+						</div>
+						<table class='layui-hide' id='workerlist' lay-filter='workers'></table>
+					</td>
+				</div>
+				<div class='layui-tab-item'>
+					<table class='layui-hide' id='photolist' lay-filter='photos'></table>
+				</div>
+			</div>
+        </div>
+    </form>
+</div>
+
+<script type='text/html' id='photostools'>
+	<div class='layui-btn-group'>
+		<button class='layui-btn layui-btn-sm' type='button' onclick='onUpload();'>
+			<i class='layui-icon'>&#xe62f;</i>上传
+		</button>
+		<button class='layui-btn layui-btn-sm' type='button' onclick='onLook();'>
+			<i class='layui-icon'>&#xe64a;</i>相册
+		</button>
+	</div>
+</script>
+<script type='text/html' id='photofieldtool'>
+  <a class='layui-btn layui-btn-danger' lay-event='delete'>删除</a>
+</script>
+<script>
+Date.prototype.Format = function(fmt) {
+	var o = {
+		'M+': this.getMonth() + 1,
+		'd+': this.getDate(),
+		'H+': this.getHours(),
+		'm+': this.getMinutes(),
+		's+': this.getSeconds(),
+		'q+': Math.floor((this.getMonth()+3)/3),
+		'S': this.getMilliseconds()
+	};
+
+	if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear()+'').substr(4-RegExp.$1.length))
+	for (var k in o)
+	if (new RegExp('('+k+')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1)?(o[k]):(('00'+o[k]).substr((''+o[k]).length)))
+	return fmt;
+}
+</script>
+<script>
+
+	var workerarray = new Array();
+	var photoarray = new Array();
+	var avatarurl = '';
+	var printdata = new Object();
+	var evaluate = new Object();
+	
+
+    layui.use(['element','table', 'rate'], function(){
+        var  $ = layui.jquery;//jquery
+        var lement = layui.element;//面包导航
+    	var table = layui.table;
+        var rate = layui.rate;
+
+        $.ajaxSetup({
+          headers: {'Access-Control-Allow-Origin' : Domain,},
+          xhrFields: {withCredentials: true},
+        });
+
+
+        table.render({
+          elem: '#workerlist'
+          ,data: []
+          ,method: 'post'
+          ,id: 'workertable'
+          ,title: '列表'
+          ,cols: [[
+            {field: 'name', title: '姓名', align:'center'}
+            ,{field: 'phone', title: '联系电话', align:'center'}
+			,{field: 'class', title: '类型', align:'center'}
+            //,{field: 'class', title: '类型', align:'center'}
+          ]]
+        })
+
+        var record = layui.sessionData('record-list').recorddata
+		console.log(record)
+        init_base_info(record);
+        init_service_info(record);
+        init_worker_info(record);
+		init_photo(record);
+		
+		table.on('tool(photos)', function(obj){
+			var data = obj.data //获得当前行数据
+			console.log(data)
+			,layEvent = obj.event; //获得 lay-event 对应的值
+			if(layEvent === 'delete'){
+				layer.confirm('确定要删除[' + data.Name + ']么?',
+				{btn:['确定', '取消']},
+				function(index, layero) {
+					console.log('delete')	
+					var param = new Object()
+					param['idx'] = record.Idx
+					param['clientidx'] = record.ClientIdx
+					param['name'] = data.Name;
+					$.ajax({
+						type: 'post',
+						url: BasePath + '/deletephoto',
+						data: param,
+						dataType: 'json',
+						success: function(data){
+							if(data.code==0){
+								layer.msg('删除成功', {icon: 6,time:1000})
+								table.reload('phototable')
+							}else if(data.code==1001) {
+								parent.location.href = '../../index.html';
+							}else{
+								layer.msg(data.msg,{icon:5,time:5000});
+							}
+						}
+					})
+				})
+			}
+		})
+    })
+
+    function init_base_info(record) {
+      layui.form.val('orderinfo', {
+		reocrdidx: record.Idx,
+        name: record.Name,
+        sex: GetSex(record.ChinaId),
+        age: GetAge(record.ChinaId),
+        phone: record.Phone,
+        addr: record.Addr,
+        remarks: record.Remarks})
+
+        var param = new Object()
+        param['idx'] = record.ClientIdx
+        $.ajax({
+  				type: 'post',
+  				url: BasePath + '/getclient',
+  				data: param,
+  				dataType: 'json',
+  				success: function(data){
+				console.log(data)
+              if(data.code==0 && data.Count != 0){
+					if (data.data[0].Avatar !== "") {
+						avatarurl = BasePath + '/avatarphoto/' + data.data[0].Avatar + '.jpg'
+						$('img').attr('src', avatarurl)
+					}
+              }else if(data.code==1001) {
+                parent.location.href = '../../index.html';
+              }else{
+                  layer.msg(data.msg, {icon:5,time:5000});
+              }
+            }
+        });
+    }
+
+    function init_service_info(record) {
+        layui.form.val('orderinfo', {
+          service: record.Service,
+          servicebegin: formattime(record.BeginTime),
+          serviceend: formattime(record.EndTime),
+        })
+    }
+
+    function init_worker_info(order) {
+		var data = {orderidx: order.Idx};
+		$.ajax({
+			type: 'post',
+			url: BasePath + '/getrecordworkers',
+			data: data,
+			dataType: 'json',
+			success: function(data){
+				console.log(data)
+				if(data.code==0){
+					if (data.count == 0) {return}
+					var table_data = layui.table.cache['workertable'];
+					workerarray = data.data[0]
+					for (var worker of data.data[0]) {
+						table_data.push({
+							'name': worker['name'],
+							'phone': worker['phone'],
+							'class': worker['class']});
+					}
+					layui.table.reload('workertable', {data: table_data})
+				}else if(data.code==1001) {
+					parent.location.href = '../../index.html';
+				}else{
+					layer.msg(data.msg, {icon:5,time:5000});
+				}
+			}
+		});
+    }
+	
+	function init_photo(record) {
+		var data = new Object();
+		data['idx'] = record.Idx;
+		data['clientidx'] = record.ClientIdx;
+		layui.table.render({
+		  elem: '#photolist'
+		  ,url: BasePath + '/getphotos'
+		  ,method: 'post'
+		  ,id: 'phototable'
+		  ,toolbar: '#photostools'
+		  ,defaultToolbar: []
+		  ,title: '列表'
+		  ,where: data
+		  ,cols: [[
+			{field: 'Photo', title: '缩略图', align:'center', templet: function(rowData){
+				return '<img src="'+PhotoPath+rowData.Path+'" style="width:100px;height:50px;">'}}
+			,{field: 'Name', title: '姓名', align:'center'}
+			,{field: 'Size', title: '大小', align:'center'}
+			,{title: '操作', align:'center', toolbar: '#photofieldtool', fixed: 'right'}
+		  ]]
+		  ,parseData: function(res){ //res 即为原始返回的数据
+			if (res.code == 0) {
+				if (res.count > 0) {
+					for(var tableitem of res.data[0]) {
+						tableitem['Size'] = (Math.round(tableitem['Size']/1024)) + 'KB'
+					}
+					photoarray = res.data[0]
+				}
+				
+				return {
+				  'code': res.code, //解析接口状态
+				  'msg': res.message, //解析提示文本
+				  'count': res.count, //解析数据长度
+				  'data': res.data[0] //解析数据列表
+				};
+			}
+			if (res.code == 1001) {
+				parent.location.href = '../../index.html';
+			}
+			return {
+			  'code': res.code, //解析接口状态
+			  'msg': res.message, //解析提示文本
+			  'count': res.count, //解析数据长度
+			  'data': [] //解析数据列表
+			};}
+		})
+	}
+
+	
+	function onUpload() {
+		layer.open({
+			type: 2,
+			area: ['900px', '500px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: '上传照片',
+			content: 'record-photoupload.html'
+		});
+	}
+	
+	function onLook() {
+		console.log(layui.table.getData('phototable'));
+		console.log(layui._typeof(layui.table.getData('phototable')));
+		var obj = new Object();
+		obj['title'] = '服务相册'
+		obj['id'] = 1
+		obj['start'] = 0
+		obj['data'] = new Array()
+		
+		var tabledata = layui.table.getData('phototable')
+		for(var info of tabledata) {
+			obj['data'].push({
+				'alt': info.Name,
+				'pid': 1,
+				'src': PhotoPath + info.Path,
+				'thumb': ''})
+		}
+
+		layer.photos({
+			anim: 5
+			,photos: obj
+		});
+	}
+
+	function DoPrint() {
+		var record = layui.sessionData('record-list').recorddata
+		
+		record['avatar'] = avatarurl;
+		record['serviceBE'] = record.BeginTime + '    -    ' + record.EndTime
+		printdata['record'] = record;
+		printdata['workers'] = workerarray;
+		printdata['photos'] = photoarray;
+		printdata['evaluate'] = evaluate;
+		console.log(printdata)
+		console.log("---------------------")
+		layui.sessionData('record-list', {key:'printdata', value:JSON.stringify(printdata)})
+		layer.open({
+			type: 2,
+			area: ['900px', '600px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: '打印设置',
+			content: 'record-printset.html',
+		});
+	}
+	
+	function formattime(t) {
+		if (t === '0001-01-01T00:00:00Z') {
+			return ''
+		}
+		return t.substr(0,19).replace('T', ' ');
+	}
+</script>
+</body>
+</html>

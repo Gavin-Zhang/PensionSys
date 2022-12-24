@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        新建工单
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript" src="../../js/base.js"></script>
+
+    <!--<style>
+        .imgs{display: none;}
+        .picture{display: none;}
+    </style>-->
+
+    <!--百度编辑器
+    <script src="./ueditor/ueditor.config.js"></script>
+    <script src="./ueditor/ueditor.all.min.js"></script>
+    <script src="./ueditor/lang/zh-cn/zh-cn.js"></script>
+	-->
+<style type="text/css">
+
+</style>
+</head>
+<body>
+	<style>
+        .container{
+            height: 80px;
+            solid white;
+			background: white;
+        }
+        .dot{
+            border:10px solid #cdcdcd;
+            width: 10px;
+            height: 10px;
+            border-radius: 100px;
+            background: none;
+            margin: AUTO;
+            margin-bottom: -15px;
+        }
+		.dot1{
+            border:10px solid #00ffff;
+            width: 10px;
+            height: 10px;
+            border-radius: 100px;
+            background: none;
+            margin: AUTO;
+            margin-bottom: -15px;
+        }
+		.dot2{
+            border:3px solid #cdcdcd;
+            width: 10px;
+            height: 10px;
+            border-radius: 10px;
+            background: none;
+            margin: AUTO;
+            margin-bottom: -8px;
+        }
+		.dot3{
+            border:3px solid #00ffff;
+            width: 10px;
+            height: 10px;
+            border-radius: 10px;
+            background: none;
+            margin: AUTO;
+            margin-bottom: -8px;
+        }
+        .item{
+            flex:5;
+            border-bottom:2px solid #cdcdcd;
+        }
+		.item1{
+            flex:5;
+            border-bottom:2px solid white;
+        }
+		.item2{
+            flex:5;
+            border-bottom:2px solid #00ffff;
+        }
+    </style>
+	
+	<script id="container" type="text/html">
+		<div style="display:flex;">
+			<!-- 订单已创建 -->
+			<div style="flex:1;display:flex">
+				<div class="flex:1"></div>
+				<div class="dot1"></div>
+				<div class="item2"></div> 
+			</div>
+			<div style="flex:1;display:flex"> <!-- 待分派 -->
+				<div class="item2"></div> 
+				<div class="dot3"></div>
+				{{#  if(d.OrderStatus === "待分派"){ }}
+					<div class="item"></div> 
+				{{#  } else { }}
+					<div class="item2"></div> 
+				{{#  } }} 
+			</div>
+			<!-- 订单已分派 -->
+			<div style="flex:1;display:flex">
+				{{#  if(d.OrderStatus === "待分派"){ }}
+					<div class="item"></div>
+					<div class="dot"></div>
+					<div class="item"></div>
+				{{#  } else { }}
+					<div class="item2"></div>
+					<div class="dot1"></div>
+					<div class="item2"></div>
+				{{#  } }} 
+			</div>
+			<div style="flex:1;display:flex"> <!-- 待服务 -->
+				{{#  if(d.OrderStatus === "待分派"){ }}
+					<div class="item"></div> 
+					<div class="dot2"></div>
+					<div class="item"></div> 
+				{{#  } else { }}
+					<div class="item2"></div> 
+					<div class="dot3"></div>
+					{{#  if(d.OrderStatus === "待分派" || d.OrderStatus === "待服务"){ }}
+						<div class="item"></div> 
+					{{#  } else { }}
+						<div class="item2"></div> 
+					{{#  } }} 
+				{{#  } }} 
+			</div>
+			<!-- 服务已完成 -->
+			<div style="flex:1;display:flex" id="dot_statue_2">
+				{{#  if(d.OrderStatus === "待分派" || d.OrderStatus === "待服务"){ }}
+					<div class="item"></div>
+					<div class="dot"></div>
+					<div class="item"></div>
+				{{#  } else { }}
+					<div class="item2"></div>
+					<div class="dot1"></div>
+					<div class="item2"></div>
+				{{#  } }} 
+			</div>
+			<div style="flex:1;display:flex"> <!-- 待支付 -->
+				{{#  if(d.OrderStatus === "待分派" || d.OrderStatus === "待服务"){ }}
+					<div class="item"></div> 
+					<div class="dot2"></div>
+					<div class="item"></div> 
+				{{#  } else { }}
+					<div class="item2"></div> 
+					<div class="dot3"></div>
+					{{#  if(d.OrderStatus === "待分派" || d.OrderStatus === "待服务" || d.OrderStatus === "待支付"){ }}
+						<div class="item"></div> 
+					{{#  } else { }}
+						<div class="item2"></div> 
+					{{#  } }} 
+				{{#  } }} 
+			</div>
+			<!-- 订单已完成 -->
+			<div style="flex:1;display:flex" id="dot_statue_3">
+				{{#  if(d.OrderStatus !== "已完成"){ }}
+					<div class="item"></div>
+					<div class="dot"></div>
+				{{#  } else { }}
+					<div class="item2"></div>
+					<div class="dot1"></div>
+				{{#  } }} 
+				<div class="flex:1"></div>
+			</div>
+		</div>
+		<div style="display:flex;margin-top:25px;">
+			<div style="flex:1;display:flex">
+				<div class="flex:1"></div>
+				<div class="layui-font-14 layui-font-blue">已下单</div>
+				<div class="item1"></div>
+			</div>
+			<div style="flex:1;display:flex">
+				<div class="item1"></div>
+				{{#  if(d.OrderStatus === "待分派"){ }}
+					<div class="layui-font-12 layui-font-blue">待分派</div>
+				{{#  } }} 
+				<div class="item1"></div>
+			</div>
+			<!-- -->
+			<div style="flex:1;display:flex">
+				<div class="item1"></div>
+				{{#  if(d.OrderStatus === "待分派"){ }}
+				<div class="layui-font-14 layui-font-gray">已分派</div>
+				{{#  } else { }}
+				<div class="layui-font-14 layui-font-blue">已分派</div>
+				{{#  } }} 
+				<div class="item1"></div>
+			</div>
+			<div style="flex:1;display:flex">
+				<div class="item1"></div>
+				{{#  if(d.OrderStatus === "待服务"){ }}
+				<div class="layui-font-12 layui-font-blue">待服务</div>
+				{{#  } }} 
+				<div class="item1"></div>
+			</div>
+			<!-- -->
+			<div style="flex:1;display:flex">
+				<div class="item1"></div>
+				{{#  if(d.OrderStatus === "待分派" || d.OrderStatus === "待服务"){ }}
+				<div class="layui-font-14 layui-font-gray">已服务</div>
+				{{#  } else { }}
+				<div class="layui-font-14 layui-font-blue">已服务</div>
+				{{#  } }} 
+				<div class="item1"></div>
+			</div>
+			<div style="flex:1;display:flex">
+				<div class="item1"></div>
+				{{#  if(d.OrderStatus === "待支付"){ }}
+				<div class="layui-font-12 layui-font-blue">待支付</div>
+				{{#  } }} 
+				<div class="item1"></div>
+			</div>
+			<!-- -->
+			<div style="flex:1;display:flex">
+				<div class="item1"></div>
+				{{#  if(d.OrderStatus !== "已完成"){ }}
+				<div class="layui-font-14 layui-font-gray">已完成</div>
+				{{#  } else { }}
+				<div class="layui-font-14 layui-font-blue">已完成</div>
+				{{#  } }} 
+				<div class="flex:1"></div>
+			</div>
+		</div>
+		<div style="display:flex;margin-top:5px;">
+			<div style="flex:1;display:flex">
+				<div class="flex:1"></div>
+				<div class="layui-font-14 layui-font-blue">{{= d.Created }}</div>
+				<div class="item1"></div>
+			</div>
+			<div style="flex:1;display:flex">
+					<div class="item1"></div>
+					<div class="item1"></div>
+			</div>
+			<div style="flex:1;display:flex">
+				{{#  if(d.OrderStatus !== "待分派"){ }}
+					<div class="item1"></div>
+					<div class="layui-font-14 layui-font-blue">{{= d.AssignTime }}</div>
+					<div class="item1"></div>
+				{{#  } }} 
+			</div>
+			<div style="flex:1;display:flex">
+					<div class="item1"></div>
+					<div class="item1"></div>
+			</div>
+			<div style="flex:1;display:flex">
+				{{#  if(d.OrderStatus !== "待分派" && d.OrderStatus !== "待服务"){ }}
+					<div class="item1"></div>
+					<div class="layui-font-14 layui-font-blue">{{= d.EndTime }}</div>
+					<div class="item1"></div>
+				{{#  } }} 
+			</div>
+			<div style="flex:1;display:flex">
+					<div class="item1"></div>
+					<div class="item1"></div>
+			</div>
+			<div style="flex:1;display:flex">
+				{{#  if(d.OrderStatus === "已完成"){ }}
+					<div class="item1"></div>
+					<div class="layui-font-14 layui-font-blue">{{= d.FinishTime }}</div>
+					<div class="flex:1"></div>
+				{{#  } }} 
+			</div>
+		</div>
+	</script>
+
+	
+	<div class="layui-fluid">
+		<form class="layui-form layui-form-pane" id="ordertrack" lay-filter="ordertrack">
+			<input type="hidden" id="orderdata">
+			<div class="layui-form-item " data-filtered="filtered">
+				<div data-filtered="filtered">
+					<div class="layui-panel" data-filtered="filtered">
+						<div style="padding: 30px;" data-filtered="filtered">
+							<div class="container" id="containerdiv">
+							</div>
+						</div>
+					</div>   
+				</div>
+			</div>   
+			<div class="layui-form-item">
+				<div class="layui-row layui-col-space5">
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="name" class="layui-form-label">老人</label>
+						<div class="layui-input-block">
+							<input type="text" name="name" disabled="disabled" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="phone" class="layui-form-label">联系方式
+						</label>
+						<div class="layui-input-block">
+							<input type="text" name="phone" disabled="disabled" class="layui-input">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-row layui-col-space5">
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="idx" class="layui-form-label">订单编号</label>
+						<div class="layui-input-block">
+							<input type="text" id="idx" name="idx" disabled="disabled" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+						<label for="sex" class="layui-form-label">性别</label>
+						<div class="layui-input-block">
+							<input type="text" name="sex" disabled="disabled" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+						<label for="age" class="layui-form-label">年龄</label>
+						<div class="layui-input-block">
+							<input type="text" name="age" disabled="disabled" class="layui-input">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="addr" class="layui-form-label">地址</label>
+				<div class="layui-input-block">
+					<input id="addr" name="addr" disabled="disabled" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="consumptiontype" class="layui-form-label">消费类型</label>
+				<div class="layui-input-block">
+					<input id="consumptiontype" name="consumptiontype" disabled="disabled" class="layui-input">
+				</div>
+			</div>
+		</form>
+</div>
+
+<!--工具栏模板-->
+<script type="text/html" id="contactstools">
+  <div class="layui-btn-group">
+    <button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" id="contacts_add">
+		<i class="layui-icon"  style="font-size: 20px">&#xe61f;</i>
+	</button>
+	<!--<button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" onclick="onRefresh();" lay-event="refresh"><i class="layui-icon"  style="font-size: 20px">&#xe669;</i></button>-->
+  </div>
+</script>
+
+<script>
+    layui.use(['element','layer', 'form', 'table', 'laydate', 'laytpl'], function(){
+        var  $ = layui.jquery;//jquery
+        var lement = layui.element;//面包导航
+        var layer = layui.layer;//弹出层
+        var form = layui.form;
+		var table = layui.table;
+		var laydate = layui.laydate;
+		var laytpl = layui.laytpl;
+		
+		var orderdata = layui.sessionData("order-list")["track"];
+		var getTpl = container.innerHTML;
+		var view = document.getElementById('containerdiv');
+		laytpl(getTpl).render(orderdata, function(html){
+			view.innerHTML = html;
+		})
+		
+		form.val("ordertrack", {
+			"name": orderdata.Name,
+			"phone": orderdata.Phone,
+			"idx": orderdata.Idx,
+			"age": GetAge(orderdata.ChinaId),
+			"sex": GetSex(orderdata.ChinaId),
+			"addr": orderdata.Addr,
+			"waiter": orderdata.Waiter,
+			"waiterphone": orderdata.WaiterPhone,
+			"consumptiontype": orderdata.ConsumptionType})
+    })
+</script>
+
+</body>
+</html>

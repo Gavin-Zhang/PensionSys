@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        新建工单
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript" src="./js/base.js"></script>
+
+</head>
+<body>
+<div class="layui-card">
+		<form class="layui-form layui-form-pane" id="orderadd" lay-filter="orderadd">
+			<input type="hidden" id="clientidx" name="clientidx">
+			<div class="layui-form-item">
+				<div class="layui-row">
+					<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+						<label for="name" class="layui-form-label">
+							<span class="x-red">*</span>对象姓名</label>
+						<div class="layui-input-block">
+							<input type="text" id="name" name="name" lay-verify="required" required="" disabled="disabled" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+						<button class="layui-btn layui-btn-normal" type="button" onclick="onSelClient();">
+							<i class="layui-icon">&#xe615;</i>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item" hidden="true">
+				<div class="layui-input-block">
+					<input type="text" id="chientidx" name="chientidx" required="" disabled="disabled" class="layui-input">
+				</div>
+				<div class="layui-input-block">
+					<input type="text" id="chinaid" name="chinaid" required="" disabled="disabled" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-row layui-col-space5">
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="phone" class="layui-form-label">
+							<span class="x-red">*</span>联系方式
+						</label>
+						<div class="layui-input-block">
+							<input type="text" id="phone" name="phone" lay-verify="required|number" required="" class="layui-input">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="addr" class="layui-form-label">
+					<span class="x-red">*</span>地址</label>
+				<div class="layui-input-block">
+					<input id="addr" name="addr" required="" lay-verify="required" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<textarea id="service" name="service" placeholder="服务内容" class="layui-textarea"></textarea>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label"><span class="x-red">*</span>服务时间</label>
+				<div class="layui-inline" id="servicetimes">
+					<div class="layui-input-inline">
+						<input type="text" autocomplete="off" id="servicebegin" name="servicebegin" lay-verify="required" class="layui-input" placeholder="开始日期">
+					</div>
+					<div class="layui-form-mid">-</div>
+					<div class="layui-input-inline">
+						<input type="text" autocomplete="off" id="serviceend" name="serviceend" lay-verify="required" class="layui-input" placeholder="结束日期">
+					</div>
+				</div>
+			</div>
+			<fieldset class="layui-elem-field">
+				<legend class="layui-font-14">服务人员</legend>
+				<div class="layui-field-box">
+					<div class="layui-form-item">
+						<table class="layui-hide" id="servers", name="servers" lay-filter="test"></table>
+					</div>
+				</div>
+			</fieldset>
+			<div class="layui-form-item">
+				<textarea id="remarks" name="remarks" placeholder="备注" class="layui-textarea"></textarea>
+			</div>
+			<div class="layui-form-item">
+				<label for="handler" class="layui-form-label">
+					<span class="x-red">*</span>办理人</label>
+				<div class="layui-input-block">
+					<input id="handler" name="handler" required="" lay-verify="required" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<button class="layui-btn layui-btn-fluid" lay-filter="add" lay-submit="">创建</button>
+			</div>
+		</form>
+</div>
+
+<script type="text/html" id="fieldtool">
+  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
+</script>
+
+<!--工具栏模板-->
+<script type="text/html" id="serverstools">
+  <div class="layui-btn-group">
+    <button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" id="servers_add">
+		<i class="layui-icon" style="font-size: 20px">&#xe61f;</i>
+	</button>
+	<!--<button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" onclick="onRefresh();" lay-event="refresh"><i class="layui-icon"  style="font-size: 20px">&#xe669;</i></button>-->
+  </div>
+</script>
+
+<script>
+Date.prototype.Format = function(fmt) {
+	var o = {
+		"M+": this.getMonth() + 1,
+		"d+": this.getDate(),
+		"H+": this.getHours(),
+		"m+": this.getMinutes(),
+		"s+": this.getSeconds(),
+		"q+": Math.floor((this.getMonth()+3)/3),
+		"S": this.getMilliseconds()
+	};
+	
+	if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4-RegExp.$1.length))
+	for (var k in o)
+	if (new RegExp("("+k+")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1)?(o[k]):(("00"+o[k]).substr((""+o[k]).length)))
+	return fmt;
+}
+</script>
+<script type="text/html" id="classTpl">
+  <select id="classtype" class="layui-border" lay-ignore>
+    <option value="志愿者">志愿者</option>
+  </select>
+</script>
+<script>
+
+	var form;
+    layui.use(['element','layer', 'form', 'table', 'laydate'], function(){
+        var  $ = layui.jquery;//jquery
+        var lement = layui.element;//面包导航
+        var layer = layui.layer;//弹出层
+        form = layui.form;
+        var upload = layui.upload;
+		var table = layui.table;
+		var laydate = layui.laydate;
+		
+		 
+		var gloab = layui.data('yl-user');
+		form.val("orderadd", {
+			"handler": gloab.user["UserName"],
+			}
+		)
+		
+		laydate.render({
+			elem: '#servicetimes'
+			,type: 'datetime'
+			,range: ['#servicebegin', '#serviceend']
+		});
+		
+		table.render({
+			elem: '#servers'
+			,height: 270
+			,data: []
+			,editTrigger: 'dblclick'
+			,toolbar: '#serverstools'
+			,cols: [[
+				,{field:'id', align:'center', title: '序号', hide: true}
+				,{field:'name', align:'center', edit: 'text', title: '姓名'}
+				,{field:'phone', align:'center', edit: 'text', title: '联系电话'}
+				,{field:'class', align:'center', title: '类型', templet: '#classTpl', exportTemplet: function(d, obj){
+					//console.log(obj)
+					// 处理该字段的导出数据
+					var td = obj.td(this.field); //获取当前 td
+					return td.find('select').val();
+				  }}
+				,{title: '操作', align:'center', toolbar: '#fieldtool', fixed: 'right'}
+			]]
+		});
+		
+		$(document).on('click', '#servers_add', function(){			
+			var table_data = table.cache["servers"];
+			table_data.push({
+				"name": "",
+				"phone": "",
+				"class": ""});
+				
+			table.reload("servers", {data: table_data})
+		});
+		
+		table.on('tool(test)', function(obj) {
+			var data = obj.data;
+			console.log(obj.event);
+			
+			if (obj.event === 'delete') {
+				if (data.name == "") {
+					var table_data = table.cache["servers"];
+					table_data.splice(obj.tr.data("index"), 1);
+					table.reload("servers", {data: table_data})
+				} else {
+					layer.confirm('确定要删除[' + data.name + ']么?',
+						{btn:['确定', '取消']},
+						function(index, layero) {
+							var table_data = table.cache["servers"];
+							table_data.splice(obj.tr.data("index"), 1);
+							table.reload("servers", {data: table_data})
+							layer.close(index);
+						});
+				}
+			}
+		});
+
+
+        //监听提交
+        form.on('submit(add)', function(data){
+			console.log(data.field)
+			data.field["servers"] = JSON.stringify(table.cache["servers"]);
+			var back;
+            $.ajax({
+                type: "post",
+                url: BasePath + '/addrecord',
+                data: data.field,
+                dataType: "json",
+				headers: {'Access-Control-Allow-Origin' : Domain,},
+				xhrFields: {withCredentials: true},
+                success: function(data){
+					back = data
+                    if(data.code==0){
+                        layer.msg("创建完成", {icon: 6,time:2000},function () {
+                            window.parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    }else if(data.code==1001) {
+						parent.location.href = "../../index.html";
+					}else{
+                        layer.msg(data.msg, {icon:5,time:5000});
+                    }
+                }
+            });
+			return false;
+        });
+		
+    })
+	
+	function onSelClient() {
+		layer.open({
+			type: 2,
+			area: ['900px', '450px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "选择老人",
+			content: 'client-select.html',
+			success:function(layero,index){
+				
+			}
+		});
+	}
+	
+</script>
+
+<script>
+    function DoSelectClient(data) {
+		form.val("orderadd", {
+			clientidx: data["Idx"],
+			name: data["Name"],
+			phone: data["Phone"],
+			chinaid: data["ChinaId"],
+			ascription: data["Community"],
+			addr: data["Addr"],
+		})
+	}
+</script>
+
+</body>
+</html>

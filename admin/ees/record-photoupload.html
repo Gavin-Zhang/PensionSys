@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        上传照片
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript" src="./js/base.js"></script>
+</head>
+<body>
+	<div class="layui-fluid">
+		<div class="layui-upload-list" style="max-width: 1000px;">
+			<table class="layui-table">
+				<colgroup>
+					<col>
+					<col>
+					<col>
+				</colgroup>
+				<thead>
+					<tr><th>文件名</th>
+					<th>大小</th>
+					<th>上传进度</th>
+					</tr></thead>
+				<tbody id="demoList"></tbody>
+			</table>
+			<button type="button" class="layui-btn layui-btn-normal" id="testList">选择多文件</button>
+			<button type="button" class="layui-btn" id="testListAction">开始上传</button>
+		</div>
+	</div>
+
+<script>
+
+    layui.use(['upload', 'form', 'laydate', 'rate'], function(){
+		var  $ = layui.jquery;//jquery
+		var upload = layui.upload;
+
+		var record = layui.sessionData("record-list").recorddata
+		$.ajaxSetup({
+			headers: {'Access-Control-Allow-Origin' : Domain,},
+            xhrFields: {withCredentials: true},
+        });
+		upload.render({
+			elem: '#testList'
+			,elemList: $('#demoList') //列表元素对象
+			,url: BasePath + "/uploadphoto"
+			,accept: 'file'
+			,multiple: true
+			,number: 0
+			,auto: false
+			,bindAction: '#testListAction'
+			,data: {idx: record["Idx"], clientidx: record["ClientIdx"]}
+			,choose: function(obj){
+				var that = this;
+				var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+				//读取本地文件
+				obj.preview(function(index, file, result){
+					var tr = $(['<tr id="upload-'+ index +'">'
+					  ,'<td>'+ file.name +'</td>'
+					  ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
+					  ,'<td><div class="layui-progress" lay-filter="progress-demo-'+ index +'"><div class="layui-progress-bar" lay-percent="0%"></div></div></td>'
+					,'</tr>'].join(''));
+
+					that.elemList.append(tr);
+					element.render('progress'); //渲染新加的进度条组件
+				});
+			}
+			,done: function(res, index, upload){ //成功的回调
+				var that = this;
+				var tr = that.elemList.find('tr#upload-'+ index)
+				,tds = tr.children();
+				delete this.files[index]; //删除文件队列已经上传成功的文件
+			}
+			,allDone: function(obj){ //多文件上传完毕后的状态回调
+				layer.msg("全部上传完成", {icon: 6,time:2000},function () {
+					window.parent.location.reload();
+					var index = parent.layer.getFrameIndex(window.name);
+					parent.layer.close(index);
+				});
+			}
+			,error: function(index, upload){ //错误回调
+
+			}
+			,progress: function(n, elem, e, index){ //注意：index 参数为 layui 2.6.6 新增
+				element.progress('progress-demo-'+ index, n + '%'); //执行进度条。n 即为返回的进度百分比
+			}
+		});
+    })
+</script>
+
+
+</body>
+</html>
