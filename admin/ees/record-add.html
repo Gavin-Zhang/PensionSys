@@ -176,9 +176,10 @@ Date.prototype.Format = function(fmt) {
 			,cols: [[
 				,{field:'id', align:'center', title: '序号', hide: true}
 				,{field:'name', align:'center', edit: 'text', title: '姓名'}
+				,{field:'chinaid', align:'center', edit: 'text', title: '身份证号'}
 				,{field:'phone', align:'center', edit: 'text', title: '联系电话'}
 				,{field:'class', align:'center', title: '类型', templet: '#classTpl', exportTemplet: function(d, obj){
-					//console.log(obj)
+					console.log(obj)
 					// 处理该字段的导出数据
 					var td = obj.td(this.field); //获取当前 td
 					return td.find('select').val();
@@ -187,14 +188,29 @@ Date.prototype.Format = function(fmt) {
 			]]
 		});
 		
-		$(document).on('click', '#servers_add', function(){			
+		$(document).on('click', '#servers_add', function(){
+			layer.open({
+				type: 2,
+				area: ['800px', '400px'],
+				fixed: false, //不固定
+				maxmin: true,
+				title: "选择服务人员",
+				content: 'worker-select.html',
+				success:function(layero,index){
+				
+				}
+			});
+		
+			/*
 			var table_data = table.cache["servers"];
 			table_data.push({
 				"name": "",
 				"phone": "",
-				"class": ""});
+				"chinaid": "",
+				"class": "测试"});
 				
 			table.reload("servers", {data: table_data})
+			*/
 		});
 		
 		table.on('tool(test)', function(obj) {
@@ -278,6 +294,28 @@ Date.prototype.Format = function(fmt) {
 			ascription: data["Community"],
 			addr: data["Addr"],
 		})
+	}
+	
+	function DoSelectWorker(data) {
+		console.log(data)
+		var table_data = layui.table.cache["servers"];
+		if (data.length == 0) {
+			table_data.push({
+				"name": "",
+				"phone": "",
+				"chinaid": "",
+				"class": ""});
+		} else {
+			for(var worker of data) { 
+				table_data.push({
+					"name": worker["Name"],
+					"chinaid": worker["ChinaId"],
+					"phone": worker["Phone"],
+					"class": worker["Class"]});
+			}
+		}
+		console.log(table_data)
+		layui.table.reload("servers", {data: table_data})
 	}
 </script>
 
