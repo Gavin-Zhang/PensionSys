@@ -356,7 +356,7 @@
 		layui.use("laytpl", function(){
 			var laytpl = layui.laytpl;
 			
-			client = layui.sessionData("client-list")["detail"];
+			client = layui.sessionData("hcc-client-list")["detail"];
 			client["ContactData"] = JSON.parse(JSON.parse(client.Contacts))
 			client["AvatarPath"] = ""
 			console.log(client["Avatar"])
@@ -382,10 +382,10 @@
 			window.document.body.innerHTML = html;//重新给页面内容赋值
 			*/
 			
-			client = layui.sessionData("client-list")["detail"];
+			client = layui.sessionData("hcc-client-list")["detail"];
 			let ary = [client];
 			console.log(ary)
-			layui.sessionData("client-list", {key:"print", value:ary})
+			layui.sessionData("hcc-client-list", {key:"print", value:ary})
 		
 			layer.open({
 				type: 2,

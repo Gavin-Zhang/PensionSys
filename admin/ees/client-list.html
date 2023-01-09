@@ -94,7 +94,7 @@
 			var data = obj.data //获得当前行数据
 			,layEvent = obj.event; //获得 lay-event 对应的值
 			if(layEvent === 'detail'){
-				layui.sessionData("client-list", {key:"detail", value:data})
+				layui.sessionData("ees-client-list", {key:"detail", value:data})
 				layer.open({
 					type: 2,
 					area: ['900px', '600px'],
@@ -105,10 +105,10 @@
 				});
 				return;
 			} else if(layEvent === 'modify'){
-				//var local = layui.sessionData("client-list")
+				//var local = layui.sessionData("ees-client-list")
 				//for(var client of local.clients) {
 				//	if (data["Idx"] === client["Idx"]) {
-				layui.sessionData("client-list", {key:"modify", value:data})
+				layui.sessionData("ees-client-list", {key:"modify", value:data})
 				layer.open({
 					type: 2,
 					area: ['900px', '600px'],
@@ -150,7 +150,7 @@
 			]]
 			,parseData: function(res){ //res 即为原始返回的数据
 				if (res.code == 0) {
-					//layui.sessionData("client-list", {key:"clients", value:res.data[0]})
+					//layui.sessionData("ees-client-list", {key:"clients", value:res.data[0]})
 					for(var tableitem of res.data[0]) {
 						tableitem["Sex"] = GetSex(tableitem.ChinaId)
 						tableitem["Age"] = GetAge(tableitem.ChinaId)
@@ -271,7 +271,7 @@
 		, data = checkStatus.data;
 		console.log(layui._typeof(data))
 		console.log(data)
-		layui.sessionData("client-list", {key:"print", value:data})
+		layui.sessionData("ees-client-list", {key:"print", value:data})
 		
 		layer.open({
 			type: 2,

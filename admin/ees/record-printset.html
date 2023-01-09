@@ -50,7 +50,7 @@
         var form = layui.form;
 		var table = layui.table;
 		
-		var str = layui.sessionData('record-list').printdata
+		var str = layui.sessionData('ees-record-list').printdata
 		console.log(layui._typeof(JSON.parse(str)))
 		var printdata = JSON.parse(str)
 		console.log(layui._typeof(printdata.photos))
@@ -80,7 +80,7 @@
 				data.url = PhotoPath + data.Path;
 			}
 			printdata.photos = checkStatus.data
-			layui.sessionData('record-list', {key:'printdata', value:JSON.stringify(printdata)})
+			layui.sessionData('ees-record-list', {key:'printdata', value:JSON.stringify(printdata)})
 
 			layer.open({
 				type: 2,

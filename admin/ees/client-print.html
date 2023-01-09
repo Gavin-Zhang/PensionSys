@@ -46,7 +46,7 @@
 		layui.use('laytpl', function(){
 			var laytpl = layui.laytpl;
 			
-			data = layui.sessionData("client-list")["print"];
+			data = layui.sessionData("ees-client-list")["print"];
 			for (var i=0; i<data.length; i++) {
 				var printdata = data[i]
 				printdata["ContactData"] = JSON.parse(JSON.parse(printdata.Contacts))		

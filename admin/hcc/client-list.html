@@ -94,7 +94,7 @@
 			var data = obj.data //获得当前行数据
 			,layEvent = obj.event; //获得 lay-event 对应的值
 			if(layEvent === 'detail'){
-				layui.sessionData("client-list", {key:"detail", value:data})
+				layui.sessionData("hcc-client-list", {key:"detail", value:data})
 				layer.open({
 					type: 2,
 					area: ['900px', '600px'],
@@ -108,7 +108,7 @@
 				//var local = layui.sessionData("client-list")
 				//for(var client of local.clients) {
 				//	if (data["Idx"] === client["Idx"]) {
-				layui.sessionData("client-list", {key:"modify", value:data})
+				layui.sessionData("hcc-client-list", {key:"modify", value:data})
 				layer.open({
 					type: 2,
 					area: ['900px', '600px'],
@@ -272,7 +272,7 @@
 		, data = checkStatus.data;
 		console.log(layui._typeof(data))
 		console.log(data)
-		layui.sessionData("client-list", {key:"print", value:data})
+		layui.sessionData("hcc-client-list", {key:"print", value:data})
 		
 		layer.open({
 			type: 2,

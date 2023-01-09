@@ -297,8 +297,8 @@ Date.prototype.Format = function(fmt) {
 	}
 	
 	function DoSelectWorker(data) {
-		console.log(data)
 		var table_data = layui.table.cache["servers"];
+		/*
 		if (data.length == 0) {
 			table_data.push({
 				"name": "",
@@ -314,7 +314,14 @@ Date.prototype.Format = function(fmt) {
 					"class": worker["Class"]});
 			}
 		}
-		console.log(table_data)
+		*/
+		for(var worker of data) { 
+			table_data.push({
+				"name": worker["Name"],
+				"chinaid": worker["ChinaId"],
+				"phone": worker["Phone"],
+				"class": worker["Class"]});
+		}
 		layui.table.reload("servers", {data: table_data})
 	}
 </script>

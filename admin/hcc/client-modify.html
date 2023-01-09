@@ -235,7 +235,7 @@
 		
 		init(form, table);
 		
-		var local = layui.sessionData("client-list")
+		var local = layui.sessionData("hcc-client-list")
 		console.log(local.modify)
 		var avatar_tpl = avatar.innerHTML
 		var avatar_div = document.getElementById('avatardiv')
@@ -353,7 +353,7 @@
 
         //监听提交
         form.on('submit(add)', function(data){
-			data.field["idx"] = layui.sessionData("client-list").modify["Idx"]
+			data.field["idx"] = layui.sessionData("hcc-client-list").modify["Idx"]
 			
 			var slow = [];
 			var child = $(".seach-box input[type='checkbox']");
@@ -370,7 +370,7 @@
 			data.field["contacts"] = JSON.stringify(table.cache["contacts"]);
 			var obj = JSON.parse(data.field["contacts"])
 
-			var local = layui.sessionData("client-list")
+			var local = layui.sessionData("hcc-client-list")
 			data.field["changecid"] = true
 			if (local.modify["ChinaId"] === data.field["chinaid"]){
 				data.field["changecid"] = false
@@ -407,7 +407,7 @@
 </script>
 <script>
 	function init(form, table) {
-		var local = layui.sessionData("client-list")
+		var local = layui.sessionData("hcc-client-list")
 		local.modify["AvatarPath"] = "";
 		if (local.modify["Avatar"] !== "") {
 			local.modify["AvatarPath"] = BasePath + '/avatarphoto/' + local.modify["Avatar"] + '.jpg'

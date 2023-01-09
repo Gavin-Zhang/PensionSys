@@ -206,7 +206,7 @@
 		
 		init(form, table);
 		
-		var local = layui.sessionData("client-list")
+		var local = layui.sessionData("ees-client-list")
 		console.log(local.modify)
 		var avatar_tpl = avatar.innerHTML
 		var avatar_div = document.getElementById('avatardiv')
@@ -324,7 +324,7 @@
 
         //监听提交
         form.on('submit(add)', function(data){
-			data.field["idx"] = layui.sessionData("client-list").modify["Idx"]
+			data.field["idx"] = layui.sessionData("ees-client-list").modify["Idx"]
 			
 			var slow = [];
 			var child = $(".seach-box input[type='checkbox']");
@@ -343,20 +343,25 @@
 			var obj = JSON.parse(data.field["contacts"])
 			console.log(obj)
 			
+			var local = layui.sessionData("ees-client-list")
+			data.field["changecid"] = true
+			if (local.modify["ChinaId"] === data.field["chinaid"]){
+				data.field["changecid"] = false
+			}
+			
 			console.log(data.field)
-			return;
 			
             $.ajax({
                 type: "post",
-                url: BasePath + '/register',
+                url: BasePath + '/updateclient',
                 data: data.field,
                 dataType: "json",
-				headers: {'Access-Control-Allow-Origin' : 'http://localhost',},
+				headers: {'Access-Control-Allow-Origin' : BasePath,},
 				xhrFields: {withCredentials: true},
                 success: function(data){
 					console.log(data)
                     if(data.code==0){
-                        layer.msg("注册成功", {icon: 6,time:2000},function () {
+                        layer.msg("修改成功", {icon: 6,time:2000},function () {
                             window.parent.location.reload();
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
@@ -383,7 +388,7 @@
 </script>
 <script>
 	function init(form, table) {
-		var local = layui.sessionData("client-list")
+		var local = layui.sessionData("ees-client-list")
 		local.modify["AvatarPath"] = "";
 		if (local.modify["Avatar"] !== "") {
 			local.modify["AvatarPath"] = BasePath + '/avatarphoto/' + local.modify["Avatar"] + '.jpg'
