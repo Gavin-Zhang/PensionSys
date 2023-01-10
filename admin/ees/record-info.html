@@ -420,7 +420,7 @@ Date.prototype.Format = function(fmt) {
 	}
 
 	function DoPrint() {
-		var record = layui.sessionData('record-list').recorddata
+		var record = layui.sessionData('ees-record-list').recorddata
 		
 		record['avatar'] = avatarurl;
 		record['serviceBE'] = record.BeginTime + '    -    ' + record.EndTime
@@ -430,7 +430,7 @@ Date.prototype.Format = function(fmt) {
 		printdata['evaluate'] = evaluate;
 		console.log(printdata)
 		console.log("---------------------")
-		layui.sessionData('record-list', {key:'printdata', value:JSON.stringify(printdata)})
+		layui.sessionData('ees-record-list', {key:'printdata', value:JSON.stringify(printdata)})
 		layer.open({
 			type: 2,
 			area: ['900px', '600px'],
