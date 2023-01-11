@@ -422,10 +422,10 @@
 "   <tr height='24'/>\r\n" +
 "   <tr height='24'/>\r\n" +
 "   <tr height='58.33'>\r\n" +
-"    <td class='borderSet' height='58.33'>服务对象</td>\r\n" +
-"    <td class='borderSet'>{{= d.record.Name}}</td>\r\n" +
-"    <td class='borderSet'>联系电话</td>\r\n" +
-"    <td class='borderSet' colspan='2'>{{= d.record.Phone}}</td>\r\n" +
+"    <td class='borderSet layui-font-16' height='58.33'>服务对象</td>\r\n" +
+"    <td class='borderSet layui-font-16'>{{= d.record.Name}}</td>\r\n" +
+"    <td class='borderSet layui-font-16'>联系电话</td>\r\n" +
+"    <td class='borderSet layui-font-16' colspan='2'>{{= d.record.Phone}}</td>\r\n" +
 "			{{# if(d.record.avatar === '') { }}\r\n" +
 "			<td rowspan='3' class='borderSet  layui-font-16'>照<br/>片</td>\r\n" +
 "			{{#  } else { }}\r\n" +
@@ -435,21 +435,21 @@
 "			{{#  } }}\r\n" +
 "   </tr>\r\n" +
 "   <tr height='58.33'>\r\n" +
-"    <td class='borderSet' height='116.67' rowspan='2'>地&nbsp;&nbsp;&nbsp;址</td>\r\n" +
+"    <td class='borderSet layui-font-16' height='116.67' rowspan='2'>地&nbsp;&nbsp;&nbsp;址</td>\r\n" +
 "    <td class='borderSetLeftTopAlign layui-font-16' colspan='4' rowspan='2'>{{= d.record.Addr}}</td>\r\n" +
 "   </tr>\r\n" +
 "   <tr height='58.33'/>\r\n" +
 "   <tr height='58.33'>\r\n" +
-"    <td class='borderSet' height='175' rowspan='3'>服务内容</td>\r\n" +
+"    <td class='borderSet layui-font-16' height='175' rowspan='3'>服务内容</td>\r\n" +
 "    <td class='borderSetLeftTopAlign layui-font-16' colspan='5' rowspan='3'>{{= d.record.Service}}</td>\r\n" +
 "   </tr>\r\n" +
 "   <tr height='58.33'/>\r\n" +
 "   <tr height='58.33'/>\r\n" +
 "   <tr height='58.33'>\r\n" +
-"    <td class='borderSet' height='408.33' rowspan='7'>服务人员</td>\r\n" +
-"    <td class='borderSet'>姓名</td>\r\n" +
-"    <td class='borderSet' colspan='2'>联系电话</td>\r\n" +
-"    <td class='borderSet' colspan='2'>类型</td>\r\n" +
+"    <td class='borderSet layui-font-16' height='408.33' rowspan='7'>服务人员</td>\r\n" +
+"    <td class='borderSet layui-font-16'>姓名</td>\r\n" +
+"    <td class='borderSet layui-font-16' colspan='2'>联系电话</td>\r\n" +
+"    <td class='borderSet layui-font-16' colspan='2'>类型</td>\r\n" +
 "   </tr>\r\n" +
 "   <tr height='58.33'>\r\n" +
 "			{{# if(typeof  d.workers[0]==='undefined'){ }}\r\n" +
@@ -518,13 +518,13 @@
 "			{{#  } }}\r\n" +
 "   </tr>\r\n" +
 "   <tr height='58.33'>\r\n" +
-"    <td class='borderSet' height='58.33'>服务时间</td>\r\n" +
-"    <td class='borderSet' colspan='2'>{{= d.record.begintime }}</td>\r\n" +
-"    <td class='borderSet'>至</td>\r\n" +
-"    <td class='borderSet' colspan='2'>{{= d.record.endtime }}</td>\r\n" +
+"    <td class='borderSet layui-font-16' height='58.33'>服务时间</td>\r\n" +
+"    <td class='borderSet layui-font-16' colspan='2'>{{= d.record.begintime }}</td>\r\n" +
+"    <td class='borderSet layui-font-16'>至</td>\r\n" +
+"    <td class='borderSet layui-font-16' colspan='2'>{{= d.record.endtime }}</td>\r\n" +
 "   </tr>\r\n" +
 "   <tr height='24'>\r\n" +
-"    <td class='borderSet' height='336' rowspan='14'>其他</td>\r\n" +
+"    <td class='borderSet layui-font-16' height='336' rowspan='14'>其他</td>\r\n" +
 "    <td class='borderSetLeftTopAlign layui-font-16' colspan='5' rowspan='14'>{{= d.record.Remarks}}</td>\r\n" +
 "   </tr>\r\n" +
 "   <tr height='24'/>\r\n" +
