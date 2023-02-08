@@ -389,34 +389,19 @@
 "		<td class='borderSet layui-font-16' height='175' rowspan='3'>费用</td>\r\n" +
 "		<td class='borderSet layui-font-16' rowspan='3'>{{= d.ConsumptionType }}</td>\r\n" +
 "		<td class='borderSet layui-font-16' >服务费用</td>\r\n" +
-"		{{# if(d.ConsumptionType==='政府购买') {}}\r\n" +
-"			<td class='borderSet layui-font-16'>无</td>\r\n" +
-"		{{#  } else { }}\r\n" +
 "			<td class='borderSet layui-font-16'></td>\r\n" +
-"		{{#  } }}\r\n" +
 "		<td class='borderSetLeftTopAlign layui-font-16' rowspan='3'>\r\n" +
 "			合计:<br/><br/><br/><br/>\r\n" +
 "			<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>\r\n" +
-"		{{# if(d.ConsumptionType==='政府购买') {}}\r\n" +
-"			无\r\n" +
-"		{{#  } }}\r\n" +
 "		<td class='borderSetLeftTopAlign layui-font-16' rowspan='6'>客户签字：</td>\r\n" +
 "		</tr>\r\n" +
 "	<tr height='58.33'>\r\n" +
 "		<td class='borderSet layui-font-16'>交通费用</td>\r\n" +
-"		{{# if(d.ConsumptionType==='政府购买') {}}\r\n" +
-"			<td class='borderSet layui-font-16'>无</td>\r\n" +
-"		{{#  } else { }}\r\n" +
 "			<td class='borderSet layui-font-16'></td>\r\n" +
-"		{{#  } }}\r\n" +
 "	</tr>\r\n" +
 "	<tr height='58.33'>\r\n" +
 "		<td class='borderSet layui-font-16'>高层费用</td>\r\n" +
-"		{{# if(d.ConsumptionType==='政府购买') {}}\r\n" +
-"			<td class='borderSet layui-font-16'>无</td>\r\n" +
-"		{{#  } else { }}\r\n" +
 "			<td class='borderSet layui-font-16'></td>\r\n" +
-"		{{#  } }}\r\n" +
 "	</tr>\r\n" +
 "	<tr height='58.33'>\r\n" +
 "		<td class='borderSet layui-font-16' height='117' rowspan='2'>客户意见</td>\r\n" +

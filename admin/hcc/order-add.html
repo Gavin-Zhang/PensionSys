@@ -255,7 +255,7 @@ Date.prototype.Format = function(fmt) {
 		
 		form.on('select(consumptiontype)', function(data){
 			console.log("data.value:"+data.value)
-			if (data.value === "政府购买") {
+			if (data.value === "政府补贴") {
 				document.getElementById('fareself').style.display = 'none';
 			} else if (data.value === "自费") {
 				document.getElementById('fareself').style.display = 'block';
@@ -315,7 +315,7 @@ Date.prototype.Format = function(fmt) {
 					}
 					form.render('select');	
 					
-					if ($('#consumptiontype option:selected').val() === "政府购买") {
+					if ($('#consumptiontype option:selected').val() === "政府补贴") {
 						document.getElementById('fareself').style.display = 'none';
 					} else {
 						document.getElementById('fareself').style.display = 'block';

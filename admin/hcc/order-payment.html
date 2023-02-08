@@ -131,12 +131,12 @@
 			$('#payment').addClass("layui-btn-disabled");
 		}
 		
-		if (orderdata.ConsumptionType === "政府购买") {
+		if (orderdata.ConsumptionType === "政府补贴") {
 			$("#consumptiontype").attr("disabled",true);
-			$("#paymenttype").attr("disabled",true);
-			$("#charge").attr("disabled",true);
-			$("#fare").attr("disabled",true);
-			$("#highrise").attr("disabled",true);
+			//$("#paymenttype").attr("disabled",true);
+			//$("#charge").attr("disabled",true);
+			//$("#fare").attr("disabled",true);
+			//$("#highrise").attr("disabled",true);
 		}
 
         //监听提交
@@ -177,8 +177,8 @@
 					layui.form.render('select');
 					
 					var orderdata = layui.sessionData("order-list")["orderdata"];
-					if (orderdata.ConsumptionType === "政府购买") {
-						layui.form.val("orderpayment", {paymenttype: "政府购买"})
+					if (orderdata.ConsumptionType === "政府补贴") {
+						layui.form.val("orderpayment", {paymenttype: "政府补贴"})
 					}
 				}
 			}
