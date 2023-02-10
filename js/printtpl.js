@@ -55,7 +55,7 @@
 "			</td>\r\n" +
 "		</tr>\r\n" +
 "		<tr height='35' class='borderSet layui-font-16'>\r\n" +
-"			<td height='35' class='borderSet layui-font-16'>客户类型</td>\r\n" +
+"			<td height='35' class='borderSet layui-font-16'>人员类型</td>\r\n" +
 "			<td colspan='9' class='borderSetLeftAlign layui-font-16'>\r\n" +
 "			<span class='layui-font-16'>&nbsp; </span>\r\n" +
 "			<font class='layui-font-16'>\r\n" +
@@ -173,7 +173,7 @@
 "			{{#  } }}\r\n" +
 "		</tr>\r\n" +
 "		<tr height='35' class='borderSet layui-font-16'>\r\n" +
-"			<td height='385' rowspan='11' class='borderSet layui-font-16'>健康情况</td>\r\n" +
+"			<td height='385' rowspan='12' class='borderSet layui-font-16'>健康情况</td>\r\n" +
 "			<td rowspan='4' class='borderSet layui-font-16'>慢病</td>\r\n" +
 "			<td colspan='9' rowspan='4' class='borderSetLeftAlign layui-font-16'>\r\n" +
 "				<span class='layui-font-16'>&nbsp; </span>\r\n" +
@@ -253,6 +253,19 @@
 "		<tr height='35' class='borderSet layui-font-16'/>\r\n" +
 "		<tr height='35' class='borderSet layui-font-16'/>\r\n" +
 "		<tr height='35' class='borderSet layui-font-16'/>\r\n" +
+"		<tr height='35' class='borderSet layui-font-16'>\r\n" +
+"			<td class='borderSet layui-font-16'>失能</td>\r\n" +
+"			<td colspan='9' class='borderSetLeftAlign layui-font-16'>\r\n" +
+"				<span class='layui-font-16'>&nbsp; </span>\r\n" +
+"				<font class='layui-font-16'>\r\n" +
+"					{{# if(d.Incapacity == '正常'){ }}●<b>正常</b>{{#  } else { }}○正常{{#  } }}\r\n" + 
+"					<font class='layui-font-16'>\r\n" +
+"					{{# if(d.Incapacity == '半失能'){ }}●<b>半失能</b>{{#  } else { }}○半失能{{#  } }}\r\n" + 
+"					<font class='layui-font-16'>\r\n" +
+"					{{# if(d.Incapacity == '失能'){ }}●<b>失能</b>{{#  } else { }}○失能{{#  } }}\r\n" + 
+"				</font>	\r\n" +
+"			</td>\r\n" +
+"		</tr>\r\n" +
 "		<tr height='35' class='borderSet layui-font-16'>\r\n" +
 "			<td rowspan='7' class='borderSet layui-font-16'>其他</td>\r\n" +
 "			<td colspan='9' rowspan='7' class='borderSetLeftTopAlign layui-font-16'>\r\n" +

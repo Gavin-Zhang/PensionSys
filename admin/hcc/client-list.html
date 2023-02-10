@@ -32,6 +32,9 @@
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5">
 						<div class="layui-inline layui-show-xs-block">
+                            <input type="text" id="idx" name="idx"  placeholder="编号" autocomplete="off" class="layui-input">
+                        </div>
+						<div class="layui-inline layui-show-xs-block">
                             <input type="text" id="username" name="username"  placeholder="姓名" autocomplete="off" class="layui-input">
                         </div>
 						<div class="layui-inline layui-show-xs-block">
@@ -39,7 +42,41 @@
                         </div>
 						<div class="layui-inline layui-show-xs-block">
                             <input type="text" id="chinaid" name="chinaid"  placeholder="身份证" autocomplete="off" class="layui-input">
-                        </div>                        
+                        </div>
+						<div class="layui-inline layui-show-xs-block">
+							<select name="ascription" id="ascription"  placeholder="归属社区/村部">
+								<option value="">归属社区/村部</option>
+								<option value="温泉社区">温泉社区</option>
+								<option value="玉龙社区">玉龙社区</option>
+								<option value="毛绢社区">毛绢社区</option>
+								<option value="营胜村">营胜村</option>
+								<option value="五龙背村">五龙背村</option>
+								<option value="新建村">新建村</option>
+								<option value="新康村">新康村</option>
+								<option value="孙家村">孙家村</option>
+								<option value="老古沟村">老古沟村</option>
+								<option value="其他">其他</option>
+							</select>
+						</div>
+						<div class="layui-inline layui-show-xs-block">
+                            <!-- <input type="text" id="type" name="type"  placeholder="类型" autocomplete="off" class="layui-input"> -->
+							<select name="type" id="type">
+								<option value="">人员类型</option>
+								<option value="社会老人">社会老人</option>
+								<option value="低保老人">低保老人</option>
+								<option value="五保老人">五保老人</option>
+								<option value="其他">其他</option>
+							</select>
+                        </div>
+						<div class="layui-inline layui-show-xs-block">
+                            <!-- <input type="text" id="incapacity" name="incapacity"  placeholder="失能情况" autocomplete="off" class="layui-input"> -->
+							<select name="incapacity" id="incapacity">
+								<option value="">失能情况</option>
+								<option value="正常">正常</option>
+								<option value="半失能">半失能</option>
+								<option value="失能">失能</option>
+							</select>
+                        </div>
                         <div class="layui-inline layui-show-xs-block">
                             <button class="layui-btn"  lay-submit="" type="button" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
                         </div>
@@ -137,6 +174,7 @@
 			,title:"列表"
 			,limits:[10,20,30,50,100,150,200,300,400,500,1000]
 			,cols: [[
+			/*
 				{type:'checkbox', align:'center', fixed: 'left'}
 				,{field:'Idx', title: '编号', align:'center', fixed: 'left', hide: false}
 				,{field:'Name', title: '姓名', align:'center', hide: false}
@@ -145,8 +183,23 @@
 				,{field:'ChinaId', title: '证件号码', align:'center', width: '15%', minWidth: 100}
 				,{field:'Phone', title: '联系方式', align:'center', width: '10%', minWidth: 100}
 				,{field:'Type', title: '类型', align:'center', width: '10%', minWidth: 100}
+				,{field:'Incapacity', title: '失能', align:'center', width: '10%', minWidth: 100}
 				,{field:'Handler', title: '登记人', align:'center', width: '10%', minWidth: 100}
 				,{field:'RegisterTime', title: '等记时间', align:'center', width: '10%', minWidth: 100}
+				,{title: '操作', align:'center', toolbar: '#fieldtool', minWidth: 150, fixed: 'right'}
+				*/
+				{type:'checkbox', align:'center', fixed: 'left'}
+				,{field:'Idx', title: '编号', align:'center', fixed: 'left', hide: false}
+				,{field:'Name', title: '姓名', align:'center', hide: false}
+				,{field:'Sex', title: '性别', align:'center'}
+				,{field:'Age', title: '年龄', align:'center'} 
+				,{field:'Community', title: '归属', align:'center'} 
+				//,{field:'ChinaId', title: '证件号码', align:'center'}
+				,{field:'Phone', title: '联系方式', align:'center'}
+				,{field:'Type', title: '类型', align:'center'}
+				,{field:'Incapacity', title: '失能', align:'center'}
+				,{field:'Handler', title: '登记人', align:'center'}
+				,{field:'RegisterTime', title: '等记时间', align:'center'}
 				,{title: '操作', align:'center', toolbar: '#fieldtool', minWidth: 150, fixed: 'right'}
 			]]
 			,parseData: function(res){ //res 即为原始返回的数据
@@ -182,16 +235,24 @@
 		
 		//监听提交
         form.on('submit(sreach)', function(data){
+			var idx = $('#idx').val()
 			var chinaid = $('#chinaid').val()
 			var name = $('#username').val()
 			var phone = $('#phone').val()
+			var ascription = $('#ascription option:selected').val()
+			var type = $('#type option:selected').val()
+			var incapacity = $('#incapacity option:selected').val()
 			
-			if (name=="" && phone=="" && chinaid=="") {
+			if (idx=="" && name=="" && phone=="" && chinaid=="" 
+				&& type=="" && incapacity=="" && ascription=="") {
 				table.reload('clients', {where:{}})
 				return;
 			}
 			
 			var where = {};
+			if (idx != "") {
+				where["idx"] = idx;
+			}
 			if (name != "") {
 				where["name"] = name;
 			}
@@ -200,7 +261,16 @@
 			}
 			if (chinaid != "") {
 				where["chinaid"] = chinaid;
-			}			
+			}
+			if (type != "") {
+				where["type"] = type;
+			}
+			if (incapacity != "") {
+				where["incapacity"] = incapacity;
+			}
+			if (ascription != "") {
+				where["ascription"] = ascription;
+			}
 			
             table.reload('clients', {
 				where: where

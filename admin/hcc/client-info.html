@@ -116,7 +116,7 @@
 					</td>
 				</tr>
 				<tr height="35" class='borderSet layui-font-16'>
-					<td height="35" class='borderSet layui-font-16'>客户类型</td>
+					<td height="35" class='borderSet layui-font-16'>人员类型</td>
 					<td colspan="9" class='borderSetLeftAlign layui-font-16'>
 						<span class="layui-font-16">&nbsp; </span>
 						<font class="layui-font-16">
@@ -237,7 +237,7 @@
 				
 				
 				<tr height="35" class='borderSet layui-font-16'>
-					<td height="385" rowspan="11" class='borderSet layui-font-16'>健康情况</td>
+					<td height="385" rowspan="12" class='borderSet layui-font-16'>健康情况</td>
 					<td rowspan="4" class='borderSet layui-font-16'>慢病</td>
 					<td colspan="9" rowspan="4" class='borderSetLeftAlign layui-font-16'>
 						<span class="layui-font-16">&nbsp; </span>
@@ -314,9 +314,23 @@
 						</font>	
 					</td>
 				</tr>
+				<tr height='35' class='borderSet layui-font-16'>
 				<tr height="35" class='borderSet layui-font-16'/>
 				<tr height="35" class='borderSet layui-font-16'/>
 				<tr height="35" class='borderSet layui-font-16'/>
+					<td class='borderSet layui-font-16'>失能</td>
+						<td colspan='9' class='borderSetLeftAlign layui-font-16'>
+							<span class='layui-font-16'>&nbsp; </span>
+							<font class='layui-font-16'>
+								{{# if(d.Incapacity == '正常'){ }}●<b>正常</b>{{#  } else { }}○正常{{#  } }}
+								<font class='layui-font-16'>
+								{{# if(d.Incapacity == '半失能'){ }}●<b>半失能</b>{{#  } else { }}○半失能{{#  } }}
+								<font class='layui-font-16'>
+								{{# if(d.Incapacity == '失能'){ }}●<b>失能</b>{{#  } else { }}○失能{{#  } }}
+							</font>
+						</td>
+					</td>
+				</tr>
 				<tr height="35" class='borderSet layui-font-16'>
 					<td rowspan="7" class='borderSet layui-font-16'>其他</td>
 					<td colspan="9" rowspan="7" class='borderSetLeftTopAlign layui-font-16'>
