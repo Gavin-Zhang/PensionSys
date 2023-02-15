@@ -59,6 +59,12 @@
 				<label class="layui-form-label"><span class="x-red">*</span>服务质量</label>
 				<div id="service_quality"></div>
 			</div>
+			<!--
+			<div class="layui-form-item">
+				<label class="layui-form-label"><span class="x-red">*</span>同步到拓展</label>
+				<input type="checkbox" name="sync" lay-skin="switch" value="1" lay-text="开启|关闭" checked>
+			</div>
+			-->
 			<button class="layui-btn" type="button" id="ok" lay-filter="ok" lay-submit="">确定</button>
 		</form>
 	</div>
@@ -189,9 +195,17 @@
 			$('#serviceend').addClass("layui-btn-disabled");
 		}
 		else {
+			var date = new Date();
+			var max_time = date.getTime() - (date.getHours() * 60 * 60 * 1000)
+			max_time = max_time - (date.getMinutes() * 60 * 1000)
+			max_time = max_time - (date.getSeconds() * 1000)
+			max_time = max_time + 86399000
+			
 			laydate.render({
 				elem: '#servicetimes'
 				,type: 'datetime'
+				,max: max_time
+				,calendar: true
 				//设置开始日期、日期日期的 input 选择器
 				//数组格式为 2.6.6 开始新增，之前版本直接配置 true 或任意分割字符即可
 				,range: ['#servicebegin', '#serviceend']
