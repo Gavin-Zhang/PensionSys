@@ -1,0 +1,37 @@
+{
+  "id": "3778407",
+  "name": "psys",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "32832734",
+      "name": "分类2",
+      "font_class": "fenlei2",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "32814393",
+      "name": "warehouse",
+      "font_class": "warehouse",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "32831256",
+      "name": "channel",
+      "font_class": "channel",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "32831268",
+      "name": "order",
+      "font_class": "order",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    }
+  ]
+}
