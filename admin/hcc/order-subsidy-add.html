@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        新建补贴工单
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript" src="../../js/base.js"></script>
+<style type="text/css">
+
+</style>
+</head>
+<body>
+<div class="layui-fluid">
+		<form class="layui-form layui-form-pane" id="orderadd" lay-filter="orderadd">
+			<input type="hidden" id="clientidx" name="clientidx">
+			<input type="hidden" id="housekeeper" name="housekeeper">
+			<div class="layui-form-item">
+				<div class="layui-row">
+					<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+						<label for="name" class="layui-form-label">
+							<span class="x-red">*</span>老人</label>
+						<div class="layui-input-block">
+							<input type="text" id="name" name="name" lay-verify="required" required="" disabled="disabled" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+						<button class="layui-btn layui-btn-normal" type="button" onclick="onSelClient();">
+							<i class="layui-icon">&#xe615;</i>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item" hidden="true">
+				<div class="layui-input-block">
+					<input type="text" id="chinaid" name="chinaid" required="" disabled="disabled" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-row layui-col-space5">
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="phone" class="layui-form-label">
+							<span class="x-red">*</span>联系方式
+						</label>
+						<div class="layui-input-block">
+							<input type="text" id="phone" name="phone" lay-verify="required|number" required="" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label class="layui-form-label">
+							<span class='x-red'>*</span>所属社区
+						</label>
+						<div class="layui-input-block">
+							<select name="ascription" id="ascription" lay-verify="required">
+								<option value="0">---请选择所属社区---</option>
+								<option value="温泉社区">温泉社区</option>
+								<option value="玉龙社区">玉龙社区</option>
+								<option value="毛绢社区">毛绢社区</option>
+								<option value="营胜村">营胜村</option>
+								<option value="五龙背村">五龙背村</option>
+								<option value="新建村">新建村</option>
+								<option value="新康村">新康村</option>
+								<option value="孙家村">孙家村</option>
+								<option value="老古沟村">老古沟村</option>
+								<option value="其他">其他</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="addr" class="layui-form-label">
+					<span class="x-red">*</span>地址</label>
+				<div class="layui-input-block">
+					<input id="addr" name="addr" required="" lay-verify="required" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-row layui-col-space1">
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+							<label for="service" class="layui-form-label">
+								<span class="x-red">*</span>服务项目</label>
+							<div class="layui-input-block">
+								<input type="text" id="service" name="service" lay-verify="required" required="" disabled="disabled" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+							<button class="layui-btn layui-btn-normal" type="button" onclick="onSelService();">
+								<i class="layui-icon">&#xe615;</i>
+							</button>
+						</div>
+					</div>
+					
+					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+						<label for="servicetime" class="layui-form-label"><span class="x-red">*</span>预约时间</label>
+						<div class="layui-input-block">
+							<input type="text" class="layui-input" id="servicetime" name="servicetime" lay-verify="required">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-row layui-col-space1">
+					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+						<label for="charge" class="layui-form-label"></span>参考价格</label>
+						<div class="layui-input-block">
+							<input type="text" id="charge" name="charge" required="" lay-verify="" disabled="disabled" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+						<label for="fare" class="layui-form-label">
+							</span>车费</label>
+						<div class="layui-input-block">
+							<input type="text" id="fare" name="fare" value="0" required="" lay-verify="number" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+						<label for="highrise" class="layui-form-label">
+							</span>高层费用</label>
+						<div class="layui-input-block">
+							<input type="text" id="highrise" name="highrise" value="0" required="" lay-verify="number" class="layui-input">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label for="handler" class="layui-form-label">
+					<span class="x-red">*</span>办理人</label>
+				<div class="layui-input-block">
+					<input id="handler" name="handler" required="" lay-verify="required" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<textarea id="remarks" name="remarks" placeholder="备注" class="layui-textarea"></textarea>
+			</div>
+			
+			<div class="layui-form-item">
+				<button class="layui-btn layui-btn-fluid" lay-filter="add" lay-submit="">创建</button>
+			</div>
+		</form>
+</div>
+
+<script type="text/html" id="fieldtool">
+  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
+</script>
+
+<!--工具栏模板-->
+<script type="text/html" id="contactstools">
+  <div class="layui-btn-group">
+    <button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" id="contacts_add">
+		<i class="layui-icon"  style="font-size: 20px">&#xe61f;</i>
+	</button>
+	<!--<button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" onclick="onRefresh();" lay-event="refresh"><i class="layui-icon"  style="font-size: 20px">&#xe669;</i></button>-->
+  </div>
+</script>
+<script>
+Date.prototype.Format = function(fmt) {
+	var o = {
+		"M+": this.getMonth() + 1,
+		"d+": this.getDate(),
+		"H+": this.getHours(),
+		"m+": this.getMinutes(),
+		"s+": this.getSeconds(),
+		"q+": Math.floor((this.getMonth()+3)/3),
+		"S": this.getMilliseconds()
+	};
+	
+	if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4-RegExp.$1.length))
+	for (var k in o)
+	if (new RegExp("("+k+")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1)?(o[k]):(("00"+o[k]).substr((""+o[k]).length)))
+	return fmt;
+}
+</script>
+<script>
+
+	var form;
+    layui.use(['element','layer', 'form', 'table', 'laydate'], function(){
+        var  $ = layui.jquery;//jquery
+        var lement = layui.element;//面包导航
+        var layer = layui.layer;//弹出层
+        form = layui.form;
+        var upload = layui.upload;
+		var table = layui.table;
+		var laydate = layui.laydate;
+
+        //预约时间日期
+		var date= new Date();
+		laydate.render({
+			elem: '#servicetime'
+			,value: date.Format("yyyy-MM-dd HH:mm:00")
+			,isInitValue: true
+			,type: 'datetime'
+			,min: Date.now()
+		});
+		 
+		var gloab = layui.data('yl-user');
+		form.val("orderadd", {
+			"handler": gloab.user["UserName"],
+			}
+		)
+
+
+        //监听提交
+        form.on('submit(add)', function(data){
+			data.field["consumptiontype"] = "自费";
+			data.field["fromtype"] = "呼叫中心"
+			console.log(data.field)
+			var back;
+            $.ajax({
+                type: "post",
+                url: BasePath + '/addorder',
+                data: data.field,
+                dataType: "json",
+				headers: {'Access-Control-Allow-Origin' : Domain,},
+				xhrFields: {withCredentials: true},
+                success: function(data){
+					back = data
+                    if(data.code==0){
+						console.log("data.code==0")
+                        layer.msg("创建完成", {icon: 6,time:2000},function () {
+                            window.parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                    }else if(data.code==1001) {
+						// cookie 失效
+						var from = document.getElementById("from").value;
+						if (from == "client-list") {
+							parent.parent.location.href = "../../index.html";
+						} else {
+							parent.location.href = "../../index.html";
+						}
+					}else{
+                        layer.msg(data.msg, {icon:5,time:5000});
+                    }
+                }
+            });
+			return false;
+        });
+		
+    })
+	
+	function onSelClient() {
+		layer.open({
+			type: 2,
+			area: ['880px', '500px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "选择老人",
+			content: 'client-select.html',
+			success:function(layero,index){
+				
+			}
+		});
+	}
+	
+	function onSelService() {
+		layui.sessionData("hcc-order-add", {key:"consumptiontype", value:"政府补贴"})
+		layer.open({
+			type: 2,
+			area: ['880px', '500px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "选择服务",
+			content: 'service-select.html',
+			success:function(layero,index){
+			
+			}
+		});
+	}
+	
+	function onSelWaiter() {
+		layer.open({
+			type: 2,
+			area: ['880px', '500px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "选择服务人员",
+			content: 'worker-select.html',
+			success:function(layero,index){
+			
+			}
+		});
+	}
+	
+	function onSelHouseKeeper() {
+		layer.open({
+			type: 2,
+			area: ['880px', '500px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "选择社区管家",
+			content: 'housekeeper-select.html',
+			success:function(layero,index){
+			
+			}
+		});
+	}
+</script>
+
+
+<script>
+    function DoSelectClient(data) {
+		form.val("orderadd", {
+			clientidx: data["Idx"],
+			name: data["Name"],
+			phone: data["Phone"],
+			chinaid: data["ChinaId"],
+			ascription: data["Community"],
+			addr: data["Addr"],
+		})
+	}
+	
+	function DoSelectService(data) {
+		console.log(data)
+		form.val("orderadd", {
+			service: data["Name"],
+			charge: data["Price"],
+		})
+	}
+	
+	function DoSelectWorker(data) {
+		console.log(data)
+		form.val("orderadd", {
+			waiter: data["Name"],
+			waiterphone: data["Phone"],
+		})
+	}
+</script>
+
+</body>
+</html>

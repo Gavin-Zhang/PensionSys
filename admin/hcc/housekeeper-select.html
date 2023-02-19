@@ -27,15 +27,7 @@
                             <input class="layui-input"  autocomplete="off" placeholder="电话" name="queryphone" id="queryphone">
                         </div>
                         <div class="layui-inline layui-show-xs-block">
-                            <select name="queryclass" id="queryclass">
-								<option value="">---类别---</option>
-							</select>
-                        </div>
-                        <div class="layui-inline layui-show-xs-block">
                             <button class="layui-btn"  type="button" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
-                        </div>
-						<div class="layui-inline layui-show-xs-block">
-                            <button class="layui-btn"  type="button" onclick="DoAssign();" lay-submit="">分派</button>
                         </div>
                     </form>
                 </div>
@@ -56,36 +48,29 @@
 			headers: {'Access-Control-Allow-Origin' : Domain,},
             xhrFields: {withCredentials: true},
         });
-		init_select();
+		//init_select();
 
 		table.render({
 			elem: '#demo'
 			//,height: 220
-			,url: BasePath + '/getworkers'
+			,url: BasePath + '/gethousekeepers'
 			,method: 'post'
 			,page: true //开启分页
 			//,totalRow: true //开启合计行
 			,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-			,id:"workers"
+			,id:"keepers"
 			,title:"列表"
 			,height: 'full-100'
 			,cols: [[
-				{type:'checkbox', align:'center', fixed: 'left'}
-				,{field:'Idx', title: '编号', align:'center', hide: false}
+				//{type:'checkbox', align:'center', fixed: 'left'}
+				{field:'Id', title: '编号', align:'center', hide: false}
 				,{field:'Name', title: '姓名', align:'center', hide: false}
-				,{field:'Sex', title: '性别', align:'center'}
-				,{field:'Age', title: '年龄', align:'center'} 
 				//,{field:'ChinaId', title: '证件号码', align:'center', width: '20%', minWidth: 100}
 				,{field:'Phone', title: '联系方式', align:'center'}
-				,{field:'Class', title: '类型', align:'center'}
+				,{field:'Community', title: '归属', align:'center'}
 			]]
 			,parseData: function(res){ //res 即为原始返回的数据
 				if (res.code == 0) {
-					for(var tableitem of res.data[0]) {
-						console.log(tableitem)
-						tableitem["Sex"] = GetSex(tableitem.ChinaId)
-						tableitem["Age"] = GetAge(tableitem.ChinaId)
-					}
 					return {
 					  "code": res.code, //解析接口状态
 					  "msg": res.message, //解析提示文本
@@ -96,12 +81,6 @@
 				if (res.code == 1001) {
 					parent.location.href = "../../index.html";
 				}
-				return {
-				  "code": res.code, //解析接口状态
-				  "msg": res.message, //解析提示文本
-				  "count": res.count, //解析数据长度
-				  "data": [] //解析数据列表
-				};
 			}
 			,done: function(res, curr, count){
 				
@@ -110,11 +89,7 @@
 		
 		table.on('rowDouble(test)', function(obj){
 			console.log(obj.data)
-			
-			var data = new Array();
-			data[0] = obj.data;
-			
-			parent.DoSelectWorker(obj.data)
+			parent.DoSelectKeeper(obj.data)
 			var index = parent.layer.getFrameIndex(window.name);
 			parent.layer.close(index);
 		});
@@ -141,39 +116,12 @@
 				where["class"] = classtype;
 			}			
 			
-            table.reload('workers', {
+            table.reload('keepers', {
 				where: where
 			})
         });
     });
 	
-	function init_select() {		
-		$.ajax({
-			url: BasePath + "/getworkerclass",
-			type:"post",
-			dataType:"json",
-			headers: {'Access-Control-Allow-Origin' : Domain,},
-			xhrFields: {withCredentials: true},
-			success:function (data){
-				if (data.code==0){
-					console.log(data.data[0])
-					for (var i=0;i<data.data[0].length;i++) {
-						console.log(data.data[0][i]["Class"])
-						$("#queryclass").append(new Option(data.data[0][i]["Class"], data.data[0][i]["Class"]))
-					}
-					layui.form.render('select');	
-				}
-			}
-		});
-	}
-	
-	function DoAssign() {
-		let checkStatus = layui.table.checkStatus('workers')
-		, data = checkStatus.data;
-		parent.DoSelectWorker(data)
-		var index = parent.layer.getFrameIndex(window.name);
-		parent.layer.close(index);
-	}
 </script>
 </body>
 </html>
