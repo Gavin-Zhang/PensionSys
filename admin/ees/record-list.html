@@ -20,7 +20,7 @@
             <span class='layui-breadcrumb'>
                 <a href=''>首页</a>
 				<a href=''>敬老院拓展服务试点服务</a>
-				<a href=''>服务对象管理</a>
+				<a href=''>服务记录管理</a>
                 <a>
                     <cite>服务记录</cite></a>
             </span>
@@ -113,17 +113,29 @@
 					,{field:'Phone', title: '联系电话', align:'center'}
 					,{field:'Addr', title: '地址', align:'center'}
 					,{field:'ServiceTime', title: '服务时间', align:'center'}
+					,{field:'Duration', title: '服务时长(小时)', align:'center'}
 					,{title: '操作', align:'center', toolbar: '#fieldtool', fixed: 'right'}
 				]]
 				,parseData: function(res){ //res 即为原始返回的数据
 					if (res.code == 0) {
 
 						for(var tableitem of res.data[0]) {
-							tableitem['ServiceTime'] = formattime(tableitem['BeginTime']) + ' - ' + formattime(tableitem['EndTime']);
+							var beginTime = formattime(tableitem['BeginTime']);
+							var bt = new Date(beginTime.replace(/-/g, '/')).getTime();
+							var endTime = formattime(tableitem['EndTime']);
+							var et = new Date(endTime.replace(/-/g, '/')).getTime();
+							
+							console.log(et - bt);
+							var diff = ((et - bt) / (1000 * 3600)).toFixed(1);
+							console.log(diff)
+							
+							
+							tableitem['ServiceTime'] = beginTime + ' - ' + endTime;
 							tableitem['Sex'] = GetSex(tableitem['ChinaId'])
 							tableitem['Age'] = GetAge(tableitem['ChinaId'])
-							tableitem['begintime'] = formattime(tableitem['BeginTime'])
-							tableitem['endtime'] = formattime(tableitem['EndTime'])
+							tableitem['begintime'] = beginTime
+							tableitem['endtime'] = endTime
+							tableitem['Duration'] = diff
 							console.log(tableitem)
 						}
 
