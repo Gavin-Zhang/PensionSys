@@ -260,9 +260,13 @@
 "				<font class='layui-font-16'>\r\n" +
 "					{{# if(d.Incapacity == '正常'){ }}●<b>正常</b>{{#  } else { }}○正常{{#  } }}\r\n" + 
 "					<font class='layui-font-16'>\r\n" +
-"					{{# if(d.Incapacity == '半失能'){ }}●<b>半失能</b>{{#  } else { }}○半失能{{#  } }}\r\n" + 
+"					{{# if(d.Incapacity == '轻度失能'){ }}●<b>轻度失能</b>{{#  } else { }}○轻度失能{{#  } }}\r\n" + 
 "					<font class='layui-font-16'>\r\n" +
-"					{{# if(d.Incapacity == '失能'){ }}●<b>失能</b>{{#  } else { }}○失能{{#  } }}\r\n" + 
+"					{{# if(d.Incapacity == '中度失能'){ }}●<b>中度失能</b>{{#  } else { }}○中度失能{{#  } }}\r\n" + 
+"					<font class='layui-font-16'>\r\n" +
+"					{{# if(d.Incapacity == '重度失能'){ }}●<b>重度失能</b>{{#  } else { }}○重度失能{{#  } }}\r\n" + 
+"					<font class='layui-font-16'>\r\n" +
+"					{{# if(d.Incapacity == '待评估'){ }}●<b>待评估</b>{{#  } else { }}○待评估{{#  } }}\r\n" + 
 "				</font>	\r\n" +
 "			</td>\r\n" +
 "		</tr>\r\n" +
