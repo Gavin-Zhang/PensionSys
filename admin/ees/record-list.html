@@ -107,11 +107,13 @@
 				,cols: [[
 					//{type:'radio', align: 'center'}
 					{field:'Idx', title: '工单编号', align:'center', minWidth: 200, hide: false}
+					,{field:'Date', title: '日期', align:'center', hide: false}
 					,{field:'Name', title: '老人姓名', align:'center', hide: false}
 					,{field:'Sex', title: '性别', align:'center'}
 					,{field:'Age', title: '年龄', align:'center'}
 					,{field:'Phone', title: '联系电话', align:'center'}
 					,{field:'Addr', title: '地址', align:'center'}
+					,{field:'Service', title: '服务内容', align:'center'}
 					,{field:'ServiceTime', title: '服务时间', align:'center'}
 					,{field:'Duration', title: '服务时长(小时)', align:'center'}
 					,{title: '操作', align:'center', toolbar: '#fieldtool', fixed: 'right'}
@@ -136,6 +138,7 @@
 							tableitem['begintime'] = beginTime
 							tableitem['endtime'] = endTime
 							tableitem['Duration'] = diff
+							tableitem['Date'] = beginTime.substr(0,10)
 							console.log(tableitem)
 						}
 
