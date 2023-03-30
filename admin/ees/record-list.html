@@ -40,6 +40,8 @@
                                     <input type='text' name='name' id='name' placeholder='老人姓名' autocomplete='off' class='layui-input'></div>
 								<div class='layui-input-inline layui-show-xs-block'>
                                     <input type='text' name='phone' id='phone' placeholder='联系电话' autocomplete='off' class='layui-input'></div>
+								<div class="layui-input-inline">
+									<input type="text" name='yearmonth' id='yearmonth' placeholder='年月' autocomplete='off' class='layui-input' placeholder="yyyy-MM"></div>
 								<div class='layui-input-inline layui-show-xs-block'>
                                     <button class='layui-btn' type='button' lay-submit='' lay-filter='sreach'>
                                         <i class='layui-icon'>&#xe615;</i></button>
@@ -86,6 +88,11 @@
 				laydate.render({
 					elem: '#end' //指定元素
 				});
+				
+			laydate.render({
+				elem: '#yearmonth'
+				,type: 'month'
+			});
 
 			$.ajaxSetup({
 				headers: {'Access-Control-Allow-Origin' : Domain,},
@@ -167,8 +174,7 @@
 			});
 			
 			
-			
-			var sreachdata = {name:'', phone:'', orderidx:''}
+			var sreachdata = {name:'', phone:'', orderidx:'', yearmonth:''}
 			form.on('submit(sreach)', function(data){
 				Query(sreachdata)
 			});
@@ -184,6 +190,11 @@
 				}
 			});
 			$("input[name='phone']").keypress(function (e) {
+				if (e.which == 13) {
+					Query(sreachdata)
+				}
+			});
+			$("input[name='yearmonth']").keypress(function (e) {
 				if (e.which == 13) {
 					Query(sreachdata)
 				}
@@ -212,8 +223,10 @@
 			var orderidx = $('#orderidx').val()
 			var name = $('#name').val()
 			var phone = $('#phone').val()
+			var yearmonth = $('#yearmonth').val();
 
-			if (sreachdata.name === name && sreachdata.phone===phone && sreachdata.orderidx===orderidx) {
+			if (sreachdata.name === name && sreachdata.phone===phone 
+				&& sreachdata.orderidx===orderidx && sreachdata.yearmonth===yearmonth) {
 				return
 			}
 			
@@ -234,6 +247,12 @@
 				sreachdata.orderidx = orderidx;
 				if (sreachdata.orderidx !== '') {
 					where['orderidx'] = orderidx;
+				}
+			}
+			if (sreachdata.yearmonth !== yearmonth) {
+				sreachdata.yearmonth = yearmonth;
+				if (sreachdata.yearmonth !== '') {
+					where['yearmonth'] = yearmonth;
 				}
 			}
 			layui.table.reload('recordtable', {where: where})
