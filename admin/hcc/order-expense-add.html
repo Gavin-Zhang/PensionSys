@@ -153,14 +153,14 @@
 							<label for="keepername" class="layui-form-label">
 								<span class="x-red">*</span>管家</label>
 							<div class="layui-input-block">
-								<input type="text" id="keepername" name="keepername" lay-verify="required" required="" disabled="disabled" class="layui-input">
+								<input type="text" id="keepername" name="keepername" required="" disabled="disabled" class="layui-input">
 							</div>
 						</div>
 						<div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
 							<label for="keeperphone" class="layui-form-label">
 								<span class="x-red">*</span>联系电话</label>
 							<div class="layui-input-block">
-								<input type="text" id="keeperphone" name="keeperphone" lay-verify="required" required="" disabled="disabled" class="layui-input">
+								<input type="text" id="keeperphone" name="keeperphone" required="" disabled="disabled" class="layui-input">
 							</div>
 						</div>
 						<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
@@ -266,6 +266,9 @@ Date.prototype.Format = function(fmt) {
         form.on('submit(add)', function(data){
 			data.field["consumptiontype"] = "自费";
 			console.log(data.field)
+			console.log(JSON.stringify(data.field));
+			
+			return;
 			var back;
             $.ajax({
                 type: "post",
@@ -278,7 +281,7 @@ Date.prototype.Format = function(fmt) {
 					back = data
                     if(data.code==0){
 						console.log("data.code==0")
-                        layer.msg("创建完成", {icon: 6,time:2000},function () {
+                        layer.msg("创建完成", {icon: 6,time:1000},function () {
                             window.parent.location.reload();
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
@@ -402,7 +405,7 @@ Date.prototype.Format = function(fmt) {
 		console.log(data)
 		form.val("orderadd", {
 			service: data["Name"],
-			charge: data["Price"],
+			//charge: data["Price"],
 		})
 	}
 	
