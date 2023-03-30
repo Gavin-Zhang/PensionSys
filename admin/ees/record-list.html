@@ -75,6 +75,7 @@
 				var layer = layui.layer;
 				var form = layui.form;
 				var dropdown = layui.dropdown //下拉菜单
+				var $ = layui.jquery;
 
 				//执行一个laydate实例
 				laydate.render({
@@ -165,36 +166,27 @@
 				}
 			});
 			
+			
+			
 			var sreachdata = {name:'', phone:'', orderidx:''}
 			form.on('submit(sreach)', function(data){
-				var orderidx = $('#orderidx').val()
-				var name = $('#name').val()
-				var phone = $('#phone').val()
-
-				if (sreachdata.name === name && sreachdata.phone===phone && sreachdata.orderidx===orderidx) {
-					return
+				Query(sreachdata)
+			});
+			
+			$("input[name='orderidx']").keypress(function (e) {
+				if (e.which == 13) {
+					Query(sreachdata)
 				}
-				
-				var where = {};
-				if (sreachdata.name !== name) {
-					sreachdata.name = name;
-					if (sreachdata.name !== '') {
-						where['name'] = name;
-					}
+			});
+			$("input[name='name']").keypress(function (e) {
+				if (e.which == 13) {
+					Query(sreachdata)
 				}
-				if (sreachdata.phone !== phone) {
-					sreachdata.phone = phone;
-					if (sreachdata.phone !== '') {
-						where['phone'] = phone;
-					}
+			});
+			$("input[name='phone']").keypress(function (e) {
+				if (e.which == 13) {
+					Query(sreachdata)
 				}
-				if (sreachdata.orderidx !== orderidx) {
-					sreachdata.orderidx = orderidx;
-					if (sreachdata.orderidx !== '') {
-						where['orderidx'] = orderidx;
-					}
-				}
-				table.reload('orders', {where: where})
 			});
 			
 			table.on('tool(recordlist)', function(obj){
@@ -215,6 +207,37 @@
 				}
 			});
 		});
+		
+		function Query(sreachdata) {
+			var orderidx = $('#orderidx').val()
+			var name = $('#name').val()
+			var phone = $('#phone').val()
+
+			if (sreachdata.name === name && sreachdata.phone===phone && sreachdata.orderidx===orderidx) {
+				return
+			}
+			
+			var where = {};
+			if (sreachdata.name !== name) {
+				sreachdata.name = name;
+				if (sreachdata.name !== '') {
+					where['name'] = name;
+				}
+			}
+			if (sreachdata.phone !== phone) {
+				sreachdata.phone = phone;
+				if (sreachdata.phone !== '') {
+					where['phone'] = phone;
+				}
+			}
+			if (sreachdata.orderidx !== orderidx) {
+				sreachdata.orderidx = orderidx;
+				if (sreachdata.orderidx !== '') {
+					where['orderidx'] = orderidx;
+				}
+			}
+			layui.table.reload('recordtable', {where: where})
+		}
 
 		function onAddOrder() {
 			layer.open({

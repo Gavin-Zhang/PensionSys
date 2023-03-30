@@ -181,30 +181,24 @@
 		
 		//监听提交
         form.on('submit(sreach)', function(data){
-			var chinaid = $('#chinaid').val()
-			var name = $('#username').val()
-			var phone = $('#phone').val()
-			
-			if (name=="" && phone=="" && chinaid=="") {
-				table.reload('clients', {where:{}})
-				return;
-			}
-			
-			var where = {};
-			if (name != "") {
-				where["name"] = name;
-			}
-			if (phone != "") {
-				where["phone"] = phone;
-			}
-			if (chinaid != "") {
-				where["chinaid"] = chinaid;
-			}			
-			
-            table.reload('clients', {
-				where: where
-			})
+			Query()
         });
+		
+		$("input[name='username']").keypress(function (e) {
+			if (e.which == 13) {
+				Query()
+			}
+		});
+		$("input[name='phone']").keypress(function (e) {
+			if (e.which == 13) {
+				Query()
+			}
+		});
+		$("input[name='chinaid']").keypress(function (e) {
+			if (e.which == 13) {
+				Query()
+			}
+		});
 		
 		form.verify({
 			chinaid: function(value, item){
@@ -249,6 +243,32 @@
 			}
 		});
     });
+	
+	function Query() {
+		var chinaid = $('#chinaid').val()
+		var name = $('#username').val()
+		var phone = $('#phone').val()
+		
+		if (name=="" && phone=="" && chinaid=="") {
+			layui.table.reload('clients', {where:{}})
+			return;
+		}
+		
+		var where = {};
+		if (name != "") {
+			where["name"] = name;
+		}
+		if (phone != "") {
+			where["phone"] = phone;
+		}
+		if (chinaid != "") {
+			where["chinaid"] = chinaid;
+		}			
+		
+		layui.table.reload('clients', {
+			where: where
+		})
+	}
 	
 	function onAddClient() {
 		layer.open({

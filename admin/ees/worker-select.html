@@ -123,31 +123,52 @@
 		
 		//监听提交
         form.on('submit(sreach)', function(data){
-			var name = $('#queryname').val()
-			var phone = $('#queryphone').val()
-			var classtype = $('#queryclass').val()
-			
-			if (name=="" && phone=="" && classtype=="") {
-				table.reload('workers', {where:{}})
-				return;
-			}
-			
-			var where = {};
-			if (name != "") {
-				where["name"] = name;
-			}
-			if (phone != "") {
-				where["phone"] = phone;
-			}
-			if (classtype != "") {
-				where["class"] = classtype;
-			}			
-			
-            table.reload('workers', {
-				where: where
-			})
+			Query()
         });
+		
+		$("input[name='queryname']").keypress(function (e) {
+			if (e.which == 13) {
+				Query()
+			}
+		});
+		$("input[name='queryphone']").keypress(function (e) {
+			if (e.which == 13) {
+				Query()
+			}
+		});
+		$("input[name='queryclass']").keypress(function (e) {
+			if (e.which == 13) {
+				Query()
+			}
+		});
+		
     });
+	
+	function Query() {
+		var name = $('#queryname').val()
+		var phone = $('#queryphone').val()
+		var classtype = $('#queryclass').val()
+		
+		if (name=="" && phone=="" && classtype=="") {
+			layui.table.reload('workers', {where:{}})
+			return;
+		}
+		
+		var where = {};
+		if (name != "") {
+			where["name"] = name;
+		}
+		if (phone != "") {
+			where["phone"] = phone;
+		}
+		if (classtype != "") {
+			where["class"] = classtype;
+		}			
+		
+		layui.table.reload('workers', {
+			where: where
+		})
+	}
 	
 	function init_select() {		
 		$.ajax({

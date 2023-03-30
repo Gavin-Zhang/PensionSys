@@ -46,6 +46,7 @@
         var table = layui.table
 		var laydate = layui.laydate;
         var form = layui.form;
+		var $ = layui.jquery;
 		
 		$.ajaxSetup({
 			headers: {'Access-Control-Allow-Origin' : Domain,},
@@ -108,34 +109,50 @@
 		
 		//监听提交
         form.on('submit(sreach)', function(data){
-			console.log("on sreach")
-			var name = $('#queryname').val()
-			var phone = $('#queryphone').val()
-			var chinaid = $('#querychinaid').val()
-			
-			if (name=="" && phone=="" && chinaid=="") {
-				table.reload('clients', {where:{}})
-				return;
-			}
-			
-			var where = {};
-			if (name != "") {
-				where["name"] = name;
-			}
-			if (phone != "") {
-				where["phone"] = phone;
-			}
-			if (chinaid != "") {
-				where["chinaid"] = chinaid;
-			}
-			console.log(where)
-			
-			
-            table.reload('clients', {
-				where: where
-			})
+			Query();
         });
+		$("input[name='queryname']").keypress(function (e) {
+			if (e.which == 13) {
+				Query()
+			}
+		});
+		$("input[name='queryphone']").keypress(function (e) {
+			if (e.which == 13) {
+				Query()
+			}
+		});
+		$("input[name='querychinaid']").keypress(function (e) {
+			if (e.which == 13) {
+				Query()
+			}
+		});
     });
+	
+	function Query() {
+		var name = $('#queryname').val()
+		var phone = $('#queryphone').val()
+		var chinaid = $('#querychinaid').val()
+		
+		if (name=="" && phone=="" && chinaid=="") {
+			layui.table.reload('clients', {where:{}})
+			return;
+		}
+		
+		var where = {};
+		if (name != "") {
+			where["name"] = name;
+		}
+		if (phone != "") {
+			where["phone"] = phone;
+		}
+		if (chinaid != "") {
+			where["chinaid"] = chinaid;
+		}
+
+		layui.table.reload('clients', {
+			where: where
+		})
+	}
 </script>
 </body>
 </html>
