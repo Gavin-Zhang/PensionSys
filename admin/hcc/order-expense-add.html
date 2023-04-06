@@ -268,7 +268,6 @@ Date.prototype.Format = function(fmt) {
 			console.log(data.field)
 			console.log(JSON.stringify(data.field));
 			
-			return;
 			var back;
             $.ajax({
                 type: "post",
@@ -405,7 +404,7 @@ Date.prototype.Format = function(fmt) {
 		console.log(data)
 		form.val("orderadd", {
 			service: data["Name"],
-			//charge: data["Price"],
+			charge: data["Price"],
 		})
 	}
 	

@@ -79,6 +79,13 @@
 			{{ d.OrderStatus }}
 		{{#  } }}
 	</script>
+	<script type="text/html" id="ConsumptionTypeTpl">
+		{{#  if(d.ConsumptionType === '自费'){ }}
+			<span style="color: #009688;">{{ d.ConsumptionType }}</span>
+		{{#  } else { }}
+			<span style="color: #FFB800;">{{ d.ConsumptionType }}</span>
+		{{#  } }}
+	</script>
     <script>
 		layui.use(['laydate', 'form', 'table', 'layer', 'dropdown'],
 			function() {
@@ -116,21 +123,23 @@
 				,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
 				,id:"orders"
 				,title:"列表"
+				,even:true
 				,limits:[10,20,30,50,100,150,200,300,400,500,1000]
-				,cols: [[
+				,cols: [[	
 					//{type:'radio', align: 'center'}
-					{field:'Idx', title: '工单编号', align:'center', minWidth: 200, hide: false}
-					,{field:'OrderStatus', title: '工单状态', align:'center', minWidth: 100, templet:'#orderStatusTpl'}
-					,{field:'ConsumptionType', title: '消费类型', align:'center', minWidth: 100}
+					{field:'Idx', title: '工单编号', align:'center', hide: false}
+					,{field:'OrderStatus', title: '工单状态', align:'center', templet:'#orderStatusTpl'}
+					,{field:'ConsumptionType', title: '消费类型', align:'center', templet:'#ConsumptionTypeTpl'}
 					,{field:'Name', title: '老人姓名', align:'center', hide: false, style:'color: #00f;', event: 'onButtionName'}
-					,{field:'Phone', title: '联系电话', align:'center', minWidth: 110}
-					,{field:'Service', title: '服务项目', align:'center', minWidth: 150}
-					,{field:'ServiceTime', title: '预定时间', align:'center', minWidth: 170}
-					,{field:'Addr', title: '地址', align:'center', minWidth: 100}
-					,{field:'Community', title: '所属社区', align:'center', minWidth: 100}
-					,{field:'PaymentStatus', title: '支付状态', align:'center', minWidth: 100}
-					,{field:'Handler', title: '下单人', align:'center', minWidth: 100}
-					,{field:'Created', title: '下单时间', align:'center', minWidth: 170}
+					,{field:'Phone', title: '联系电话', align:'center', hide: true}
+					,{field:'Service', title: '服务项目', align:'center'}
+					,{field:'Cost', title: '费用', align:'center'}
+					,{field:'PaymentStatus', title: '支付状态', align:'center'}
+					,{field:'ServiceTime', title: '预定时间', align:'center', sort: true}
+					,{field:'Addr', title: '地址', align:'center'}
+					,{field:'Community', title: '所属社区', align:'center'}
+					,{field:'Handler', title: '下单人', align:'center', hide: true}
+					,{field:'Created', title: '下单时间', align:'center', hide: true}
 					,{title: '操作', align:'center', toolbar: '#fieldtool', minWidth: 250, fixed: 'right'}
 				]]
 				,parseData: function(res){ //res 即为原始返回的数据
@@ -145,6 +154,7 @@
 							tableitem["FinishTime"] = formattime(tableitem["FinishTime"]);
 							tableitem["Sex"] = GetSex(tableitem["ChinaId"])
 							tableitem["Age"] = GetAge(tableitem["ChinaId"])
+							tableitem["Cost"] = tableitem["Charge"] + tableitem["Fare"] + tableitem["HighRise"];
 						}
 
 						return {
@@ -201,7 +211,9 @@
 						,data: [{title: '工单分派', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-release"> </i>{{d.title}} </label>', id: 'assign'},
 								{title: '打印派工', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-print"> </i>{{d.title}} </label>', id: 'dispatch'},
 							    {title: '服务完成', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-form"> </i>{{d.title}} </label>', id: 'serivceover'},
-								{title: '工单结算', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-rmb"> </i>{{d.title}} </label>', id: 'settlement'}]
+								{title: '工单结算', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-rmb"> </i>{{d.title}} </label>', id: 'settlement'},
+								//{title: '工单取消', templet: '<label class="layui-font-12"> <i class="layui-icon layui-icon-close"> </i>{{d.title}} </label>', id: 'cancel'}
+							]
 						,click: function(menudata){
 							layui.sessionData("order-list", {key:"orderdata", value:data})
 							console.log(data.OrderStatus)
