@@ -143,7 +143,6 @@ Date.prototype.Format = function(fmt) {
   </select>
 </script>
 <script>
-
 	var form;
     layui.use(['element','layer', 'form', 'table', 'laydate'], function(){
         var  $ = layui.jquery;//jquery
@@ -274,6 +273,27 @@ Date.prototype.Format = function(fmt) {
 			return false;
         });
 		
+		$(document).keyup(function(event){
+			if (event.keyCode == 27) {
+			
+				var childFrame = window.frames[0];
+				console.log(childFrame);
+				
+				var len = window.frames.length;
+				if (len == 0) {
+					// 获得frame索引
+					var index = parent.layer.getFrameIndex(window.name);
+					//关闭当前frame
+					parent.layer.close(index);
+				} else {
+					var childFrame = window.frames[len-1];
+					// 获得frame索引
+					var index = layer.getFrameIndex(childFrame.name);
+					//关闭当前frame
+					layer.close(index);
+				}
+			}
+		})
     })
 	
 	function onSelClient() {

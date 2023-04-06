@@ -146,7 +146,7 @@
   <!--endprint-->
 	</body>
 	<script>
-		layui.use('laytpl', function(){
+		layui.use(['laytpl','layer'], function(){
 			const html = window.document.body.innerHTML; 
 			const start = "<!--startprint-->"; //开始打印标识字符串有17个字符
 			const end = "<!--endprint-->"; //结束打印标识字符串
@@ -158,6 +158,29 @@
 			setTimeout(() => {
 				var index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
+			})
+			
+			var $ = layui.jquery;
+			$(document).keyup(function(event){
+				if (event.keyCode == 27) {
+				
+					var childFrame = window.frames[0];
+					console.log(childFrame);
+					
+					var len = window.frames.length;
+					if (len == 0) {
+						// 获得frame索引
+						var index = parent.layer.getFrameIndex(window.name);
+						//关闭当前frame
+						parent.layer.close(index);
+					} else {
+						var childFrame = window.frames[len-1];
+						// 获得frame索引
+						var index = layer.getFrameIndex(childFrame.name);
+						//关闭当前frame
+						layer.close(index);
+					}
+				}
 			})
 		})
 	</script>
