@@ -42,14 +42,22 @@
                                     <input type='text' name='phone' id='phone' placeholder='联系电话' autocomplete='off' class='layui-input'></div>
 								<div class="layui-input-inline">
 									<input type="text" name='yearmonth' id='yearmonth' placeholder='年月' autocomplete='off' class='layui-input' placeholder="yyyy-MM"></div>
+								<div class="layui-input-inline">
+									<input type="text" name='yearmonth' id='yearmonthday' placeholder='年月日' autocomplete='off' class='layui-input' placeholder="yyyy-MM-dd"></div>
+								<div class='layui-input-inline layui-show-xs-block'>
+                                    <button class='layui-btn' type='button' lay-submit='' lay-filter='clean'>
+                                        <i class='layui-icon'>&#xe639;</i></button>
+                                </div>
 								<div class='layui-input-inline layui-show-xs-block'>
                                     <button class='layui-btn' type='button' lay-submit='' lay-filter='sreach'>
                                         <i class='layui-icon'>&#xe615;</i></button>
                                 </div>
+								<!--
 								<div class='layui-input-inline layui-show-xs-block' style='float:right' >
                                     <button class='layui-btn' type='button' onclick='PrintRecord()'>
                                         <i class='layui-icon'>&#xe66d;</i>打印服务记录登记表</button>
                                 </div>
+								-->
                             </form>
 					<table class='layui-hide' id='recordlist' lay-filter='recordlist'></table>
                     </div>
@@ -70,28 +78,43 @@
 		<a class='layui-btn layui-btn-primary layui-btn-xs' lay-event='look'>查看</a>
 	</script>
     <script>
-		layui.use(['laydate', 'form', 'table', 'layer', 'dropdown'],
-			function() {
-				var laydate = layui.laydate;
-				var table = layui.table;
-				var layer = layui.layer;
-				var form = layui.form;
-				var dropdown = layui.dropdown //下拉菜单
-				var $ = layui.jquery;
+		layui.use(['laydate', 'form', 'table', 'layer', 'dropdown'], function() {
+			var laydate = layui.laydate;
+			var table = layui.table;
+			var layer = layui.layer;
+			var form = layui.form;
+			var dropdown = layui.dropdown //下拉菜单
+			var $ = layui.jquery;
+			var sreachdata = {name:'', phone:'', orderidx:'', yearmonth:''}
 
-				//执行一个laydate实例
-				laydate.render({
-					elem: '#start' //指定元素
-				});
+			//执行一个laydate实例
+			laydate.render({
+				elem: '#start' //指定元素
+			});
 
-				//执行一个laydate实例
-				laydate.render({
-					elem: '#end' //指定元素
-				});
+			//执行一个laydate实例
+			laydate.render({
+				elem: '#end' //指定元素
+			});
 				
 			laydate.render({
 				elem: '#yearmonth'
 				,type: 'month'
+				,done: function(value, date){
+					console.log(value);
+					$('#yearmonthday').val("")
+					Query(sreachdata)
+				}
+			});
+			
+			laydate.render({
+				elem: '#yearmonthday'
+				,format: 'yyyy-MM-dd'
+				,done: function(value, date){
+					console.log(value);
+					$('#yearmonth').val("")
+					Query(sreachdata)
+				}
 			});
 
 			$.ajaxSetup({
@@ -172,11 +195,17 @@
 
 				}
 			});
-			
-			
-			var sreachdata = {name:'', phone:'', orderidx:'', yearmonth:''}
+
 			form.on('submit(sreach)', function(data){
 				Query(sreachdata)
+			});
+			
+			form.on("submit(clean)", function(data){
+				$('#orderidx').val("");
+				$('#name').val("");
+				$('#phone').val("");
+				$('#yearmonth').val("");
+				$('#yearmonthday').val("");
 			});
 			
 			$("input[name='orderidx']").keypress(function (e) {
@@ -199,6 +228,12 @@
 					Query(sreachdata)
 				}
 			});
+			$("input[name='yearmonthday']").keypress(function (e) {
+				if (e.which == 13) {
+					Query(sreachdata)
+				}
+			});
+			
 			
 			table.on('tool(recordlist)', function(obj){
 				var data = obj.data //获得当前行数据
@@ -246,37 +281,42 @@
 			var name = $('#name').val()
 			var phone = $('#phone').val()
 			var yearmonth = $('#yearmonth').val();
+			var yearmonthday = $('#yearmonthday').val();
 
 			if (sreachdata.name === name && sreachdata.phone===phone 
-				&& sreachdata.orderidx===orderidx && sreachdata.yearmonth===yearmonth) {
+				&& sreachdata.orderidx===orderidx 
+				&& sreachdata.yearmonth===yearmonth
+				&& sreachdata.yearmonthday===yearmonthday) {
 				return
 			}
 			
 			var where = {};
-			if (sreachdata.name !== name) {
-				sreachdata.name = name;
-				if (sreachdata.name !== '') {
-					where['name'] = name;
-				}
+			
+			sreachdata.name = name;
+			if (sreachdata.name !== '') {
+				where['name'] = name;
 			}
-			if (sreachdata.phone !== phone) {
-				sreachdata.phone = phone;
-				if (sreachdata.phone !== '') {
-					where['phone'] = phone;
-				}
+			
+			sreachdata.phone = phone;
+			if (sreachdata.phone !== '') {
+				where['phone'] = phone;
 			}
-			if (sreachdata.orderidx !== orderidx) {
-				sreachdata.orderidx = orderidx;
-				if (sreachdata.orderidx !== '') {
-					where['orderidx'] = orderidx;
-				}
+
+			sreachdata.orderidx = orderidx;
+			if (sreachdata.orderidx !== '') {
+				where['orderidx'] = orderidx;
 			}
-			if (sreachdata.yearmonth !== yearmonth) {
-				sreachdata.yearmonth = yearmonth;
-				if (sreachdata.yearmonth !== '') {
-					where['yearmonth'] = yearmonth;
-				}
+
+			sreachdata.yearmonth = yearmonth;
+			if (sreachdata.yearmonth !== '') {
+				where['yearmonth'] = yearmonth;
 			}
+			
+			sreachdata.yearmonthday = yearmonthday;
+			if (sreachdata.yearmonthday !== '') {
+				where['yearmonthday'] = yearmonthday;
+			}
+
 			layui.table.reload('recordtable', {where: where})
 		}
 
