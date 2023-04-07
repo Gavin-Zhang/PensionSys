@@ -282,6 +282,8 @@
 			var phone = $('#phone').val()
 			var yearmonth = $('#yearmonth').val();
 			var yearmonthday = $('#yearmonthday').val();
+			
+			console.log(1);
 
 			if (sreachdata.name === name && sreachdata.phone===phone 
 				&& sreachdata.orderidx===orderidx 
@@ -290,6 +292,7 @@
 				return
 			}
 			
+			console.log(2);
 			var where = {};
 			
 			sreachdata.name = name;
@@ -317,6 +320,7 @@
 				where['yearmonthday'] = yearmonthday;
 			}
 
+			console.log(where);
 			layui.table.reload('recordtable', {where: where})
 		}
 
