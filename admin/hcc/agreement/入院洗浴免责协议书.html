@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>入院洗浴免责协议书</title>
+	<meta charset="UTF-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="format-detection" content="telephone=no">
+
+	<link rel="stylesheet" href="../../css/font.css">
+	<link rel="stylesheet" href="../../css/index.css">
+	<script src="../../lib/layui/layui.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../../js/index.js"></script>
+	<script type="text/javascript" src="../../../js/base.js"></script>
+	<script type="text/javascript" src="../../../js/printtpl.js"></script>
+
+</head>
+<body>
+	<style>
+		.layui-font-fs-32 {
+		  font-family: "仿宋_GB2312", "仿宋", "FangSong";
+		  font-size: 22px;
+		}
+		.layui-font-ht-32 {
+		  font-family: "黑体", sans-serif !important;
+		  font-size: 18px;
+		}
+	</style>
+	<p id="index" style="text-align: right;"></p>
+	</br>
+	<div class="layui-container layui-font-ht-32">
+        <h1 style="text-align: center;">振安区五龙背镇居家和社区养老服务中心</h1>
+        <h1 style="text-align: center;">入院洗浴免责协议书</h1>
+    </div>
+	</br>
+	</br>
+	<div class="layui-font-fs-32">
+		<p style="text-indent: 2em;">振安区五龙背镇居家和社区养老服务中心（以下简称“甲方”）与服务对象（以下简称“乙方”），在同意共同遵守《五龙背镇居家和社区养老实施方案》的前提下，就有关居家养老服务的事宜达成以下协议。乙方在本协议上签名即视为乙方已知悉并理解本协议条款，并同意受其约束。</p>
+		</br>
+		<p>一、服务内容</p>
+		</br>
+		<p style="text-indent: 2em;">第一条 甲方为乙方提洗浴的场地、设备，按照预约时间为乙方提供洗浴服务。</p>
+		<p style="text-indent: 2em;">第二条 甲方应保证洗浴的场地、设备符合相关的卫生、安全和质量标准。</p>
+		<p style="text-indent: 2em;">第三条 甲方应根据乙方的身体状况和需求，合理安排服务时间和方式，尊重乙方的意愿和隐私，保护乙方的人格尊严。</p>
+		</br>
+		<p>二、免责条款</p>
+		</br>
+		<p style="text-indent: 2em;">第一条 乙方为自愿请求入院洗浴服务，洗浴过程中需至少有一名成年家属陪同，否者甲方有权终止服务。</p>
+		<p style="text-indent: 2em;">第二条 乙方在使用甲方提供的洗浴服务前，应如实告知甲方自己的身体状况和特殊需求，如有过敏、心脏病、高血压等疾病或不适症状，应提前告知甲方，并出示医生证明或相关证件。</p>
+		<p style="text-indent: 2em;">第三条 乙方在使用甲方提供的洗浴服务过程中，如因自身原因或不可抗力因素导致身体不适、受伤或其他意外事故，由乙方自行承担责任和后果，甲方不承担任何法律责任。但甲方应尽力协助乙方进行紧急救助和处理。</p>
+		</br>
+		<p>三、争议解决</p>
+		</br>
+		<p style="text-indent: 2em;">第一条 本协议由双方签字或盖章后生效，有效期为自签订之日起至乙方使用甲方提供的洗浴服务终止之时止。</p>
+		<p style="text-indent: 2em;">第二条 本协议未尽事宜，双方可另行签订补充协议，补充协议与本协议具有同等法律效力。</p>
+		</br>
+		<p>四、其他条款</p>
+		</br>
+		<p style="text-indent: 2em;">1. 本协议一式两份，甲乙双方各执一份，具有同等法律效力。</p>
+		<p style="text-indent: 2em;">2. 本协议的任何修改、变更或解除，均须经双方书面同意，并签署相关文件。</p>
+		</br>
+		</br>
+		</br>
+		</br>
+		</br>
+		</br>
+		<p id="myid" style="text-align: right;">服务单号：</p>
+		</br>
+		</br>
+		</br>
+		</br>
+		<p style="text-align: right;">甲方签名(公章)：</p>
+		</br>
+		<p style="text-align: right;">____________________</p>
+		</br>
+		</br>
+		</br>
+		<p style="text-align: right;">乙方签名：</p>
+		</br>
+		<p style="text-align: right;">____________________</p>
+		</br>
+		</br>
+		</br>
+		<p style="text-align: right;">日期：____年____月____日</p>
+		</div>
+	 </div>
+  </div> 
+</body>
+
+	<script>
+		layui.use('laytpl', function(){
+			var laytpl = layui.laytpl;
+
+			data = layui.sessionData("order-list")["agreement"];
+			console.log(data)
+			var index = document.getElementById("index");
+			index.textContent = "No:" + data.Idx;
+			
+			var myid = document.getElementById("myid");
+			myid.textContent = myid.textContent + data.Idx;
+			
+			window.print();
+			setTimeout(() => {
+				var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+				parent.DoClose();
+			})
+
+		})
+	</script>
+
+</html>
