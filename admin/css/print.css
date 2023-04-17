@@ -1,0 +1,30 @@
+.borderSet {
+	border:1px solid #000000;
+	text-align:center;
+}
+.borderSetLeftAlign {
+	border:1px solid #000000;
+	text-align:left;
+}
+.borderSetLeftTopAlign {
+	border:1px solid #000000;
+	text-align:left;
+	vertical-align:top;
+}
+.titleSet {
+	text-align:center;
+	font-size: 30px;
+	font-weight: bold;
+}
+.indexSet {
+	text-align:right;
+	font-size: 15px;
+}
+
+@media print {
+	.print-content {
+		margin: 0.54cm 3cm 2.54cm 3cm; /* 上、右、下、左 */
+	}
+}
+
+
