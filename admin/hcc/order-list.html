@@ -140,7 +140,7 @@
 					,{field:'Community', title: '所属社区', align:'center'}
 					,{field:'Handler', title: '下单人', align:'center', hide: true}
 					,{field:'Created', title: '下单时间', align:'center', hide: true}
-					,{title: '操作', align:'center', toolbar: '#fieldtool', minWidth: 250, fixed: 'right'}
+					,{title:'操作', align:'center', toolbar: '#fieldtool', minWidth: 250, fixed: 'right'}
 				]]
 				,parseData: function(res){ //res 即为原始返回的数据
 					if (res.code == 0) {
@@ -246,13 +246,23 @@
 								});
 							}else if(menudata.id === 'agreement') {
 								layui.sessionData("order-list", {key:"agreement", value:data})
+								
+								var title = ""
+								if (data.Service == "院内温泉洗浴") {
+									title = "入院洗浴免责协议书"
+								} else if (data.Service == "上门助浴") {
+									title = "入户洗浴免责协议书"
+								} else {
+									return;
+								}
+								
 								layer.open({
 									type: 2,
 									area: ['1px', '1px'],
 									fixed: false, //不固定
 									maxmin: true,
-									title: "入院洗浴免责协议书",
-									content: 'agreement/入院洗浴免责协议书.html'
+									title: title,
+									content: 'agreement/' + title + '.html'
 								});
 							}else if(menudata.id === 'serivceover'){
 								if (data.OrderStatus === "待分派") {

@@ -20,3 +20,11 @@
 	text-align:right;
 	font-size: 15px;
 }
+
+@media print {
+  .print-content {
+    margin: 2.54cm 3.18cm 2.54cm 3.18cm; /* 上、右、下、左 */
+  }
+}
+
+
