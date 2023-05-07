@@ -11,7 +11,6 @@
 "		<col width='55'/>\r\n" +
 "		<col width='115'/>\r\n" +
 "		<col width='153'/>\r\n" +
-"		<col width='81'/>\r\n" +
 "		<tr height='30.00'>\r\n" +
 "			<td height='30.00' width='795' colspan='11' class='indexSet'>No: {{= d.Idx}}</td>\r\n" +
 "		</tr>\r\n" +
