@@ -333,7 +333,11 @@
 "	</tr>\r\n" +
 "	<tr height='58.33'>\r\n" +
 "		<td class='borderSet layui-font-16' height='58.33'>服务内容</td>\r\n" +
+"		{{# if(d.Count==='1'){ }}\r\n" +
 "		<td class='borderSetLeftAlign layui-font-16' colspan='5'><span>&nbsp;&nbsp;&nbsp;&nbsp;</span>{{= d.Service}}</td>\r\n" +
+"		{{#  } else { }}\r\n" +
+"		<td class='borderSetLeftAlign layui-font-16' colspan='5'><span>&nbsp;&nbsp;&nbsp;&nbsp;</span>{{= d.Service}} * {{= d.Count}}</td>\r\n" +
+"		{{#  } }}\r\n" +
 "	</tr>\r\n" +
 "	<tr height='58.33'>\r\n" +
 "		<td class='borderSet layui-font-16' height='408.33' rowspan='6'>服务人员</td>\r\n" +

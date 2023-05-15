@@ -88,7 +88,7 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-row layui-col-space1">
-					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
 						<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
 							<label for="service" class="layui-form-label">
 								<span class="x-red">*</span>服务项目</label>
@@ -103,7 +103,14 @@
 						</div>
 					</div>
 					
-					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+						<label for="count" class="layui-form-label"><span class="x-red">*</span>数量</label>
+						<div class="layui-input-block">
+							<input type="text" id="count" name="count" value="1" autocomplete="off" lay-verify="required|servercount" class="layui-input">
+						</div>
+					</div>
+					
+					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
 						<label for="servicetime" class="layui-form-label"><span class="x-red">*</span>预约时间</label>
 						<div class="layui-input-block">
 							<input type="text" class="layui-input" id="servicetime" name="servicetime" lay-verify="required">
@@ -113,6 +120,7 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-row layui-col-space1">
+					<input type="hidden", id="scharge", name="scharge", value="0">
 					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
 						<label for="charge" class="layui-form-label"></span>参考价格</label>
 						<div class="layui-input-block">
@@ -210,6 +218,22 @@ Date.prototype.Format = function(fmt) {
 			"handler": gloab.user["UserName"],
 			}
 		)
+		
+		form.verify({
+			servercount: function(value, item) {
+				if (!/ ^\d+$/.test(value)) {
+					return "数量必须为正整数"
+				}
+			}
+		})
+		
+		$(function() {
+			$("#count").on("input", function(e){
+				form.val("orderadd", {
+					charge: $('#scharge').val() * e.delegateTarget.value,
+				})
+			});
+		});
 
 
         //监听提交
@@ -324,10 +348,14 @@ Date.prototype.Format = function(fmt) {
 	}
 	
 	function DoSelectService(data) {
-		console.log(data)
+		var charge = 0;
+		if (!isNaN(data["Price"])) {
+			$('#scharge').val(data["Price"]);
+			charge = data["Price"] * $('#count').val();
+		}
 		form.val("orderadd", {
 			service: data["Name"],
-			charge: data["Price"],
+			charge: charge,
 		})
 	}
 	

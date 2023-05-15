@@ -85,7 +85,7 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-row layui-col-space1">
-					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
 						<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
 							<label for="service" class="layui-form-label">
 								<span class="x-red">*</span>服务项目</label>
@@ -100,7 +100,14 @@
 						</div>
 					</div>
 					
-					<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+						<label for="num" class="layui-form-label"></span>数量</label>
+						<div class="layui-input-block">
+							<input type="text" id="num" name="num" value="1" required="" lay-verify="" lay-verify="number" class="layui-input">
+						</div>
+					</div>
+					
+					<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
 						<label for="servicetime" class="layui-form-label"><span class="x-red">*</span>预约时间</label>
 						<div class="layui-input-block">
 							<input type="text" class="layui-input" id="servicetime" name="servicetime" lay-verify="required">
