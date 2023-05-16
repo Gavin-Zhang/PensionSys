@@ -221,7 +221,8 @@ Date.prototype.Format = function(fmt) {
 		
 		form.verify({
 			servercount: function(value, item) {
-				if (!/ ^\d+$/.test(value)) {
+				var regPos = /^[1-9]+[0-9]*$/;
+				if (!regPos.test(value)) {
 					return "数量必须为正整数"
 				}
 			}
