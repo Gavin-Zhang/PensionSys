@@ -445,11 +445,13 @@
 /////////////////////////////////////////////////////////////////////////////////////
 ;var ordertmpl = "\r\n\r\n" +
 "	<table width='972' border='0' cellpadding='0' cellspacing='0' style='page-break-after:always'>\r\n" +
-"		<col width='132.92'/>\r\n" +
-"		<col width='136.92'/>\r\n" +
-"		<col width='102.92'/>\r\n" +
-"		<col width='116.58'/>\r\n" +
-"		<col width='106.58'/>\r\n" +
+"		<col width='138.85'/>\r\n" +
+"		<col width='138.85'/>\r\n" +
+"		<col width='138.85'/>\r\n" +
+"		<col width='138.85'/>\r\n" +
+"		<col width='138.85'/>\r\n" +
+"		<col width='138.85'/>\r\n" +
+"		<col width='138.85'/>\r\n" +
 "			<td class='indexSet' height='24' width='972' colspan='7'>No:{{= d.order.Idx}}</td>\r\n" +
 "		</tr>\r\n" +
 "		<tr height='90'>\r\n" +
@@ -482,7 +484,7 @@
 "		</tr>\r\n" +
 "		<tr height='96.33'>\r\n" +
 "			<td class='borderSet layui-font-16'>备注</td>\r\n" +
-"			<td class='borderSetLeftTopAlign layui-font-16' colspan='5'>{{= d.order.Remarks}}</td>\r\n" +
+"			<td class='borderSet layui-font-16' colspan='5'>{{= d.order.Remarks}}</td>\r\n" +
 "		</tr>\r\n" +
 "		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16' height='386.64' rowspan='8'>服务及费用</td>\r\n" +
