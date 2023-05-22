@@ -444,18 +444,18 @@
 
 /////////////////////////////////////////////////////////////////////////////////////
 ;var ordertmpl = "\r\n\r\n" +
-"	<table width='793.83' border='0' cellpadding='0' cellspacing='0' style='page-break-after:always'>\r\n" +
+"	<table width='972' border='0' cellpadding='0' cellspacing='0' style='page-break-after:always'>\r\n" +
 "		<col width='132.92'/>\r\n" +
 "		<col width='136.92'/>\r\n" +
 "		<col width='102.92'/>\r\n" +
 "		<col width='116.58'/>\r\n" +
 "		<col width='106.58'/>\r\n" +
-"			<td class='indexSet' height='24' width='793.83' colspan='7'>No:{{= d.order.Idx}}</td>\r\n" +
+"			<td class='indexSet' height='24' width='972' colspan='7'>No:{{= d.order.Idx}}</td>\r\n" +
 "		</tr>\r\n" +
 "		<tr height='90'>\r\n" +
 "			<td class='titleSet' height='90' colspan='7'>五龙背镇居家与社区养老服务中心 - 服务工单</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16' height='193.32' rowspan='4'>\r\n" +
 "				{{# if(d.order.avatar == '') {}}\r\n" +
 "					照片\r\n" +
@@ -470,30 +470,30 @@
 "			<td class='borderSet layui-font-16'>年龄</td>\r\n" +
 "			<td class='borderSet layui-font-16'>{{= d.order.Age}}</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16'>联系电话</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='2'>{{= d.order.Phone}}</td>\r\n" +
 "			<td class='borderSet layui-font-16'>社区/村部</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='2'>{{= d.order.Community}}</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16'>服务地址</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='5'>{{= d.order.Addr}}</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='65.33'>\r\n" +
+"		<tr height='96.33'>\r\n" +
 "			<td class='borderSet layui-font-16'>备注</td>\r\n" +
 "			<td class='borderSetLeftTopAlign layui-font-16' colspan='5'>{{= d.order.Remarks}}</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16' height='386.64' rowspan='8'>服务及费用</td>\r\n" +
 "			<td class='borderSet layui-font-16'>服务项目</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='5'>{{= d.order.Service}}</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16'>服务时间</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='5'>{{= d.order.serviceBE}}</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16'>消费类型</td>\r\n" +
 "			<td class='borderSet layui-font-16'>{{= d.order.ConsumptionType}}</td>\r\n" +
 "			<td class='borderSet layui-font-16'>支付状态</td>\r\n" +
@@ -501,34 +501,34 @@
 "			<td class='borderSet layui-font-16'>支付方式</td>\r\n" +
 "			<td class='borderSet layui-font-16'>{{= d.order.PaymentType}}</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16' rowspan='5'>费用</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='3'>类别</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='2'>费用</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='3'>服务费用</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='2'>{{= d.order.Charge}}</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='3'>车费</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='2'>{{= d.order.Fare }}</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='3'>高层费用</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='2'>{{= d.order.HighRise }}</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='3'>合计</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='2'><b>{{= d.order.total }}</b></td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16' height='425' rowspan='9'>服务人员及评价</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='2'>姓名</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='2'>联系方式</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='2'>类型</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			{{# if(typeof  d.workers[0]==='undefined'){ }}\r\n" +
 "				<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
 "				<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
@@ -539,7 +539,7 @@
 "				<td class='borderSet layui-font-16' colspan='2'>{{= d.workers[0].class }}</td>\r\n" +
 "			{{#  } }}\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			{{# if(typeof d.workers[1]==='undefined'){ }}\r\n" +
 "				<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
 "				<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
@@ -550,7 +550,7 @@
 "				<td class='borderSet layui-font-16' colspan='2'>{{= d.workers[1].class }}</td>\r\n" +
 "			{{#  } }}\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			{{# if(typeof d.workers[2]==='undefined'){ }}\r\n" +
 "				<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
 "				<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
@@ -561,7 +561,7 @@
 "				<td class='borderSet layui-font-16' colspan='2'>{{= d.workers[2].class }}</td>\r\n" +
 "			{{#  } }}\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			{{# if(typeof d.workers[3]==='undefined'){ }}\r\n" +
 "				<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
 "				<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
@@ -572,7 +572,7 @@
 "				<td class='borderSet layui-font-16' colspan='2'>{{= d.workers[3].class }}</td>\r\n" +
 "			{{#  } }}\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			{{# if(typeof d.workers[4]==='undefined'){ }}\r\n" +
 "				<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
 "				<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
@@ -583,7 +583,7 @@
 "				<td class='borderSet layui-font-16' colspan='2'>{{= d.workers[4].class }}</td>\r\n" +
 "			{{#  } }}\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			{{# if(typeof d.workers[5]==='undefined'){ }}\r\n" +
 "				<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
 "				<td class='borderSet layui-font-16' colspan='2'></td>\r\n" +
@@ -594,7 +594,7 @@
 "				<td class='borderSet layui-font-16' colspan='2'>{{= d.workers[5].class }}</td>\r\n" +
 "			{{#  } }}\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='2'>服务态度</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='4'>\r\n" +
 "			{{# if(d.evaluate.Attitude === '4'){ }}\r\n" +
@@ -619,7 +619,7 @@
 "			{{#  } }}\r\n" +
 "			</td>\r\n" +
 "		</tr>\r\n" +
-"		<tr height='48.33'>\r\n" +
+"		<tr height='58.33'>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='2'>服务质量</td>\r\n" +
 "			<td class='borderSet layui-font-16' colspan='4'>\r\n" +
 "			{{# if(d.evaluate.Quality === '4'){ }}\r\n" +
