@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "35742771",
+      "name": "30-账户信息",
+      "font_class": "a-30-zhanghuxinxi",
+      "unicode": "e63a",
+      "unicode_decimal": 58938
+    },
+    {
+      "icon_id": "35742756",
+      "name": "14-成员管理",
+      "font_class": "a-14-chengyuanguanli",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
       "icon_id": "32832734",
       "name": "分类2",
       "font_class": "fenlei2",
