@@ -17,6 +17,12 @@
 <body>
 
 <div class="layui-card">
+<button class="layui-btn layui-btn layui-btn-sm" style="float:right" onclick="onImport();" lay-event="add">
+	<i class="layui-icon">&#xe61f;</i>从居家和社区养老导入
+</button>
+</div>
+<br></br>
+<div class="layui-card">
     <form class="layui-form layui-form-pane" action="" id="register" lay-filter="register">
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 
@@ -61,7 +67,7 @@
 						<span class='x-red'>*</span>联系电话
 					</label>
 					<div class="layui-input-block">
-						<input type="text" lay-verify="required|phone" oninput="value=value.replace(/[^\d]/g, '')" name="phone" autocomplete="off" value="" class="layui-input">
+						<input type="text" lay-verify="required|phone" oninput="value=value.replace(/[^\d]/g, '')" name="phone" id="phone" autocomplete="off" value="" class="layui-input">
 					</div>
 				</div>
 				<div class="layui-form-item">
@@ -89,17 +95,17 @@
 							  <legend class="layui-font-14">慢性病</legend>
 							  <div class="layui-field-box">
 								<div class="seach-box">
-									<input type="checkbox" id="高血压" title="高血压">
-									<input type="checkbox" id="高血糖" title="高血糖"> 
-									<input type="checkbox" id="冠心病" title="冠心病">
-									<input type="checkbox" id="哮喘" title="哮喘">
-									<input type="checkbox" id="通风" title="通风">
-									<input type="checkbox" id="慢性支气管炎" title="慢性支气管炎">
-									<input type="checkbox" id="慢性肝炎" title="慢性肝炎">
-									<input type="checkbox" id="慢性贫血" title="慢性贫血">
-									<input type="checkbox" id="慢性关节炎" title="慢性关节炎">
-									<input type="checkbox" id="慢性颈椎疼痛" title="慢性颈椎疼痛">
-									<input type="checkbox" id="其他" title="其他">
+									<input type="checkbox" name="高血压" 		id="高血压" title="高血压">
+									<input type="checkbox" name="高血糖" 		id="高血糖" title="高血糖"> 
+									<input type="checkbox" name="冠心病" 		id="冠心病" title="冠心病">
+									<input type="checkbox" name="哮喘" 			id="哮喘" title="哮喘">
+									<input type="checkbox" name="通风" 			id="通风" title="通风">
+									<input type="checkbox" name="慢性支气管炎" id="慢性支气管炎" title="慢性支气管炎">
+									<input type="checkbox" name="慢性肝炎" 		id="慢性肝炎" title="慢性肝炎">
+									<input type="checkbox" name="慢性贫血" 		id="慢性贫血" title="慢性贫血">
+									<input type="checkbox" name="慢性关节炎" 	id="慢性关节炎" title="慢性关节炎">
+									<input type="checkbox" name="慢性颈椎疼痛"	id="慢性颈椎疼痛" title="慢性颈椎疼痛">
+									<input type="checkbox" name="其他" 			id="其他" title="其他">
 								</div>
 							  </div>
 							</fieldset>
@@ -320,6 +326,68 @@
 			}
 		})
     })
+</script>
+
+<script>
+	function onImport() {
+		layer.open({
+			type: 2,
+			area: ['900px', '600px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "敬老院拓展服务试点服务-服务对象管理-对象注册-导入",
+			content: 'client-import.html',
+			success:function(layero,index){
+				var body = layer.getChildFrame('body', index);
+				console.log(body.contents().find("#from"));
+				body.contents().find("#from").val("client-list");
+			}
+		});
+	}
+	
+	function DoImportClient(data) {
+		console.log(data)
+		
+		var slows = JSON.parse(JSON.parse(data["SlowIll"]))
+		console.log(slows);
+		console.log(slows.includes("冠心病"));
+		layui.form.val("register", {
+			"name": data["Name"],
+			"chinaid": data["ChinaId"],
+			"sex": data["Sex"],
+			"age": data["Age"],
+			"phone": data["Phone"],
+			"addr": data["Addr"],
+			"高血压": slows.includes("高血压"),
+			"高血糖": slows.includes("高血糖"),
+			"冠心病": slows.includes("冠心病"),
+			"哮喘": slows.includes("哮喘"),
+			"通风": slows.includes("通风"),
+			"慢性支气管炎": slows.includes("慢性支气管炎"),
+			"慢性肝炎": slows.includes("慢性肝炎"),
+			"慢性贫血": slows.includes("慢性贫血"),
+			"慢性关节炎": slows.includes("慢性关节炎"),
+			"慢性颈椎疼痛": slows.includes("慢性颈椎疼痛"),
+			"其他": slows.includes("其他"),
+			"healthdescription": data["Healthy"],
+			"other": data["Remarks"],
+		})
+		
+		layui.table.render({
+			elem: '#contacts'
+			,height: 270
+			,data: JSON.parse(JSON.parse(data["Contacts"]))
+			,editTrigger: 'dblclick'
+			,toolbar: '#contactstools'
+			,cols: [[
+				,{field:'id', width: '1%', align:'center', title: '序号', hide: true}
+				,{field:'name', width: '24%', align:'center', edit: 'text', title: '姓名'}
+				,{field:'phone', width: '40%', align:'center', edit: 'text', title: '联系电话'}
+				,{field:'relationship', width: '25%', align:'center', edit: 'text', title: '关系'} 
+				,{title: '操作', width: '10%', align:'center', toolbar: '#fieldtool', fixed: 'right'}
+			]]
+		});
+	}
 </script>
 
 </body>

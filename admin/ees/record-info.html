@@ -298,7 +298,8 @@ Date.prototype.Format = function(fmt) {
         remarks: record.Remarks})
 
         var param = new Object()
-        param['idx'] = record.ClientIdx
+		param['key'] = "idx";
+        param['value'] = record.ClientIdx
         $.ajax({
   				type: 'post',
   				url: BasePath + '/getclient',

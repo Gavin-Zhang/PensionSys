@@ -20,6 +20,14 @@
 
 </head>
 <body>
+
+<div class="layui-card">
+<button class="layui-btn layui-btn layui-btn-sm" style="float:right" onclick="onImport();" lay-event="import">
+	<i class="layui-icon">&#xe61f;</i>从居家和社区养老导入
+</button>
+</div>
+<br></br>
+
 <div class="layui-card">
 		<form class="layui-form layui-form-pane" id="orderadd" lay-filter="orderadd">
 			<input type="hidden" id="clientidx" name="clientidx">
@@ -313,36 +321,54 @@ Date.prototype.Format = function(fmt) {
 </script>
 
 <script>
+	function onImport() {
+		layer.open({
+			type: 2,
+			area: ['900px', '500px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "敬老院拓展服务试点服务-服务记录-新建-导入",
+			content: 'record-import.html',
+			success:function(layero,index){
+				var body = layer.getChildFrame('body', index);
+				console.log(body.contents().find("#from"));
+				body.contents().find("#from").val("client-list");
+			}
+		});
+	}
+	
+	function DoImport(data) {
+		console.log(data)
+		form.val("orderadd", {
+			clientidx: data["ees_idx"],
+			name: data["Name"],
+			phone: data["Phone"],
+			chinaid: data["ChinaId"],
+			addr: data["Addr"],
+		})
+		
+		layui.laydate.render({ 
+			elem: '#servicebegin'
+			,value: data["BeginTime"] //必须遵循format参数设定的格式
+		});
+		layui.laydate.render({ 
+			elem: '#serviceend'
+			,value: data["EndTime"] //必须遵循format参数设定的格式
+		});
+	}
+
     function DoSelectClient(data) {
 		form.val("orderadd", {
 			clientidx: data["Idx"],
 			name: data["Name"],
 			phone: data["Phone"],
 			chinaid: data["ChinaId"],
-			ascription: data["Community"],
 			addr: data["Addr"],
 		})
 	}
 	
 	function DoSelectWorker(data) {
 		var table_data = layui.table.cache["servers"];
-		/*
-		if (data.length == 0) {
-			table_data.push({
-				"name": "",
-				"phone": "",
-				"chinaid": "",
-				"class": ""});
-		} else {
-			for(var worker of data) { 
-				table_data.push({
-					"name": worker["Name"],
-					"chinaid": worker["ChinaId"],
-					"phone": worker["Phone"],
-					"class": worker["Class"]});
-			}
-		}
-		*/
 		for(var worker of data) { 
 			table_data.push({
 				"name": worker["Name"],
