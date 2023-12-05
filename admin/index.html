@@ -28,7 +28,7 @@
 			<li class="layui-nav-item">
 				<a href="javascript:;">
 					<i class="layui-icon left-nav-li" lay-tips="居家和社区养老服务中心">&#xe68e;</i>
-						<cite>居家和社区养老服务中心</cite>
+						<cite>居家和社区养老服务</cite>
 					<i class="iconfont nav_right">&#xe697;</i>	
 				</a>
 				<ul class="sub-menu">
@@ -59,7 +59,7 @@
 						</a>
 						<ul class="sub-menu">
 							<li>
-								<a onclick="xadmin.add_tab('居家和社区养老服务中心-工单列表','hcc/order-list.html')">
+								<a onclick="xadmin.add_tab('居家和社区养老服务中心-列表','hcc/order-list.html')">
 									<i class="layui-icon left-nav-li">&#xe705;</i>
 									<cite>工单列表</cite></a>
 							</li>
@@ -73,59 +73,94 @@
 						</a>
 						<ul class="sub-menu">
 							<li>
-								<a onclick="xadmin.add_tab('居家和社区养老服务中心-工单列表','hcc/worker-list.html')">
-									<i class="layui-icon left-nav-li">&#xe705;</i>
+								<a onclick="xadmin.add_tab('居家和社区养老服务中心-志愿者列表','hcc/worker-list.html')">
+									<i class="layui-icon left-nav-li layui-icon-chengyuanguanli" ></i>
 									<cite>志愿者列表</cite></a>
 							</li>
 						</ul>
 					</li>
 				</ul>
-				<li class="layui-nav-item">
-					<a href="javascript:;">
-						<i class="layui-icon left-nav-li" lay-tips="敬老院拓展服务试点服务">&#xe653;</i>
-						<cite>敬老院拓展服务试点服务</cite>
-						<i class="iconfont nav_right">&#xe697;</i>
-					</a>
-					<ul class="sub-menu">
-						<li class="layui-nav-item">
-							<a href="javascript:;">
-								<i class="iconfont left-nav-li" lay-tips="服务对象管理">&#xe6b8;</i>
-								<cite>服务对象管理</cite>
-								<i class="iconfont nav_right">&#xe697;</i>
-							</a>
-							<ul class="sub-menu">
-								<li>
-									<a onclick="xadmin.add_tab('敬老院拓展服务试点服务-对象列表','ees/client-list.html')">
-										<i class="layui-icon left-nav-li">&#xe705;</i>
-										<cite>对象列表</cite></a>
-								</li>
-							</ul>
-						</li>
-						<li class="layui-nav-item">
-							<a href="javascript:;">
-								<i class="iconfont left-nav-li" lay-tips="服务记录管理">&#xe6a2;</i>
-								<cite>服务记录管理</cite>
-								<i class="iconfont nav_right">&#xe697;</i>
-							</a>
-							<ul class="sub-menu">
-								<li>
-									<a onclick="xadmin.add_tab('敬老院拓展服务试点服务-服务记录','ees/record-list.html')">
-										<i class="layui-icon left-nav-li">&#xe6b2;</i>
-										<cite>服务记录</cite></a>
-								</li>
-							</ul>
-							<!--
-							<ul class="sub-menu">
-								<li>
-									<a onclick="xadmin.add_tab('敬老院拓展服务试点服务-志愿服务','ees/volunteersvr-record-list.html')">
-										<i class="layui-icon left-nav-li">&#xe66b;</i>
-										<cite>志愿服务</cite></a>
-								</li>
-							</ul>
-							-->
-						</li>
-					</ul>
-				</li>
+			</li>
+			<li class="layui-nav-item">
+				<a href="javascript:;">
+					<i class="layui-icon left-nav-li" lay-tips="敬老院拓展服务试点服务">&#xe653;</i>
+					<cite>拓展服务试点服务</cite>
+					<i class="iconfont nav_right">&#xe697;</i>
+				</a>
+				<ul class="sub-menu">
+					<li class="layui-nav-item">
+						<a href="javascript:;">
+							<i class="iconfont left-nav-li" lay-tips="服务对象管理">&#xe6b8;</i>
+							<cite>服务对象管理</cite>
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a onclick="xadmin.add_tab('敬老院拓展服务试点服务-对象列表','ees/client-list.html')">
+									<i class="layui-icon left-nav-li">&#xe705;</i>
+									<cite>对象列表</cite></a>
+							</li>
+						</ul>
+					</li>
+					<li class="layui-nav-item">
+						<a href="javascript:;">
+							<i class="iconfont left-nav-li" lay-tips="服务记录管理">&#xe6a2;</i>
+							<cite>服务记录管理</cite>
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a onclick="xadmin.add_tab('敬老院拓展服务试点服务-服务记录','ees/record-list.html')">
+									<i class="layui-icon left-nav-li">&#xe6b2;</i>
+									<cite>服务记录</cite></a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li class="layui-nav-item">
+				<a href="javascript:;">
+					<i class="layui-icon left-nav-li" lay-tips="敬老院服务管理">&#xe62a;</i>
+					<cite>敬老院服务管理</cite>
+					<i class="iconfont nav_right">&#xe697;</i>
+				</a>
+				<ul class="sub-menu">
+					<li>
+						<a onclick="xadmin.add_tab('敬老院服务管理-总览','jly/client-list.html')">
+							<i class="layui-icon left-nav-li">&#xe63c;</i>
+							<cite>总览</cite></a>
+					</li>
+				</ul>
+				<ul class="sub-menu">
+					<li class="layui-nav-item">
+						<a href="javascript:;">
+							<i class="iconfont left-nav-li" lay-tips="服务对象管理">&#xe6b8;</i>
+							<cite>服务对象管理</cite>
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a onclick="xadmin.add_tab('敬老院拓展服务试点服务-对象列表','ees/client-list.html')">
+									<i class="layui-icon left-nav-li">&#xe705;</i>
+									<cite>对象列表</cite></a>
+							</li>
+						</ul>
+					</li>
+					<li class="layui-nav-item">
+						<a href="javascript:;">
+							<i class="iconfont left-nav-li" lay-tips="服务记录管理">&#xe6a2;</i>
+							<cite>服务记录管理</cite>
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a onclick="xadmin.add_tab('敬老院拓展服务试点服务-服务记录','ees/record-list.html')">
+									<i class="layui-icon left-nav-li">&#xe6b2;</i>
+									<cite>服务记录</cite></a>
+							</li>
+						</ul>
+					</li>
+				</ul>
 			</li>
 			{{#  } else if(d.Power === 1){ }}
 				<li class="layui-nav-item">
@@ -167,29 +202,6 @@
 										<cite>服务记录</cite></a>
 								</li>
 							</ul>
-							<!--
-							<ul class="sub-menu">
-								<li>
-									<a onclick="xadmin.add_tab('敬老院拓展服务试点服务-志愿服务','ees/volunteersvr-record-list.html')">
-										<i class="layui-icon left-nav-li">&#xe66b;</i>
-										<cite>志愿服务</cite></a>
-								</li>
-							</ul>
-							-->
-						</li>
-						<li class="layui-nav-item">
-							<a href="javascript:;">
-								<i class="iconfont left-nav-li" lay-tips="志愿者管理">&#xe6af;</i>
-								<cite>志愿者管理</cite>
-								<i class="iconfont nav_right">&#xe697;</i>
-							</a>
-							<ul class="sub-menu">
-								<li>
-									<a onclick="xadmin.add_tab('居家和社区养老服务中心-志愿者列表','hcc/worker-list.html')">
-										<i class="layui-icon left-nav-li">&#xe705;</i>
-										<cite>志愿者列表</cite></a>
-								</li>
-							</ul>
 						</li>
 					</ul>
 				</li>
@@ -228,15 +240,6 @@
 										<cite>服务记录</cite></a>
 								</li>
 							</ul>
-							<!--
-							<ul class="sub-menu">
-								<li>
-									<a onclick="xadmin.add_tab('敬老院拓展服务试点服务-志愿服务','ees/volunteersvr-record-list.html')">
-										<i class="layui-icon left-nav-li">&#xe66b;</i>
-										<cite>志愿服务</cite></a>
-								</li>
-							</ul>
-							-->
 						</li>
 					</ul>
 				</li>
