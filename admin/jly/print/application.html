@@ -1,0 +1,734 @@
+<!doctype html>
+<html class="x-admin-sm">
+    <script id="application-page" type="text/html">
+        <table width="1104.83" cellpadding="0" cellspacing="0">
+            <col width="116.33"/>
+            <col width="132.92"/>
+            <col width="86.50"/>
+            <col width="100.42"/>
+            <col width="156"/>
+            <col width="108.08"/>
+            <col width="51"/>
+            <col width="58.25"/>
+            <col width="65.42"/>
+            <col width="127.08"/>
+            <col width="102.83" style='width:61.70pt;'/>
+            <tr height="23" style='height:13.80pt;'>
+                <td class="indexSet layui-font-16" height="23" width="882.00" colspan="10" x:str>
+                    {{# if(typeof d.Application === 'undefined' || d.Application == null || d.Application.idx == null) { }}
+                        <b>No:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                    {{# } else { }}
+                        <b>No: {{= d.Application.idx }}</b>
+                    {{# }}}
+                </td>
+                <td width="102.83" style='width:61.70pt;'></td>
+            </tr>
+            <tr height="78.33" style='height:47.00pt;'>
+                <td class="titleSet" height="78.33" colspan="10"><b>五龙背敬老院入住申请登记表</b></td>
+                <td></td>
+            </tr>
+            <tr height="50" style='height:41.00pt'>
+                <td class="borderSet layui-font-20" height="50" x:str>姓名</td>
+                <td class="borderSet layui-font-20" x:str>{{= d.Name}}</td>
+                <td class="borderSet layui-font-20" colspan="2" x:str>性别</td>
+                <td class="borderSet layui-font-20" x:str>{{= d.Sex}}</td>
+                <td class="borderSet layui-font-20" colspan="2" x:str>出生年月</td>
+                <td class="borderSet layui-font-20" colspan="2" x:str>{{= d.Birthday}}</td>
+                    {{# if (typeof d.AvatarPath == 'undefined' || d.AvatarPath == '') { }}
+                        <td class="borderSet layui-font-20" rowspan="3" >照<br/>片</td>
+                    {{# } else { }}
+                    <td class="borderSet layui-font-20" rowspan="3" >
+                        <img src={{ d.AvatarPath }} style='height:123pt;width:88.5pt' id='demo1'>
+                    </td>
+                    {{# } }} 
+                </td>
+                <td></td>
+            </tr>
+            <tr height="50" style='height:42.00pt;'>
+                <td class="borderSet layui-font-20" height="50" style='height:42.00pt;' x:str>文化程度</td>
+                <td class="borderSet layui-font-20" x:str>{{= d.Culture }}</td>
+                <td class="borderSet layui-font-20" colspan="2" x:str>政治面貌</td>
+                <td class="borderSet layui-font-20" x:str>{{= d.Politics }}</td>
+                <td class="borderSet layui-font-20" colspan="2" x:str>民族</td>
+                <td class="borderSet layui-font-20" colspan="2" x:str>{{= d.Nation }}</td>
+                <td></td>
+            </tr>
+            <tr height="50" style='height:42.00pt;'>
+                <td class="borderSet layui-font-20" height="50" style='height:42.00pt;' x:str>婚姻状况</td>
+                <td class="borderSet layui-font-20" x:str>{{= d.Marriage }}</td>
+                <td class="borderSet layui-font-20" colspan="2" x:str>身份证号码</td>
+                <td class="borderSet layui-font-20" colspan="5" x:str>{{= d.ChinaId }}</td>
+                <td></td>
+            </tr>
+            <tr height="50" style='height:41.00pt;'>
+                <td class="borderSet layui-font-20" height="50" style='height:41.00pt;' x:str>家庭住址</td>
+                <td class="borderSet-left layui-font-20" colspan="4" x:str><span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>{{= d.Addr }}</td>
+                <td class="borderSet layui-font-20" colspan="3" x:str>电 话</td>
+                <td class="borderSet layui-font-20" colspan="2" x:str>{{= d.Phone }}</td>
+                <td></td>
+            </tr>
+            <tr height="55" style='height:41.00pt;'>
+                <td class="borderSet layui-font-20" height="41.67" style='height:25.00pt;' x:str>居住情况</td>
+                <td class="borderSet-left" colspan="9" x:str>
+                    {{# if(typeof d.Application === 'undefined' || d.Application === null || typeof d.Application.live === 'undefined' || d.Application.live === null || d.Application.live === ''){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>独居</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>与配偶同住</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>与子女同住</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>与孙辈同住</font>
+                    {{# } else if(d.Application.live==='独居'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>独居</b></font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>与配偶同住</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>与子女同住</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>与孙辈同住</font>
+                    {{# } else if(d.Application.live==='与配偶同住'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>独居</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>与配偶同住</b></font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>与子女同住</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>与孙辈同住</font>
+                    {{# } else if(d.Application.live==='与子女同住'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>独居</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>与配偶同住</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>与子女同住</b></font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>与孙辈同住</font>
+                    {{# } else if(d.Application.live==='与孙辈同住'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>独居</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>与配偶同住</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>与子女同住</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>与孙辈同住</b></font>
+                    {{#  } }}
+                </td>
+                <td></td>
+            </tr>
+            <tr height="41.67" style='height:41.00pt;'>
+                <td class="borderSet layui-font-20" height="41.67" style='height:25.00pt;' x:str>兴趣爱好</td>
+                <td class="borderSet-left" colspan="9" x:str>
+                    {{# if(typeof d.Interest == 'undefined' || d.Interest == null ) { }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>棋牌</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>戏曲</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>舞蹈</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>唱歌</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>乐器</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>阅览</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>聊天</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>其他</font>
+                    {{# } else { }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        {{# if(d.Interest.indexOf('棋牌') != -1){ }}
+                            <font class='font-simsun layui-font-20'><b>☑</b></font>
+                            <font class='layui-font-20'><b>棋牌</b></font>
+                        {{# } else { }}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>棋牌</font>
+                        {{# } }}
+
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        {{# if(d.Interest.indexOf('戏曲') != -1){ }}
+                            <font class='font-simsun layui-font-20'><b>☑</b></font>
+                            <font class='layui-font-20'><b>戏曲</b></font>
+                        {{# } else {}}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>戏曲</font>
+                        {{# } }}
+
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        {{# if(d.Interest.indexOf('舞蹈') != -1){ }}
+                            <font class='font-simsun layui-font-20'><b>☑</b></font>
+                            <font class='layui-font-20'><b>舞蹈</b></font>
+                        {{# } else {}}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>舞蹈</font>
+                        {{# } }}
+
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        {{# if(d.Interest.indexOf('唱歌') != -1){ }}
+                            <font class='font-simsun layui-font-20'><b>☑</b></font>
+                            <font class='layui-font-20'><b>唱歌</b></font>
+                        {{# } else {}}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>唱歌</font>
+                        {{# } }}
+
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        {{# if(d.Interest.indexOf('乐器') != -1){ }}
+                            <font class='font-simsun layui-font-20'><b>☑</b></font>
+                            <font class='layui-font-20'><b>乐器</b></font>
+                        {{# } else {}}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>乐器</font>
+                        {{# } }}
+
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        {{# if(d.Interest.indexOf('阅览') != -1){ }}
+                            <font class='font-simsun layui-font-20'><b>☑</b></font>
+                            <font class='layui-font-20'><b>阅览</b></font>
+                        {{# } else {}}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>阅览</font>
+                        {{# } }}
+
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        {{# if(d.Interest.indexOf('聊天') != -1){ }}
+                            <font class='font-simsun layui-font-20'><b>☑</b></font>
+                            <font class='layui-font-20'><b>聊天</b></font>
+                        {{# } else {}}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>聊天</font>
+                        {{# } }}
+
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        {{# if(d.Interest.indexOf('其他') != -1){ }}
+                            <font class='font-simsun layui-font-20'><b>☑</b></font>
+                            <font class='layui-font-20'><b>其他</b></font>
+                            <span class='layui-font-20'>&nbsp;&nbsp;</span>
+                            <font class='layui-font-20'><b>:<u>{{= d.InterestOther }}</u></b></font>
+                        {{# } else {}}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>其他</font>
+                        {{# } }}
+                    {{# } }}
+                </td>
+                <td></td>
+            </tr>
+            <tr height="41.67" style='height:41.00pt;'>
+                <td class="borderSet layui-font-20" height="41.67" style='height:25.00pt;' x:str>宗教信仰</td>
+                <td class="borderSet-left" colspan="9" x:str>
+                    {{# if(typeof d.Religion === 'undefined' || d.Religion === null || d.Religion === '') { }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>无神论</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>佛教</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>基督教</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>其他</font>
+                    {{# } else if(d.Religion==='无神论'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>无神论</b></font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>佛教</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>基督教</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>其他</font>
+                    {{# } else if(d.Religion==='佛教'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>无神论</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>佛教</b></font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>基督教</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>其他</font>
+                    {{# } else if(d.Religion==='基督教'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>无神论</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>佛教</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>基督教</b></font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>其他</font>
+                    {{# } else if(d.Religion==='其他'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>无神论</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>佛教</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>基督教</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>其他</b></font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;</span>
+                        <font class='layui-font-20'><b>:<u>{{= d.ReligionOther }}</u></b></font>
+                    {{#  } }}
+                </td>
+                <td></td>
+            </tr>
+            <tr height="58.33" style='height:41.00pt;'>
+                <td class="borderSet layui-font-18" height="58.33" style='height:41.00pt;' x:str>费用承担</td>
+                <td class="borderSet-left" colspan="9" x:str>
+                    {{# if(typeof d.Application === 'undefined' || d.Application === null || typeof d.Application.cost === 'undefined' || d.Application.cost === null || d.Application.cost === '') { }}
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>入住费用由本人承担</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>入住费用子女人承担</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>入住费用由本人及子女共同承担</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>其他</font>
+                    {{# } else if(d.Application.cost==='入住费用由本人承担'){ }}
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'><b>☑</b></font>
+                        <font class='layui-font-18'><b>入住费用由本人承担</b></font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>入住费用子女人承担</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>入住费用由本人及子女共同承担</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>其他</font>
+                    {{# } else if(d.Application.cost==='入住费用子女人承担'){ }}
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>入住费用由本人承担</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'><b>☑</b></font>
+                        <font class='layui-font-18'><b>入住费用子女人承担</b></font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>入住费用由本人及子女共同承担</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>其他</font>
+                    {{# } else if(d.Application.cost==='入住费用由本人及子女共同承担'){ }}
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>入住费用由本人承担</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'><b>入住费用子女人承担</b></font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'><b>☑</b></font>
+                        <font class='layui-font-18'><b>入住费用由本人及子女共同承担</b></font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>其他</font>
+                    {{# } else if(d.Application.cost==='其他'){ }}
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>入住费用由本人承担</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>入住费用子女人承担</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>入住费用由本人及子女共同承担</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'><b>☑</b></font>
+                        <font class='layui-font-18'><b>其他</b></font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
+                        <font class='layui-font-18'><b>:<u>{{= d.Application.cost_other }}</u></b></font>
+                    {{#  } }}
+                </td>
+                <td></td>
+            </tr>
+            <tr height="58.33" style='height:41.00pt;'>
+                <td class="borderSet layui-font-18" height="58.33" style='height:41.00pt;' x:str>医疗保险</td>
+                <td class="borderSet-left" colspan="9" x:str>
+                    {{# if(typeof d.Treat === 'undefined'|| d.Treat ==null || d.Treat==='') { }}
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>城镇职工医疗保险</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>城镇居民医疗保险</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>新型农村合作医疗</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>全公费</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>全自费</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>其他</font>
+                    {{# } else if(d.Treat==='城镇职工医疗保险'){ }}
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'><b>☑</b></font>
+                        <font class='layui-font-18'><b>城镇职工医疗保险</b></font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>城镇居民医疗保险</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>新型农村合作医疗</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>全公费</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>全自费</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>其他</font>
+                    {{# } else if(d.Treat==='城镇居民医疗保险'){ }}
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>城镇职工医疗保险</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'><b>☑</b></font>
+                        <font class='layui-font-18'><b>城镇居民医疗保险</b></font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>新型农村合作医疗</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>全公费</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>全自费</font>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>其他</font>
+                    {{# } else if(d.Treat==='新型农村合作医疗'){ }}
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>城镇职工医疗保险</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>城镇居民医疗保险</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'><b>☑</b></font>
+                        <font class='layui-font-18'><b>新型农村合作医疗</b></font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>全公费</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>全自费</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>其他</font>
+                    {{# } else if(d.Treat==='全公费'){ }}
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>城镇职工医疗保险</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>城镇居民医疗保险</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>新型农村合作医疗</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'><b>☑</b></font>
+                        <font class='layui-font-18'><b>全公费</b></font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>全自费</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>其他</font>
+                    {{# } else if(d.Treat==='全自费'){ }}
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>城镇职工医疗保险</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>城镇居民医疗保险</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>新型农村合作医疗</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>全公费</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'><b>☑</b></font>
+                        <font class='layui-font-18'><b>全自费</b></font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>其他</font>
+                    {{# } else if(d.Treat==='其他'){ }}
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>城镇职工医疗保险</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>城镇居民医疗保险</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>新型农村合作医疗</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'><b>☑</b></font>
+                        <font class='layui-font-18'><b>其他</b></font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
+                        <font class='layui-font-18'><b>:<u>{{= d.Treat_other }}</u></b></font>
+                    {{#  } }}
+                </td>
+                <td></td>
+            </tr>
+            <tr height="50" style='height:41.00pt;'>
+                <td class="borderSet layui-font-20" height="164pt" rowspan="4" x:str>家庭<br/>主要<br/>成员</td>
+                <td class="borderSet layui-font-20" x:str>姓名</td>
+                <td class="borderSet layui-font-20" colspan="2" x:str>联系电话</td>
+                <td class="borderSet layui-font-20" x:str>与老人关系</td>
+                <td class="borderSet layui-font-20" colspan="5" x:str>家庭住址或工作单位</td>
+                <td></td>
+            </tr>
+            <tr height="50" style='height:41.00pt;'>
+                {{# if(typeof d.ContactData === 'undefined' || d.ContactData == null || typeof d.ContactData[0]==='undefined'){ }}
+                    <td class="borderSet layui-font-20" x:str></td>
+                    <td class="borderSet layui-font-20" colspan="2" x:str></td>
+                    <td class="borderSet layui-font-20" x:str></td>
+                    <td class="borderSet layui-font-20" colspan="5" x:str></td>
+                    <td></td>
+                {{#  } else { }}
+                    <td class="borderSet layui-font-20" x:str>{{= d.ContactData[0].name}}</td>
+                    <td class="borderSet layui-font-20" colspan="2" x:str>{{= d.ContactData[0].phone}}</td>
+                    <td class="borderSet layui-font-20" x:str>{{= d.ContactData[0].relationship}}</td>
+                    <td class="borderSet layui-font-20" colspan="5" x:str>{{= d.ContactData[0].address}}</td>
+                    <td></td>
+                {{#  } }}
+            </tr>
+            <tr height="50" style='height:41.00pt;'>
+                {{# if(typeof d.ContactData === 'undefined' || d.ContactData == null || typeof d.ContactData[1]==='undefined'){ }}
+                    <td class="borderSet layui-font-20" x:str></td>
+                    <td class="borderSet layui-font-20" colspan="2" x:str></td>
+                    <td class="borderSet layui-font-20" x:str></td>
+                    <td class="borderSet layui-font-20" colspan="5" x:str></td>
+                    <td></td>
+                {{#  } else { }}
+                    <td class="borderSet layui-font-20" x:str>{{= d.ContactData[1].name}}</td>
+                    <td class="borderSet layui-font-20" colspan="2" x:str>{{= d.ContactData[1].phone}}</td>
+                    <td class="borderSet layui-font-20" x:str>{{= d.ContactData[1].relationship}}</td>
+                    <td class="borderSet layui-font-20" colspan="5" x:str>{{= d.ContactData[1].address}}</td>
+                    <td></td>
+                {{#  } }}
+            </tr>
+            <tr height="50" style='height:41.00pt;'>
+                {{# if(typeof d.ContactData === 'undefined' || d.ContactData == null || typeof d.ContactData[2]==='undefined'){ }}
+                    <td class="borderSet layui-font-26" x:str></td>
+                    <td class="borderSet layui-font-26" colspan="2" x:str></td>
+                    <td class="borderSet layui-font-26" x:str></td>
+                    <td class="borderSet layui-font-26" colspan="5" x:str></td>
+                    <td></td>
+                {{#  } else { }}
+                    <td class="borderSet layui-font-26" x:str>{{= d.ContactData[2].name}}</td>
+                    <td class="borderSet layui-font-26" colspan="2" x:str>{{= d.ContactData[2].phone}}</td>
+                    <td class="borderSet layui-font-26" x:str>{{= d.ContactData[2].relationship}}</td>
+                    <td class="borderSet layui-font-26" colspan="5" x:str>{{= d.ContactData[2].address}}</td>
+                    <td></td>
+                {{#  } }}
+            </tr>
+            <tr height="41.67" style='height:41.00pt;'>
+                <td class="borderSet layui-font-20" height="41.67" style='height:25.00pt;' x:str>行为能力</td>
+                <td class="borderSet-left" colspan="9" x:str>
+                    {{# if(typeof d.Application==='undefined' || d.Application == null || typeof d.Application.capacity==='undefined' || d.Application.capacity == null || typeof d.Application.capacity===''){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>生活完全能自理</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>生活自理有困难</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>生活需要全护理</font>
+                    {{# } else if(d.Application.capacity==='生活完全能自理'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>生活完全能自理</b></font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>生活自理有困难</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>生活需要全护理</font>
+                    {{# } else if(d.Application.capacity==='生活自理有困难'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>生活完全能自理</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>生活自理有困难</b></font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>生活需要全护理</font>
+                    {{# } else if(d.Application.capacity==='生活需要全护理'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>生活完全能自理</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>生活自理有困难</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>生活需要全护理</b></font>
+                    {{#  } }}
+                </td>
+                <td></td>
+            </tr>
+            <tr height="41.67" style='height:41.00pt;'>
+                <td class="borderSet layui-font-20" height="41.67" style='height:25.00pt;' x:str>床位选择</td>
+                <td class="borderSet-left" colspan="9" x:str>
+                    {{# if(typeof d.Application==='undefined' || d.Application == null || typeof d.Application.capacity==='undefined' || d.Application.capacity == null || typeof d.Application.capacity===''){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>单人间</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>双人间</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>多人间</font>
+                    {{# } else if(d.Application.bed==='单人间'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>单人间</b></font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>双人间</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>多人间</font>
+                    {{# } else if(d.Application.bed==='双人间'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>单人间</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>双人间</b></font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>多人间</font>
+                    {{# } else if(d.Application.bed==='多人间'){ }}
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>单人间</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>双人间</font>
+                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>多人间</b></font>
+                    {{#  } }}
+                </td>
+                <td></td>
+            </tr>
+            <tr height="100" style='height:143.00pt;'>
+                <td class="borderSet layui-font-20" height="100" style='height:143pt;' x:str>其他需求<span style='display:none;'>求</span></td>
+                <td class="borderSet-left layui-font-20" colspan="9" x:str>
+                    {{# if(typeof d.Application !== 'undefined' &&  d.Application.other != null) { }}
+                        &nbsp;&nbsp;&nbsp;&nbsp;{{= d.Application.other}}
+                    {{# }}}
+                </td>
+                <td></td>
+            </tr>
+            <tr height="41.67" style='height:41.00pt;'>
+                <td class="borderSet layui-font-20" height="125.00" rowspan="3" x:str>担保人<br/>（有权决定老人入住所有事项）</td>
+                <td class="borderSet-left layui-font-20" colspan="2" x:str>姓名：</td>
+                <td class="borderSet-left layui-font-20" colspan="3" x:str>与老人关系：</td>
+                <td class="borderSet-left layui-font-20" colspan="4" x:str>手机：</td>
+                <td></td>
+            </tr>
+            <tr height="41.67" style='height:41.00pt;'>
+                <td class="borderSet-left layui-font-20" colspan="9" x:str>家庭地址：</td>
+                <td></td>
+            </tr>
+            <tr height="41.67" style='height:41.00pt;'>
+                <td class="borderSet-left layui-font-20" colspan="9" x:str>
+                    填表日期：
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>年
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>月
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>日</td>
+                <td></td>
+            </tr>
+            <tr height="41.67" style='height:41.00pt;'>
+                <td class="borderSet layui-font-20" height="125.00" rowspan="3" x:str>审批</td>
+                <td class="borderSet-left layui-font-20" colspan="7" x:str>
+                    床位安排：
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>楼
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>号房间</td>
+                <td class="borderSet-left layui-font-20" colspan="2" rowspan="3" x:str>经手人：</td>
+                <td></td>
+            </tr>
+            <tr height="41.67" style='height:41.00pt;'>
+                <td class="borderSet-left layui-font-20" colspan="7" x:str>
+                    照护等级：现暂定为
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>级护理</td>
+                <td></td>
+            </tr>
+            <tr height="41.67" style='height:41.00pt;'>
+                <td class="borderSet-left layui-font-20" colspan="7" x:str>
+                    入住时间：
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>年
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>月
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>日</td>
+                <td></td>
+            </tr>
+        </table>
+    </script>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        基本信息
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript" src="./js/base.js"></script>
+</head>
+<body>
+
+<div class="layui-card">
+    <form class="layui-form layui-form-pane" action="" id="register" lay-filter="register">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+			<input type="hidden" id="from">
+			
+			<div class="layui-tab-item layui-show">
+				<div class="layui-form-item">
+					<div class="layui-row">
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label class="layui-form-label">	
+								<span class='x-red'>*</span>姓名
+							</label>
+							<div class="layui-input-block">
+								<input type="text" name="name" lay-verify="required" autocomplete="off" value="" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label class="layui-form-label">
+								<span class='x-red'>*</span>身份证号
+							</label>
+							<div class="layui-input-block">
+								<input type="text" name="chinaid" id="chinaid" lay-verify="required|identity" autocomplete="off" value="" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label class="layui-form-label">
+								联系电话
+							</label>
+							<div class="layui-input-block">
+								<input type="text" name="phone" id="phone" autocomplete="off" value="" class="layui-input">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-row">
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label class="layui-form-label">
+								性别
+							</label>
+							<div class="layui-input-block">
+								<input type="text" id="sex" lay-verify="" autocomplete="off" placeholder="根据身份证信息自动填写" value="" class="layui-input" disabled="disabled">
+							</div>
+						</div>
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label class="layui-form-label">
+								年龄
+							</label>
+							<div class="layui-input-block">
+								<input type="text" lay-verify="" placeholder="根据身份证信息自动填写" disabled="disabled" id="age" autocomplete="off" value="" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label class="layui-form-label">	
+								<span class='x-red'>*</span>民族
+							</label>
+							<div class="layui-input-block">
+								<input type="text" name="nation" lay-verify="required" autocomplete="off" class="layui-input" value="汉">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-row">
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label class="layui-form-label">
+								<span class='x-red'>*</span>文化程度
+							</label>
+							<div class="layui-input-block">
+								<select name="culture" id="culture" lay-verify="required">
+									<option value="文盲及半文盲">文盲及半文盲</option>
+									<option value="小学">小学</option>
+									<option value="初中">初中</option>
+									<option value="高中/技校/中专">高中/技校/中专</option>
+									<option value="大学专科及以上">大学专科及以上</option>
+									<option value="不详">不详</option>
+								</select>
+							</div>
+						</div>
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label class="layui-form-label">
+								<span class='x-red'>*</span>政治面貌
+							</label>
+							<div class="layui-input-block">
+								<select name="politics" id="politics" lay-verify="required">
+									<option value="群众">群众</option>
+									<option value="中共党员">中共党员</option>
+									<option value="民主党派">民主党派人士</option>
+								</select>
+							</div>
+						</div>
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label class="layui-form-label">
+								<span class='x-red'>*</span>婚姻状况
+							</label>
+							<div class="layui-input-block">
+								<select name="marriage" id="marriage" lay-verify="required">
+									<option value="未婚">未婚</option>
+									<option value="已婚">已婚</option>
+									<option value="丧偶">丧偶</option>
+									<option value="离异">离异</option> 
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-row">
+						<div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+							<label class="layui-form-label">
+								住址
+							</label>
+							<div class="layui-input-block">
+								<input type="text" lay-verify="" name="addr" autocomplete="off" value="" class="layui-input">
+							</div>
+						</div>
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label for="indate" class="layui-form-label">
+								<span class='x-red'>*</span>入住日期
+							</label>
+							<div class="layui-input-inline">
+								<input type="text" autocomplete="off" id="indate" name="indate" lay-verify="required" class="layui-input" placeholder="入住日期">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-row">
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label class="layui-form-label">
+								<span class='x-red'>*</span>人员类型
+							</label>
+							<div class="layui-input-block">
+								<select name="client_type" id="client_type" lay-verify="required">
+									<option value="社会老人">社会老人</option>
+									<option value="农村低保老人">农村低保老人</option>
+									<option value="城镇低保老人">城镇低保老人</option> 
+									<option value="五保老人">五保老人</option>
+								</select>
+							</div>
+						</div>
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label class="layui-form-label">
+								<span class='x-red'>*</span>缴费类型
+							</label>
+							<div class="layui-input-block">
+								<select name="pay_type" id="pay_type" lay-verify="required">
+									<option value="自费">自费</option>
+									<option value="低保">低保</option>
+									<option value="五保">五保</option>
+								</select>
+							</div>
+						</div>
+						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<label for="indate" class="layui-form-label">
+								<span class='x-red'>*</span>政府托管
+							</label>
+							<div class="layui-input-block">
+								<select name="trusteeship" id="trusteeship" lay-verify="required">
+									<option value="否">否</option>
+									<option value="是">是</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<fieldset class="layui-elem-field">
+					<legend class="layui-font-14">兴趣爱好</legend>
+					<div class="layui-field-box">
+						<div class="seach-box">
+							<input type="checkbox" name="棋牌" 		id="棋牌" title="棋牌">
+							<input type="checkbox" name="戏曲" 		id="戏曲" title="戏曲"> 
+							<input type="checkbox" name="舞蹈" 		id="舞蹈" title="舞蹈">
+							<input type="checkbox" name="唱歌" 		id="唱歌" title="唱歌">
+							<input type="checkbox" name="乐器" 		id="乐器" title="乐器">
+							<input type="checkbox" name="阅读" 		id="阅读" title="阅读">
+							<input type="checkbox" name="聊天" 		id="聊天" title="聊天">
+							<input type="checkbox" name="其他" 		id="其他" title="其他" lay-filter="other">
+						</div>
+						<textarea id="interest_other" name="interest_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
+					</div>
+				</fieldset>
+				<fieldset class="layui-elem-field">
+					<legend class="layui-font-14">宗教信仰</legend>
+					<div class="layui-field-box">
+						<div class="layui-form-item">
+							<input type="radio" name="religion" value="无神论" title="无神论" checked="">
+							<input type="radio" name="religion" value="佛教" title="佛教">
+							<input type="radio" name="religion" value="基督教" title="基督教">
+							<input type="radio" name="religion" value="其他" title="其他">
+							<textarea id="religion_other" name="religion_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="layui-elem-field">
+					<legend class="layui-font-14">医疗保险</legend>
+					<div class="layui-field-box">
+						<div class="layui-form-item">
+							<input type="radio" name="treat" value="城镇职工医疗保险" title="城镇职工医疗保险" checked="">
+							<input type="radio" name="treat" value="城镇居民医疗保险" title="城镇居民医疗保险">
+							<input type="radio" name="treat" value="新型农村合作医疗" title="新型农村合作医疗">
+							<input type="radio" name="treat" value="全公费" title="全公费">
+							<input type="radio" name="treat" value="全自费" title="全自费">
+							<input type="radio" name="treat" value="其他" title="其他">
+							<textarea id="treat_other" name="treat_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
+						</div>
+					</div>
+				</fieldset>
+				<!--  <form class="layui-form layui-form-pane" action="" id="add">-->
+				<fieldset class="layui-elem-field">
+					<legend class="layui-font-14">联系人</legend>
+					<div class="layui-field-box">
+						<div class="layui-form-item">
+							<table class="layui-hide" id="contacts", name="contacts" lay-filter="test"></table>
+						</div>
+					</div>
+				</fieldset>
+				
+				<div class="layui-form-item">
+					<button class="layui-btn layui-btn-fluid"  type="button" lay-filter="add" lay-submit="">
+						提交
+					</button>
+				</div>
+			</div>
+        </div>
+    </form>
+</div>
+
+<!--工具栏模板-->
+<script type="text/html" id="contactstools">
+  <div class="layui-btn-group">
+    <button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" id="contacts_add">
+		<i class="layui-icon"  style="font-size: 20px">&#xe61f;</i>
+	</button>
+	<!--<button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" onclick="onRefresh();" lay-event="refresh"><i class="layui-icon"  style="font-size: 20px">&#xe669;</i></button>-->
+  </div>
+</script>
+
+<script type="text/html" id="fieldtool">
+  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
+</script>
+
+<script>
+
+    layui.use(['element','layer','form', 'table', 'laydate'], function(){
+        var  $ = layui.jquery;//jquery
+        var lement = layui.element;//面包导航
+        var layer = layui.layer;//弹出层
+        var form = layui.form;
+		var table = layui.table;
+		var laydate = layui.laydate;
+		
+		// 入住日期
+		var date= new Date();
+		laydate.render({
+			elem: '#indate'
+			,isInitValue: true
+			,type: 'date'
+			,value: date
+		});
+		
+		table.render({
+			elem: '#contacts'
+			,height: 270
+			,data: []
+			,editTrigger: 'dblclick'
+			,toolbar: '#contactstools'
+			,cols: [[
+				,{field:'id', width: '1%', align:'center', title: '序号', hide: true}
+				,{field:'name', width: '10%', align:'center', edit: 'text', title: '姓名'}
+				,{field:'phone', width: '25%', align:'center', edit: 'text', title: '联系电话'}
+				,{field:'relationship', width: '10%', align:'center', edit: 'text', title: '与老人关系'} 
+				,{field:'address', width: '45%', align:'center', edit: 'text', title: '家庭住址'} 
+				,{title: '操作', width: '10%', align:'center', toolbar: '#fieldtool', fixed: 'right'}
+			]]
+		});
+		
+		table.on('tool(test)', function(obj) {
+			var data = obj.data;
+			
+			if (obj.event === 'delete') {
+				if (data.name == "") {
+					var table_data = table.cache["contacts"];
+					table_data.splice(obj.tr.data("index"), 1);
+					table.reload("contacts", {data: table_data})
+				} else {
+					layer.confirm('确定要删除[' + data.name + ']么?',
+						{btn:['确定', '取消']},
+						function(index, layero) {
+							var table_data = table.cache["contacts"];
+							table_data.splice(obj.tr.data("index"), 1);
+							table.reload("contacts", {data: table_data})
+							layer.close(index);
+						});
+				}
+			}
+		});
+		
+		$(document).on('click', '#contacts_add', function(){			
+			var table_data = table.cache["contacts"];
+			table_data.push({
+				"name": "",
+				"phone": "",
+				"relationship":"",
+				"address":""});
+				
+			table.reload("contacts", {data: table_data})
+		});
+		 
+		 //鼠标失去焦点事件
+        $(document).ready(function () {
+            $("#chinaid").blur(function () {
+                var china_id = $(this).val();
+				var age = GetAge(china_id);
+				if (age != 0) {
+					$("#age").val(age);
+				}
+				
+				var sex = GetSex(china_id);
+				if (sex != 0) {
+					document.getElementById("sex").value = GetSex(china_id);
+					form.render("select");
+				}
+            })
+        });
+		
+		form.on('checkbox(other)', function(data) {   
+			if (data.elem.checked) { // 判断当前 checkbox 是否选中   
+				document.getElementById('interest_other').disabled = false;				
+			} else {  
+				document.getElementById('interest_other').value = "";
+				document.getElementById('interest_other').disabled = true;
+			}
+		});
+		
+		form.on('radio', function(data) {   
+			if (data.elem.value == "其他") {
+				if (data.elem.name == "religion") {
+					document.getElementById('religion_other').disabled = false;	
+				} else if (data.elem.name = "treat") {
+					document.getElementById('treat_other').disabled = false;	
+				}
+			} else {
+				if (data.elem.name == "religion") {
+					document.getElementById('religion_other').value = "";
+					document.getElementById('treat_other').value = "";
+				} else if (data.elem.name = "treat") {
+					document.getElementById('religion_other').disabled = true;
+					document.getElementById('treat_other').disabled = true;		
+				}			
+			}
+		});
+
+        //监听提交
+        form.on('submit(add)', function(data){
+			// 兴趣
+			var interest = [];
+			var child = $(".seach-box input[type='checkbox']");
+			child.each(function (index, item) {		
+				if (item.checked) {
+					interest.push(item.id);
+				}
+			});
+			data.field["interest"] = JSON.stringify(interest);
+			// 联系人
+			data.field["contacts"] = JSON.stringify(table.cache["contacts"]);
+			
+            $.ajax({
+                type: "post",
+                url: BasePath + '/inclient',
+                data: data.field,
+                dataType: "json",
+				headers: {'Access-Control-Allow-Origin' : BasePath,},
+				xhrFields: {withCredentials: true},
+                success: function(data){
+					console.log(data)
+                    if(data.code==0){
+                        layer.msg("注册成功", {icon: 6,time:2000},function () {
+                            window.parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                        return false;
+                    }else if(data.code==1001) {
+						// cookie 失效
+						var from = document.getElementById("from").value;
+						if (from == "client-op") {
+							parent.parent.location.href = "../../index.html";
+						} else {
+							parent.location.href = "../../index.html";
+						}
+                        return false;
+					}else{
+                        layer.msg(data.msg,{icon:5,time:5000});
+						return false;
+                    }
+                }
+            });
+        });
+		
+		$(document).keyup(function(event){
+			if (event.keyCode == 27) {
+			
+				var childFrame = window.frames[0];
+				console.log(childFrame);
+				
+				var len = window.frames.length;
+				if (len == 0) {
+					// 获得frame索引
+					var index = parent.layer.getFrameIndex(window.name);
+					//关闭当前frame
+					parent.layer.close(index);
+				} else {
+					var childFrame = window.frames[len-1];
+					// 获得frame索引
+					var index = layer.getFrameIndex(childFrame.name);
+					//关闭当前frame
+					layer.close(index);
+				}
+			}
+		})
+    })
+</script>
+
+
+</body>
+</html>

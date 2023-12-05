@@ -1,0 +1,41 @@
+@media print {
+    @page {
+        margin: 0.5in 0.25in 0.5in 0.25in;
+    }
+
+    body {
+        margin-left: 10mm; 
+    }
+
+    
+}
+
+table {
+    margin-left: auto;  
+    margin-right: auto;  
+}
+
+.titleSet {
+    text-align:center;
+    font-size: 45px;
+    font-family:"黑体";
+}
+
+.indexSet {
+    text-align:right;
+}
+
+.borderSet {
+    border:1px solid #000000;
+    text-align:center;
+}
+
+.borderSet-left {
+    border:1px solid #000000;
+    text-align:left;
+}
+
+.font-simsun {
+    font-family:"simsun";
+    color:#000000;
+}

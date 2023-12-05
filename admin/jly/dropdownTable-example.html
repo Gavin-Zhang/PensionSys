@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>下拉表格组件使用演示</title>
+  <link rel="stylesheet" href="../lib/layui/css/layui.css">
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+    }
+
+    .chosen-area {
+      display: inline-block;
+      width: 200px;
+      min-height: 35px;
+      border: 1px solid #cccccc;
+      line-height: 35px;
+      box-sizing: border-box;
+      padding: 0px 10px;
+    }
+
+    .chosen-area span {
+      font-size: 13px;
+      color: #000;
+    }
+
+    .chosen-area:hover {
+      border: 1px solid #16baaa;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class=" layui-main">
+
+    <blockquote class="layui-elem-quote">
+      <legend>下拉表格-使用示例（不带默认值）</legend>
+    </blockquote>
+    <div class="layui-inline">
+      <label class="layui-form-label" for="name">姓名</label>
+      <input type="hidden" name="name" id="name" />
+      <a class="chosen-area" id="singleSelect"></a>
+    </div>
+
+    <div class="layui-inline">
+      <label class="layui-form-label" for="personLabel">个人标签</label>
+      <input type="hidden" name="personLabel" id="personLabel" />
+      <a class="chosen-area" id="multiSelect"></a>
+    </div>
+
+    <blockquote class="layui-elem-quote">
+      <legend>下拉表格-使用示例（带默认值）</legend>
+      <hr class="layui-border-green">
+      <p class="layui-bg-gray">默认值需要在input元素上设置value，且在当前input绑定display-value</p>
+    </blockquote>
+    <div class="layui-block">
+      <label class="layui-form-label" for="gender">默认值-性别</label>
+      <input type="hidden" name="gender" id="gender" data-display-value="男" value="1" />
+      <a class="chosen-area" id="genderSelect"></a>
+    </div>
+
+    <blockquote class="layui-elem-quote">
+      <legend>下拉表格-使用示例（动态加载dropdownTable中的数据）</legend>
+    </blockquote>
+    <div class="layui-inline">
+      <label class="layui-form-label" for="dept">部门</label>
+      <div class="layui-input-inline layui-input-wrap">
+        <input class="layui-input" type="text" name="dept" id="dept" />
+      </div>
+    </div>
+    <div class="layui-inline">
+      <label class="layui-form-label" for="emp">员工</label>
+      <input type="hidden" name="emp" id="emp" />
+      <a class="chosen-area" id="empSelect"></a>
+    </div>
+  </div>
+
+  <script src="../lib/layui/layui.js"></script>
+  <script>
+    layui.config({
+      base: '../../layui-exts'
+    }).extend({
+      'dropdownTable': '/dropdownTable/dropdownTable'
+    });
+
+    layui.use(['dropdownTable', 'jquery'], () => {
+      let dropdownTable = layui.dropdownTable,
+        $ = layui.$;
+
+      dropdownTable.render({
+        style:'padding:10px;width:600px;height:400px',
+        emptyMsg: '请选择姓名',
+        elem: "#singleSelect",
+        bindInput: "#name",
+        selectType: 'radio',
+        auxiliaryType: "search",
+        selectTable: {
+          uniqueId: 'id',
+          displayField: 'username',
+          cols: [[
+            { field: 'id', title: 'ID' },
+            { field: 'username', title: '用户' },
+            { field: 'sex', title: '性别' },
+            { field: 'city', title: '城市' }
+          ]],
+          data: [{
+            "id": "1",
+            "username": "王五",
+            "sex": "男",
+            "city": "浙江杭州"
+          },
+          {
+            "id": "2",
+            "username": "三甲",
+            "sex": "女",
+            "city": "浙江杭州"
+          },
+          {
+            "id": "3",
+            "username": "李四",
+            "sex": "女",
+            "city": "浙江杭州"
+          }],
+          page: true,
+          limit: 2
+        }
+      });
+
+      dropdownTable.render({
+        emptyMsg: '性别',
+        elem: "#genderSelect",
+        bindInput: "#gender",
+        selectType: 'radio',
+        selectTable: {
+          uniqueId: 'id',
+          displayField: 'gender',
+          cols: [[
+            { field: 'id', title: 'ID' },
+            { field: 'gender', title: '性别', width: 120 }
+          ]],
+          data: [
+            {
+              "id": "1",
+              "gender": "男"
+            },
+            {
+              "id": "2",
+              "gender": "女"
+            }
+          ]
+        },
+        even: false
+      });
+
+      dropdownTable.render({
+        emptyMsg: '请选择个人标签',
+        elem: "#multiSelect",
+        bindInput: "#personLabel",
+        auxiliaryType: "add",
+        selectType: 'checkbox',
+        selectTable: {
+          uniqueId: 'id',
+          displayField: 'personLabel',
+          cols: [[
+            { field: 'id', title: 'ID' },
+            { field: 'personLabel', title: '标签项', width: 120 }
+          ]],
+          data: [
+            {
+              "id": "1",
+              "personLabel": "可爱"
+            },
+            {
+              "id": "2",
+              "personLabel": "凶猛"
+            },
+            {
+              "id": "3",
+              "personLabel": "编程爱好者"
+            },
+          ]
+        }
+      });
+
+      dropdownTable.render({
+        id: "empSelect",
+        emptyMsg: '请选择员工',
+        elem: "#empSelect",
+        bindInput: "#emp",
+        selectType: 'checkbox',
+        selectTable: {
+          uniqueId: 'id',
+          displayField: 'username',
+          cols: [[
+            { field: 'id', title: 'ID' },
+            { field: 'username', title: '姓名', width: 120 },
+            { field: 'dept', title: '部门', width: 120 },
+          ]],
+          data: [{
+            "id": "1",
+            "username": "王五",
+            "dept": "默认部门"
+          },
+          {
+            "id": "2",
+            "username": "三甲",
+            "dept": "默认部门"
+          },
+          {
+            "id": "3",
+            "username": "李四",
+            "dept": "默认部门"
+          }],
+          page: true,
+          limit: 2
+        }
+      });
+
+      $("#dept").on('change', function () {
+        let dept = $(this).val();
+        dropdownTable.clearSelected('empSelect'); //清空所有的已选择
+        dropdownTable.reloadSelectTable('empSelect', {
+          data: [{
+            "id": "1",
+            "username": "张亮",
+            "dept": "切换数据"
+          },
+          {
+            "id": "2",
+            "username": "刘佳",
+            "dept": "切换数据"
+          },
+          {
+            "id": "3",
+            "username": "王五",
+            "dept": "切换数据"
+          }]
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

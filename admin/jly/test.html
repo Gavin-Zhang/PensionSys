@@ -1,0 +1,136 @@
+<!doctype html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="renderer" content="webkit|ie-comp|ie-stand">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <meta http-equiv="Cache-Control" content="no-siteapp" />
+		<script src="../lib/layui/layui.js" charset="utf-8"></script>
+        <link rel="stylesheet" href="../css/font.css">
+        <link rel="stylesheet" href="../css/index.css">
+        <link rel="stylesheet" href="../../layui/css/layui.css">
+		<script type="text/javascript" src="./js/base.js"></script>
+		<iframe src="./print/application.html" hidden="true"></iframe>
+        <style>
+            html,
+            body {
+              width: 100%;
+              height: 100%;
+            }
+        
+            .chosen-area {
+              display: inline-block;
+              width: 200px;
+              min-height: 35px;
+              border: 1px solid #cccccc;
+              line-height: 35px;
+              box-sizing: border-box;
+              padding: 0px 10px;
+            }
+        
+            .chosen-area span {
+              font-size: 13px;
+              color: #000;
+            }
+        
+            .chosen-area:hover {
+              border: 1px solid #16baaa;
+              cursor: pointer;
+            }
+          </style>
+    </head>
+
+    <body>
+        <form class="layui-form layui-form-pane" action="" id="test" lay-filter="test">
+            <div class="layui-form-item layui-inline">
+                <label class="layui-form-label" for="personLabel">个人标签</label>
+                <input type="hidden" name="personLabel" id="personLabel" />
+                <a class="chosen-area" id="multiSelect"></a>
+            </div>
+            <div class="layui-form-item">
+                <table class="layui-hide" id="contacts", name="contacts" lay-filter="test"></table>
+            </div>
+            <div class="layui-form-item">
+                <button class="layui-btn layui-btn-fluid"  type="button" lay-filter="add" lay-submit="">
+                    提交
+                </button>
+            </div>
+        </form>
+	</body>
+
+    <!--工具栏模板-->
+<script type="text/html" id="contactstools">
+    <div class="layui-btn-group">
+      <button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" id="contacts_add">
+          <i class="layui-icon"  style="font-size: 20px">&#xe61f;</i>
+      </button>
+      <!--<button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" onclick="onRefresh();" lay-event="refresh"><i class="layui-icon"  style="font-size: 20px">&#xe669;</i></button>-->
+    </div>
+</script>
+
+    <script type="text/html" id="switchTpl">
+        <!-- 这里的 checked 的状态只是演示 -->
+        <input type="hidden" name="personLabel" id="personLabel" />
+        <a class="chosen-area" id="multiSelect"></a>
+    </script>
+	
+	<script>
+		layui.config({base: 'layui-exts'}).extend({'dropdownTable': '/dropdownTable/dropdownTable'})
+
+        layui.use(['dropdownTable', 'form', 'jquery', 'table'], () => {
+            let dropdownTable = layui.dropdownTable,
+            $ = layui.$;
+            form = layui.form;
+            table = layui.table;
+
+            dropdownTable.render({
+                emptyMsg: '请选择个人标签',
+                elem: "#multiSelect",
+                bindInput: "#personLabel",
+                selectType: 'checkbox',
+                selectTable: {
+                uniqueId: 'personLabel',
+                displayField: 'personLabel',
+                cols: [[
+                    // { field: 'id', title: 'ID' },
+                    { field: 'personLabel', title: '标签项', width: 120 }
+                ]],
+                data: [
+                    {"personLabel": "可爱"},
+                    {"personLabel": "凶猛"},
+                    {"personLabel": "编程爱好者"},
+                ]
+                }
+            });
+
+            table.render({
+                elem: '#contacts'
+                ,height: 270
+                ,data: []
+                ,editTrigger: 'dblclick'
+                ,toolbar: '#contactstools'
+                ,cols: [[
+                    ,{field:'id', width: '1%', align:'center', title: '序号', hide: true}
+                    ,{field:'test', width: '10%', align:'center', edit: 'text', title: 'test', templet: '#switchTpl',}
+                ]]
+            });
+
+            $(document).on('click', '#contacts_add', function(){			
+			var table_data = table.cache["contacts"];
+			table_data.push({
+				"id": "",
+				"test": ""});
+				
+			table.reload("contacts", {data: table_data})
+		});
+
+            form.on('submit(add)', function(data){
+                layer.msg(JSON.stringify(data.field));
+                console.log(data.field);
+                return false;
+            });
+
+        });
+	</script>
+</html>

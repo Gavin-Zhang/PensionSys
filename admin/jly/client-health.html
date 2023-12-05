@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        敬老院服务管理-总览-操作-健康信息
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+	<link rel="stylesheet" href="../../layui/css/layui.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript" src="./js/base.js"></script>
+	<style>
+		.chosen-area {
+			display: inline-block;
+			width: 400pt;
+			min-height: 35px;
+			border: 1px solid #cccccc;
+			line-height: 35px;
+			box-sizing: border-box;
+			padding: 0px 10px;
+		}
+
+		.chosen-area span {
+			font-size: 13px;
+			color: #000;
+		}
+
+		.chosen-area:hover {
+			border: 1px solid #16baaa;
+			cursor: pointer;
+		}
+		a.disabled {
+			pointer-events: none;
+			color: #ccc;
+		}
+	</style>
+</head>
+<body>
+	
+<div class="layui-card">
+
+    <form class="layui-form" action="" id="health" lay-filter="health">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+			<input type="hidden" id="from">
+			<input type="hidden" id="idx" name="idx">
+			<input type="hidden" id="client_idx" name="client_idx">
+			
+			<div class="layui-tab-item layui-show">
+
+				<div class="layui-row layui-col-space5">
+					<div class="layui-col-xs1 layui-col-sm1 layui-col-md1">
+						<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid"  type="button" id="print" lay-filter="print" onclick="onPrint();">打印健康表</button>
+					</div>
+					<div class="layui-col-xs1 layui-col-sm1 layui-col-md1 layui-col-md-offset9">
+						<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid layui-hide"  type="button" id="edit_cancel" onclick="on_cancel();">取消</button>
+					</div>
+					<div class="layui-col-xs1 layui-col-sm1 layui-col-md1">
+						<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid"  type="button" id="edit_save" lay-filter="save" lay-submit>编辑</button>
+					</div>
+				</div>	
+				<div class="layui-form-item">
+					<legend class="layui-font-14">血型</legend>
+					<div class="layui-field-box">
+						<div class="layui-form-item" id="blood">
+							<input type="radio" disabled="disable" name="blood" value="A型" title="A型">
+							<input type="radio" disabled="disable" name="blood" value="B型" title="B型">
+							<input type="radio" disabled="disable" name="blood" value="O型" title="O型">
+							<input type="radio" disabled="disable" name="blood" value="AB型" title="AB型">
+							<input type="radio" disabled="disable" name="blood" value="不详" title="不详" checked="">
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<legend class="layui-font-14">食物过敏史</legend>
+					<div class="layui-field-box">
+						<div class="layui-form-item">
+							<input class="layui-input" type="text" id="foot_allergy" name="foot_allergy" placeholder="说明" disabled>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<legend class="layui-font-14">药物过敏史</legend>
+					<div class="layui-field-box">
+						<div class="layui-form-item">
+							<div class="seach-box" id="drug_allergy">
+								<input type="checkbox" lay-skin="primary" lay-filter="drug_allergy_checkbox" name="青霉素" value="青霉素" id="青霉素"  title="青霉素" disabled>
+								<input type="checkbox" lay-skin="primary" lay-filter="drug_allergy_checkbox" name="磺胺"   value="磺胺"   id="磺胺"    title="磺胺" disabled>
+								<input type="checkbox" lay-skin="primary" lay-filter="drug_allergy_checkbox" name="链霉素" value="链霉素" id="链霉素"  title="链霉素" disabled>
+								<input type="checkbox" lay-skin="primary" lay-filter="drug_allergy_checkbox" name="药物过敏史其他"   value="其他"   id="药物过敏史其他"   title="其他" disabled>
+							</div>
+							<input class="layui-input" type="text" id="drug_allergy_other" name="drug_allergy_other" placeholder="其他说明" disabled>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<legend class="layui-font-14">暴露史</legend>
+					<div class="layui-field-box">
+						<div class="layui-form-item">
+							<div class="seach-box" id="exposure_allergy">
+								<input type="checkbox" lay-skin="primary" lay-filter="exposure_allergy_checkbox" disabled name="化学品" id="化学品" value="化学品" title="化学品">
+								<input type="checkbox" lay-skin="primary" lay-filter="exposure_allergy_checkbox" disabled name="毒物" id="毒物" value="毒物" title="毒物">
+								<input type="checkbox" lay-skin="primary" lay-filter="exposure_allergy_checkbox" disabled name="射线" id="射线" value="射线" title="射线">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<legend class="layui-font-14">遗传病史</legend>
+					<div class="layui-field-box">
+						<textarea id="genetic" name="genetic" placeholder="说明" class="layui-textarea" disabled="disabled"></textarea>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<legend class="layui-font-14">残疾情况</legend>
+					<div class="layui-field-box">
+						<div class="layui-form-item">
+							<div class="seach-box" id="disability">
+								<input type="checkbox" lay-skin="primary" lay-filter="disability_checkbox" name="视力残疾" value="视力残疾" id="视力残疾"  title="视力残疾" disabled>
+								<input type="checkbox" lay-skin="primary" lay-filter="disability_checkbox" name="听力残疾" value="听力残疾" id="听力残疾"  title="听力残疾" disabled>
+								<input type="checkbox" lay-skin="primary" lay-filter="disability_checkbox" name="言语残疾" value="言语残疾" id="言语残疾"  title="言语残疾" disabled>
+								<input type="checkbox" lay-skin="primary" lay-filter="disability_checkbox" name="肢体残疾" value="肢体残疾" id="肢体残疾"  title="肢体残疾" disabled>
+								<input type="checkbox" lay-skin="primary" lay-filter="disability_checkbox" name="智力残疾" value="智力残疾" id="智力残疾"  title="智力残疾" disabled>
+								<input type="checkbox" lay-skin="primary" lay-filter="disability_checkbox" name="精神残疾" value="精神残疾" id="精神残疾"  title="精神残疾" disabled>
+								<input type="checkbox" lay-skin="primary" lay-filter="disability_checkbox" name="残疾情况其他" value="其他" id="残疾情况其他" title="其他" disabled>
+							</div>
+							<input class="layui-input" type="text" id="disability_other" name="disability_other" placeholder="其他说明" disabled>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<legend class="layui-font-14">家族史</legend>
+					<div class="layui-field-box">
+						<div class="layui-inline">
+							<select id="family_history" lay-filter="family_history" disabled>
+								<option value=""></option>
+								<option value="父亲">父亲</option>
+								<option value="母亲">母亲</option>
+								<option value="兄弟姐妹">兄弟姐妹</option>
+								<option value="子女">子女</option>
+							</select>
+						</div>
+						<div class="layui-inline">
+							<input type="hidden" id="family_history_ill" />
+							<a class="chosen-area disabled" id="multiSelect"></a>
+						</div>
+						<button class="layui-btn layui-btn-normal" type="button" id="family_history_buttion" onclick="addFamilyHistory()" disabled>添加</button>
+						<div class="layui-field-box">
+							<table class="layui-hide" id="family_history_table" name="family_history_table" lay-filter="family_history_table"></table>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item" id="illnessdiv">
+					<legend class="layui-font-14">既往史及疾病史</legend>
+					<div class="layui-field-box">
+						<div class="layui-inline">
+							<input type="text" id="illness" style="position:absolute;z-index:2;width:150pt;" class="layui-input" placeholder="疾病名称" disabled>
+							<style>
+								.layui-form-select {
+									width: 175pt;
+								}
+							</style>
+							<select id="illness_name" lay-filter="illness_name" disabled>
+								<option value="高血压">高血压</option>
+								<option value="糖尿病">糖尿病</option>
+								<option value="冠心病">冠心病</option>
+								<option value="恶性肿瘤(癌症)">恶性肿瘤(癌症)</option>
+								<option value="脑卒中">脑卒中</option>
+								<option value="结核病">结核病</option>
+								<option value="肝炎">肝炎</option>
+							</select>
+						</div>
+						<div class="layui-inline">
+							<input type="text" class="layui-input" id="illdate" placeholder="确诊日期" disabled>
+						</div>
+						<button class="layui-btn layui-btn-normal" type="button" id="illness_button" onclick="addIllness()" disabled>添加</button>
+						<div class="layui-field-box">
+							<table class="layui-hide" id="illnesslist_table" name="illnesslist_table" lay-filter="illnesslist_table"></table>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+        </div>
+    </form>
+</div>
+
+<!--工具栏模板-->
+<script type="text/html" id="contactstools">
+  <div class="layui-btn-group">
+    <button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" id="contacts_add">
+		<i class="layui-icon"  style="font-size: 20px">&#xe61f;</i>
+	</button>
+	<!--<button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" onclick="onRefresh();" lay-event="refresh"><i class="layui-icon"  style="font-size: 20px">&#xe669;</i></button>-->
+  </div>
+</script>
+
+<script type="text/html" id="fieldtool">
+  <a class="layui-btn layui-btn-primary layui-btn-xs" id="tabledelete" lay-event="delete">删除</a>
+</script>
+
+<script>
+
+	let session_data;
+
+	layui.config({
+      base: '../../layui-exts'
+    }).extend({
+      'dropdownTable': '/dropdownTable/dropdownTable'
+    });
+
+    layui.use(['element','layer','form', 'laydate', 'table', 'dropdownTable'], function(){
+        var  $ = layui.jquery;//jquery
+        var element = layui.element;//面包导航
+        var layer = layui.layer;//弹出层
+        var form = layui.form;
+		var laydate = layui.laydate;
+		var table = layui.table;
+		var dropdownTable = layui.dropdownTable
+  
+		//执行一个laydate实例
+		laydate.render({
+			elem: '#illdate' //指定元素
+			,type: 'month'
+		});
+
+		console.log("jly-client-list", layui.sessionData("jly-client-list"))
+		console.log("jly-client-list op", layui.sessionData("jly-client-list").op)
+		console.log("jly-client-list op healthinfo", layui.sessionData("jly-client-list").op.HealthInfo)
+		session_data = layui.sessionData("jly-client-list").op;
+		console.log(session_data)
+		init(session_data);
+
+		$(document).keyup(function(event){
+			if (event.keyCode == 27) {
+			
+				var childFrame = window.frames[0];
+				console.log(childFrame);
+				
+				var len = window.frames.length;
+				if (len == 0) {
+					// 获得frame索引
+					var index = parent.layer.getFrameIndex(window.name);
+					//关闭当前frame
+					parent.layer.close(index);
+				} else {
+					var childFrame = window.frames[len-1];
+					// 获得frame索引
+					var index = layer.getFrameIndex(childFrame.name);
+					//关闭当前frame
+					layer.close(index);
+				}
+			}
+		})
+
+		form.on('checkbox(drug_allergy_checkbox)', function(data) {
+			if (data.elem.value === "其他") {
+				document.getElementById('drug_allergy_other').disabled = !data.elem.checked;
+				form.render();
+			} 
+		});
+		form.on('checkbox(disability_checkbox)', function(data) {
+			if (data.elem.value === "其他") {
+				document.getElementById('disability_other').disabled = !data.elem.checked;
+				form.render();
+			} 
+		});
+
+		// 监听既往史及疾病史下拉选框
+		form.on('select(illness_name)', function (data) {
+			let illness_input = document.getElementById("illness")
+      		illness_input.value = data.value;
+         });
+
+		table.render({
+			elem: '#illnesslist_table'
+			,data: JSON.parse(session_data.HealthInfo.illness)
+			,cols: [[
+				{field:'name', align:'center', title: '名称'}
+				,{field:'date', align:'center', title: '确诊时间'}
+				,{field: 'op', width: '10%', align:'center', toolbar: '#fieldtool', fixed: 'right'}
+			]]
+		});
+
+		table.render({
+			elem: '#family_history_table'
+			,data: JSON.parse(session_data.HealthInfo.family_history)
+			,cols: [[
+				{field:'relationship', width: '20%', align:'center', title: '关系'}
+				,{field:'history', width: '70%', align:'center', title: '家族史'}
+				,{field: 'op', width: '10%', align:'center', toolbar: '#fieldtool', fixed: 'right'}
+			]]
+		});
+
+		dropdownTable.render({
+			emptyMsg: ' ',
+			id: "family_history_drop",
+			elem: "#multiSelect",
+			bindInput: "#family_history_ill",
+			auxiliaryType: "add",
+			selectType: 'checkbox',
+			selectTable: {
+				uniqueId: 'ill',
+				displayField: 'ill',
+				cols: [[
+					{ field: 'ill', title: '选择项' }
+				]],
+				data: [
+					{"ill": "高血压"},
+					{"ill": "糖尿病"},
+					{"ill": "冠心病"},
+					{"ill": "慢性阻塞性肺疾病"},
+					{"ill": "恶性肿瘤"},
+					{"ill": "脑卒中"},
+					{"ill": "重性精神疾病"},
+					{"ill": "结核病"},
+					{"ill": "肝炎"},
+					{"ill": "先天畸形"},
+				]
+			}
+		});
+
+		table.on('tool(family_history_table)', function(obj) {
+			var data = obj.data;
+			console.log(obj)
+			if (obj.event === 'delete') {
+				if (data.name == "") {
+					var table_data = table.cache["family_history_table"];
+					table_data.splice(obj.tr.data("index"), 1);
+					table.reload("family_history_table", {data: table_data})
+				} else {
+					layer.confirm('确定要删除[' + data.name + ']么?',
+						{btn:['确定', '取消']},
+						function(index, layero) {
+							var table_data = table.cache["family_history_table"];
+							table_data.splice(obj.tr.data("index"), 1);
+							table.reload("family_history_table", {data: table_data})
+							layer.close(index);
+						});
+				}
+			}
+		});
+
+		table.on('tool(illnesslist_table)', function(obj) {
+			var data = obj.data;
+			
+			if (obj.event === 'delete') {
+				if (data.name == "") {
+					var table_data = table.cache["illnesslist_table"];
+					table_data.splice(obj.tr.data("index"), 1);
+					table.reload("illnesslist_table", {data: table_data})
+				} else {
+					layer.confirm('确定要删除[' + data.name + ']么?',
+						{btn:['确定', '取消']},
+						function(index, layero) {
+							var table_data = table.cache["illnesslist_table"];
+							table_data.splice(obj.tr.data("index"), 1);
+							table.reload("illnesslist_table", {data: table_data})
+							layer.close(index);
+						});
+				}
+			}
+		});
+
+		form.on('submit(save)', function(form_data) {
+			var btn = document.getElementById("edit_save")
+			if (btn.innerHTML === "编辑") {
+				on_edit(btn);
+				return false;
+			}
+
+			// 药物过敏史
+			let drug_allergy = [];
+			document.getElementById("drug_allergy")
+				.querySelectorAll('.layui-form-checked').forEach(function(item) {
+					drug_allergy.push(item.querySelector("div").innerText);
+				});
+			form_data.field["drug_allergy"] = JSON.stringify(drug_allergy);
+			// 暴露史
+			let exposure_allergy = [];
+			document.getElementById("exposure_allergy")
+				.querySelectorAll(".layui-form-checked").forEach(function(item) {
+					console.log("暴露史",item);
+					console.log("暴露史",item.querySelector("div").innerText);
+					exposure_allergy.push(item.querySelector("div").innerText);
+				});
+			form_data.field["exposure_allergy"] = JSON.stringify(exposure_allergy);
+			// 残疾情况其他
+			let disability = [];
+			document.getElementById("disability")
+				.querySelectorAll(".layui-form-checked").forEach(function(item) {
+					disability.push(item.querySelector("div").innerText);
+				});
+			form_data.field["disability"] = JSON.stringify(disability);
+			// 家族史
+			form_data.field["family_history"] = JSON.stringify(table.cache["family_history_table"]);
+			// 既往病史
+			form_data.field["illness"] = JSON.stringify(table.cache["illnesslist_table"]);
+
+			console.log(form_data.field)
+			$.ajax({
+                type: "post",
+                url: BasePath + '/setHealthInfo',
+                data: form_data.field,
+                dataType: "json",
+				headers: {'Access-Control-Allow-Origin' : BasePath,},
+				xhrFields: {withCredentials: true},
+                success: function(data){
+					console.log(data)
+                    if(data.code==0){
+                        layer.msg("保存成功", {icon: 6,time:2000},function () {
+							// 回写seesion data
+							on_save(btn);
+							session_data = form_data.field;
+							console.log("--》", session_data)
+							parent.backSetHealthInfo(session_data);
+                        });
+                        return false;
+                    }else if(data.code==1001) {
+						// cookie 失效
+						var from = document.getElementById("from").value;
+						if (from == "client-op") {
+							parent.parent.parent.location.href = "../../index.html";
+						} else {
+							parent.location.href = "../../index.html";
+						}
+                        return false;
+					}else{
+                        layer.msg(data.msg,{icon:5,time:5000});
+						return false;
+                    }
+                }
+            });
+			return false;
+        });
+
+		modifyCss();
+    });
+
+	function init(basedata) {
+		console.log(data)
+
+		var data = basedata.HealthInfo;
+
+		var drug_allergy = JSON.parse(data["drug_allergy"]);
+		var disability = JSON.parse(data["disability"]);
+		var exposure_allergy = JSON.parse(data["exposure_allergy"]);
+		layui.form.val("health", {
+			"idx": data["idx"],
+			"client_idx": data["client_idx"],
+			"blood": data["blood"],
+			"foot_allergy": data["foot_allergy"],
+			"drug_allergy": data["drug_allergy"],
+			"青霉素": drug_allergy.includes("青霉素"),
+			"磺胺": drug_allergy.includes("磺胺"),
+			"链霉素": drug_allergy.includes("链霉素"),
+			"药物过敏史其他": drug_allergy.includes("其他"),
+			"drug_allergy_other": data["drug_allergy_other"],
+			"化学品": exposure_allergy.includes("化学品"),
+			"毒物": exposure_allergy.includes("毒物"),
+			"射线": exposure_allergy.includes("射线"),
+			"genetic": data["genetic"],
+			"视力残疾": disability.includes("视力残疾"),
+			"听力残疾": disability.includes("听力残疾"),
+			"言语残疾": disability.includes("言语残疾"),
+			"肢体残疾": disability.includes("肢体残疾"),
+			"智力残疾": disability.includes("智力残疾"),
+			"精神残疾": disability.includes("精神残疾"),
+			"残疾情况其他": disability.includes("其他"),
+			"disability_other": data["disability_other"],
+		});
+		
+		layui.form.render();
+	}
+
+	function on_save(btn) {
+		btn.innerHTML = "编辑"
+		layui.$('#edit_save').removeClass('layui-btn-danger').addClass('layui-btn-normal');
+		layui.$('#edit_cancel').addClass('layui-hide');
+		layui.$('#print').removeClass('layui-hide');
+
+		controlDisabled(true);
+		layui.form.render();
+
+		modifyCss();
+	}
+
+	function on_edit(btn) {
+		btn.innerHTML = "保存"
+		layui.$('#edit_save').removeClass('layui-btn-normal').addClass('layui-btn-danger');
+		layui.$('#edit_cancel').removeClass('layui-hide');
+		layui.$('#print').addClass('layui-hide');
+
+		controlDisabled(false);
+		layui.form.render();
+	}
+
+	function on_cancel() {
+		var btn = document.getElementById("edit_save")
+		btn.innerHTML = "编辑"
+		layui.$('#edit_save').removeClass('layui-btn-danger').addClass('layui-btn-normal');
+		layui.$('#edit_cancel').addClass('layui-hide');
+		layui.$('#print').removeClass('layui-hide');
+
+		controlDisabled(true);
+		modifyCss();
+		layui.form.render();
+	}
+
+	function controlDisabled(disable) {
+		// 血型
+		document.querySelectorAll('input[type="radio"]').forEach(function(item){
+			item.disabled = disable;
+		});
+		// 食物过敏史
+		document.getElementById("foot_allergy").disabled = disable;
+		// 遗传病史
+		document.getElementById("genetic").disabled = disable;
+		// 暴露史、药物过敏史、残疾情况
+		var checbox = document.querySelectorAll('input[type="checkbox"]');
+		checbox.forEach(function(item) {
+			item.disabled = disable;
+		})
+		//药物过敏史其他
+		document.getElementById('drug_allergy_other').disabled = disable ? disable : !document.getElementById('药物过敏史其他').checked
+		//残疾情况其他
+		document.getElementById('disability_other').disabled = disable ? disable : !document.getElementById('残疾情况其他').checked
+	
+		
+		// 家族史与既往史疾病史的下拉选框
+		document.querySelectorAll('select')
+			.forEach(function(item){
+				item.disabled = disable;
+			})
+		// 家族史与既往史疾病史的下拉选框 表格工具按钮【删除】
+		document.querySelectorAll("a[id=tabledelete]").forEach(function(item){
+			disable ? item.classList.add("disabled") : item.classList.remove("disabled")
+		})
+		// 家族史
+		disable ? document.querySelector("a[id=multiSelect]").classList.add("disabled") : document.querySelector("a[id=multiSelect]").classList.remove("disabled");
+		document.getElementById("family_history_buttion").disabled = disable;
+		//既往史疾病史
+		document.getElementById("illness").disabled = disable;
+		document.getElementById("illdate").disabled = disable;
+		document.getElementById("illness_button").disabled = disable;
+	}
+
+	function addFamilyHistory() {
+		let relationship = document.getElementById("family_history").value
+		if (relationship == "") {
+			layer.msg("请填写关系", {icon: 5,time:2000});
+			return;
+		}
+		let ills = document.getElementById("family_history_ill").value
+		if (ills == "") {
+			layer.msg("请填写家族史", {icon: 5,time:2000});
+			return;
+		}
+
+		let ill_str = ills.replace(/\$/g, ';');
+		var table_data = layui.table.cache["family_history_table"];
+		table_data.push({
+			"relationship": relationship,
+			"history": ill_str});
+		layui.table.reload("family_history_table", {data: table_data})
+		layui.dropdownTable.clearSelected("family_history_drop");
+	}
+
+	function addIllness() {
+		let ill_name = document.getElementById("illness").value
+		if (ill_name == "") {
+			layer.msg("请填写疾病名称", {icon: 5,time:2000});
+			return false;
+		}
+		let ill_date = document.getElementById("illdate").value;
+		if (ill_date == "") {
+			layer.msg("请填写确诊日期", {icon: 5,time:2000});
+			return false;
+		}
+
+		let ill_str = ill_date.replace("$",";");
+		var table_data = layui.table.cache["illnesslist_table"];
+		table_data.push({
+			"name": ill_name,
+			"date": ill_str});
+		layui.table.reload("illnesslist_table", {data: table_data})
+	}
+
+	function onPrint() {
+		layer.open({
+			type: 2,
+			area: ['1px', '1px'],
+			offset: ['-100px', '-100px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "敬老院服务管理-总览-操作",
+			content: 'client-healthinfo-print.html',
+			success:function(layero,index){
+				layer.full(index);
+			}
+		})
+	}
+
+	let doms = {
+		blood : document.getElementById("blood"),
+		disability : document.getElementById("disability"),
+		drugAllergy : document.getElementById("drug_allergy"),
+	}
+	function modifyCss() {
+		doms.blood.querySelectorAll(".layui-form-radioed")
+			.forEach(function(radio) {
+				radio.classList.remove("layui-radio-disabled");
+			});
+		doms.drugAllergy.querySelectorAll(".layui-form-checked")
+			.forEach(function(checkbox) {
+				checkbox.classList.remove("layui-checkbox-disabled");
+			});
+		doms.disability.querySelectorAll(".layui-form-checked")
+			.forEach(function(checkbox) {
+				checkbox.classList.remove("layui-checkbox-disabled");
+			});
+	}
+
+</script>
+
+
+</body>
+</html>

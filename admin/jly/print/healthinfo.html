@@ -1,0 +1,573 @@
+<!doctype html>
+<html class="x-admin-sm">
+    <script id="healthinfo-page" type="text/html">
+        <table width="1107.75" cellpadding="0" cellspacing="0">
+            <col width="144.67"/>
+            <col width="146"/>
+            <col width="106.17"/>
+            <col width="76.92"/>
+            <col width="104"/>
+            <col width="405"/>
+            <col width="178"/>
+            <tr height="23" style='height:20pt;'>
+                <td height="23" width="144.67" style='height:20pt;width:86.80pt;'></td>
+                <td width="146" style='width:87.60pt;'></td>
+                <td width="166.17" style='width:99.70pt;'></td>
+                <td width="46.92" style='width:28.15pt;'></td>
+                <td width="59" style='width:35.40pt;'></td>
+                <td class="indexSet layui-font-16" width="345" x:str>
+                    {{# if(typeof d.HealthInfo === 'undefined' || d.HealthInfo == null || d.HealthInfo.idx == null) { }}
+                        <b>No:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                    {{# } else { }}
+                        <b>No: {{= d.HealthInfo.idx }}</b>
+                    {{# }}}
+                </td>
+            </tr>
+            <tr height="15" style='height:9.00pt'>
+                <td height="15" style='height:9.00pt;'></td>
+                <td colspan="5"></td>
+            </tr>
+            <tr height="50" style='height:50.00pt'>
+                <td class="titleSet" height="50" colspan="6" style='height:50.00pt' x:str>五龙背镇敬老院个人基本健康信息</td>
+            </tr>
+            <tr height="15" style='height:15.00pt'>
+                <td height="15" style='height:15.00pt;'></td>
+                <td colspan="5"></td>
+            </tr>
+            <tr height="41.67" style='height:40.00pt;'>
+                <td class="borderSet layui-font-20" height="41.67" style='height:40.00pt;' x:str>姓名</td>
+                <td class="borderSet layui-font-20" colspan="2">{{ d.Name }}</td>
+                <td class="borderSet layui-font-20" colspan="2"x:str>身份证号</td>
+                <td class="borderSet layui-font-20">{{ d.ChinaId }}</td>
+            </tr>
+            <tr height="41.67" style='height:40.00pt;'>
+                <td class="borderSet layui-font-20" height="41.67" style='height:40.00pt;' x:str>性别</td>
+                <td class="borderSet layui-font-20" colspan="2" >{{ d.Sex }}</td>
+                <td class="borderSet layui-font-20" colspan="2" style='border-right:none;border-bottom:.5pt solid #000000;' x:str>出生日期</td>
+                <td class="borderSet layui-font-20">{{ d.Birthday }}</td>
+            </tr>
+            <tr height="41.67" style='height:40.00pt;'>
+                <td class="borderSet layui-font-20" height="41.67" style='height:40.00pt;' x:str>民族</td>
+                <td class="borderSet layui-font-20" colspan="2">{{ d.Nation }}</td>
+                <td class="borderSet layui-font-20" colspan="2" x:str>血&nbsp;&nbsp; 型</td>
+                <!-- <td class="borderSet layui-font-20" x:str>□A型 □B型 □O型 □AB型 □不详</td> -->
+                <td class="borderSet layui-font-20" x:str>
+                    {{# if(typeof d.HealthInfo === 'undefined' || d.HealthInfo === null || typeof d.HealthInfo.blood === 'undefined' || d.HealthInfo.blood === null || d.HealthInfo.blood === ''){ }}
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>A型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>B型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>O型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>AB型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>不详</font>
+                    {{# } else if(d.HealthInfo.blood === 'A型') { }}
+                        <font class='font-simsun layui-font-16'><b>☑</b></font>
+                        <font class='layui-font-16'><b>A型</b></font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>B型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>O型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>AB型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>不详</font>
+                    {{# } else if(d.HealthInfo.blood === 'B型') { }}
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>A型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'><b>☑</b></font>
+                        <font class='layui-font-16'><b>B型</b></font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>O型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>AB型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>不详</font>
+                    {{# } else if(d.HealthInfo.blood === 'O型') { }}
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>A型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>B型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'><b>☑</b></font>
+                        <font class='layui-font-16'><b>O型</b></font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>AB型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>不详</font>
+                    {{# } else if(d.HealthInfo.blood === 'AB型') { }}
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>A型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>B型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>O型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'><b>☑</b></font>
+                        <font class='layui-font-16'><b>AB型</b></font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>不详</font>
+                    {{# } else if(d.HealthInfo.blood === '不详') { }}
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>A型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>B型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>O型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'>□</font>
+                        <font class='layui-font-16'>AB型</font>
+                        <span class='layui-font-10'>&nbsp;</span>
+                        <font class='font-simsun layui-font-16'><b>☑</b></font>
+                        <font class='layui-font-16'><b>不详</b></font>
+                    {{# } }}
+                </td>
+            </tr>
+            <tr height="41.67" style='height:40.00pt;'>
+                <td class="borderSet layui-font-20" style='height:40.00pt;' x:str>文化程度</td>
+                <!-- <td class="borderSet-text-left layui-font-20" colspan="5" x:str>□文盲及半文盲&nbsp; □小学&nbsp; □初中&nbsp; □高中/技校/中专&nbsp; □大学专科及以上</td> -->
+                <td class="borderSet-text-left layui-font-20" colspan="5" x:str>
+                    <span class='layui-font-20'>&nbsp;</span>
+                    {{# if(typeof typeof d.Culture === 'undefined' || d.Culture === null || d.Culture === ''){ }}
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>文盲及半文盲</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>小学</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>初中</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>高中/技校/中专</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>大学专科及以上</font>
+                    {{# } else if(d.Culture === '文盲及半文盲') { }}
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>文盲及半文盲</b></font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>小学</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>初中</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>高中/技校/中专</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>大学专科及以上</font>
+                    {{# } else if(d.Culture === '小学') { }}
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>文盲及半文盲</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>小学</b></font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>初中</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>高中/技校/中专</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>大学专科及以上</font>
+                    {{# } else if(d.Culture === '初中') { }}
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>文盲及半文盲</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>小学</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>初中</b></font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>高中/技校/中专</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>大学专科及以上</font>
+                    {{# } else if(d.Culture === '高中/技校/中专') { }}
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>文盲及半文盲</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>小学</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>初中</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>高中/技校/中专</b></font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>大学专科及以上</font>
+                    {{# } else if(d.Culture === '大学专科及以上') { }}
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>文盲及半文盲</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>小学</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>初中</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>高中/技校/中专</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>大学专科及以上</b></font>
+                    {{# } }}
+                </td>
+            </tr>
+            <tr height="75" style='height:70.00pt'>
+                <td class="borderSet layui-font-20" height="75" style='height:70.00pt;' x:str>医疗费用<br/>支付方式</td>
+                <td class="borderSet-text-left layui-font-20" colspan="5"  x:str>
+                    <span class='layui-font-20'>&nbsp;</span>
+                    {{# if(typeof typeof d.Treat === 'undefined' || d.Treat === null || d.Treat === ''){ }}
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>城镇职工医疗保险</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>城镇居民医疗保险</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>新型农村合作医疗</font></br>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>全公费</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>全自费</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>其他</font>
+                    {{# } else if(d.Treat === '城镇职工医疗保险') { }}
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>城镇职工医疗保险</b></font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>城镇居民医疗保险</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>新型农村合作医疗</font></br>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>全公费</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>全自费</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>其他</font>
+                    {{# } else if(d.Treat === '城镇居民医疗保险') { }}
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>城镇职工医疗保险</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>城镇居民医疗保险</b></font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>新型农村合作医疗</font></br>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>全公费</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>全自费</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>其他</font>
+                    {{# } else if(d.Treat === '新型农村合作医疗') { }}
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>城镇职工医疗保险</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>城镇居民医疗保险</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>新型农村合作医疗</b></font></br>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>全公费</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>全自费</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>其他</font>
+                    {{# } else if(d.Treat === '全公费') { }}
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>城镇职工医疗保险</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>城镇居民医疗保险</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>新型农村合作医疗</font></br>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>全公费</b></font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>全自费</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>其他</font>
+                    {{# } else if(d.Treat === '全自费') { }}
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>城镇职工医疗保险</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>城镇居民医疗保险</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>新型农村合作医疗</font></br>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>全公费</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>全自费</b></font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>其他</font>
+                    {{# } else if(d.Treat === '其他') { }}
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>城镇职工医疗保险</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>城镇居民医疗保险</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>新型农村合作医疗</font></br>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>全公费</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>全自费</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'><b>☑</b></font>
+                        <font class='layui-font-20'><b>其他</b></font>
+                        <span class='layui-font-20'>&nbsp</span>
+                        <font class='layui-font-20'><b>:<u>{{= d.TreatOther }}</u></b></font>
+                    {{# } }}
+                </td>
+            </tr>
+            <tr height="41.67" style='height:40.00pt;'>
+                <td class="borderSet layui-font-20" height="41.67" style='height:40.00pt;' x:str>药物过敏史</td>
+                <td class="borderSet-text-left layui-font-20" colspan="5" x:str>
+                    {{# if(typeof d.HealthInfo === 'undefined' || d.HealthInfo === null || typeof d.HealthInfo.drug_allergy === 'undefined' || d.HealthInfo.drug_allergy === null || d.HealthInfo.drug_allergy === ''){ }}
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>青霉素</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>磺胺</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-20'>□</font>
+                        <font class='layui-font-20'>链霉素</font>
+                        <span class='layui-font-20'>&nbsp;</span>
+                        <font class='font-simsun layui-font-20'>□</font>
+                        <font class='layui-font-20'>其他</font>
+                    {{# } else { }}
+                        <span class='layui-font-20'>&nbsp</span>
+                        {{# if(d.HealthInfo.drug_allergy.indexOf('青霉素') != -1){ }}
+                            <font class='font-simsun layui-font-20'><b>☑</b></font>
+                            <font class='layui-font-20'><b>青霉素</b></font>
+                        {{# } else { }}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>青霉素</font>
+                        {{# } }}
+
+                        <span class='layui-font-20'>&nbsp</span>
+                        {{# if(d.HealthInfo.drug_allergy.indexOf('磺胺') != -1){ }}
+                            <font class='font-simsun layui-font-20'><b>☑</b></font>
+                            <font class='layui-font-20'><b>磺胺</b></font>
+                        {{# } else { }}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>磺胺</font>
+                        {{# } }}
+
+                        <span class='layui-font-20'>&nbsp</span>
+                        {{# if(d.HealthInfo.drug_allergy.indexOf('链霉素') != -1){ }}
+                            <font class='font-simsun layui-font-20'><b>☑</b></font>
+                            <font class='layui-font-20'><b>链霉素</b></font>
+                        {{# } else { }}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>链霉素</font>
+                        {{# } }}
+
+                        <span class='layui-font-20'>&nbsp</span>
+                        {{# if(d.HealthInfo.drug_allergy.indexOf('其他') != -1){ }}
+                            <font class='font-simsun layui-font-20'><b>☑</b></font>
+                            <font class='layui-font-20'><b>其他</b></font>
+                            <font class='layui-font-20'><b>:<u>{{= d.HealthInfo.drug_allergy_other }}</u></b></font>
+                        {{# } else {}}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>其他</font>
+                        {{# } }}
+
+                    {{# } }}
+                </td>
+            </tr>
+            <tr height="41.67" style='height:40.00pt;'>
+                <td class="borderSet layui-font-20" height="41.67" style='height:40.00pt;' x:str>食物过敏史</td>
+                {{# if(typeof d.HealthInfo === 'undefined' && d.HealthInfo == null || typeof d.HealthInfo.food_allergy === 'undefined' || d.HealthInfo.food_allergy === null){ }}
+                    <td class="borderSet-text-left layui-font-20" colspan="5"></td>
+                {{# } else { }}
+                    <td class="borderSet-text-left layui-font-20" colspan="5">{{= d.HealthInfo.food_allergy }}</td>
+                {{# }}} 
+            </tr>
+            <tr height="41.67" style='height:40.00pt;'>
+                <td class="borderSet layui-font-20" height="41.67" style='height:40.00pt;' x:str>暴露史</td>
+                <td class="borderSet-text-left layui-font-20" colspan="5" x:str>
+                    {{#
+                        var get_exposure_list = function() {
+                            return ["化学品", "毒物", "射线"];
+                        };
+                    }}
+                    {{# if(typeof d.HealthInfo === 'undefined' || d.HealthInfo === null || typeof d.HealthInfo.exposure_allergy === 'undefined' || d.HealthInfo.exposure_allergy === null || d.HealthInfo.exposure_allergy === ''){ }}
+                        {{# for(var i = 0; i < get_exposure_list().length; i++){ }}
+                            <span class='layui-font-20'>&nbsp;</span>
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>{{ get_exposure_list()[i] }}</font>
+                        {{# }}}
+                    {{# } else { }}
+                        {{# for(var i = 0; i < get_exposure_list().length; i++){ }}
+                            {{# if(d.HealthInfo.exposure_allergy.indexOf(get_exposure_list()[i]) > -1){ }}
+                                <span class='layui-font-20'>&nbsp;</span>
+                                <font class='font-simsun layui-font-20'><b>☑</b></font>
+                                <font class='layui-font-20'><b>{{ get_exposure_list()[i] }}</b></font>
+                            {{# } else { }}
+                                <span class='layui-font-20'>&nbsp;</span>
+                                <font class='font-simsun layui-font-20'>□</font>
+                                <font class='layui-font-20'>{{ get_exposure_list()[i] }}</font>
+                            {{# }}}
+                        {{# } }}
+                    {{# } }}
+                </td>
+            </tr>
+            <tr height="41.67" style='height:70.00pt;'>
+                <td class="borderSet layui-font-20" height="41.67" style='height:70.00pt;' x:str>残疾情况</td>
+                <td class="borderSet-text-left layui-font-20" colspan="5"  x:str>
+                    {{#
+                        var get_disability_list = function() {
+                            return ["视力残疾", "听力残疾", "言语残疾", "肢体残疾", "智力残疾", "精神残疾", "其他残疾"];
+                        };
+                    }}
+                    {{# if(typeof d.HealthInfo === 'undefined' || d.HealthInfo === null || typeof d.HealthInfo.disability === 'undefined' || d.HealthInfo.disability === null || d.HealthInfo.disability === ''){ }}
+                        {{# for(var i = 0; i < get_disability_list().length; i++){ }}
+                            <span class='layui-font-20'>&nbsp;</span>
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>{{ get_disability_list()[i] }}</font>
+                            {{# if(get_disability_list()[i] === '精神残疾') { }}
+                                </br>
+                            {{# }}}
+                        {{# }}}
+                    {{# } else { }}
+                        {{# for(var i = 0; i < get_disability_list().length; i++){ }}
+                            {{# if(d.HealthInfo.disability.indexOf(get_disability_list()[i]) > -1){ }}
+                                <span class='layui-font-20'>&nbsp;</span>
+                                <font class='font-simsun layui-font-20'><b>☑</b></font>
+                                <font class='layui-font-20'><b>{{ get_disability_list()[i] }}</b></font>
+                                {{# if(get_disability_list()[i] === '其他残疾') { }}
+                                    <font class='layui-font-20'><b>:<u>{{ d.HealthInfo.disability_other }}</u></b></font>
+                                {{# }}}
+                            {{# } else { }}
+                                <span class='layui-font-20'>&nbsp;</span>
+                                <font class='font-simsun layui-font-20'>□</font>
+                                <font class='layui-font-20'>{{ get_disability_list()[i] }}</font>
+                            {{# }}}
+                            {{# if(get_disability_list()[i] === '精神残疾') { }}
+                                </br>
+                            {{# }}}
+                        {{# } }}
+                    {{# } }}
+                </td>
+            </tr>
+            {{#
+                var json_parse = function(str) {
+                    return JSON.parse(str);
+                };
+            }}
+            {{# let illnessdata = []; }}
+            <tr height="33.33" style='height:20.00pt;'>
+                <td class="borderSet layui-font-20" height="433.33" rowspan="13" style='height:260.00pt;border-right:none;border-bottom:none;' x:str>既</br>往</br>史</br>及</br>疾</br>病</br>史</td>
+                {{# if(typeof d.HealthInfo !== 'undefined' && d.HealthInfo != null && typeof d.HealthInfo.illness !== 'undefined' && d.HealthInfo.illness != null && d.HealthInfo.illness !== ''){ }}
+                    {{# illnessdata = json_parse(d.HealthInfo.illness) }}
+                    <td class="borderSet-line-left text-left layui-font-20" colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;{{ illnessdata[0].name }}</td>
+                    <td class="borderSet-line-right text-left layui-font-20" colspan="2">确诊日期:&nbsp;{{ illnessdata[0].date }}</td>
+                {{# } else { }}
+                    <td class="borderSet-line-left text-left layui-font-20" colspan="3"></td>
+                    <td class="borderSet-line-right text-left layui-font-20" colspan="2"></td>
+                {{# } }}
+            </tr>
+            {{# for(var i=1; i<=12; i++) { }}
+            <tr height="33.33" style='height:20.00pt'>
+                {{# if (i < illnessdata.length) { }}
+                    <td class="borderSet-line-left text-left layui-font-20" colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;{{ illnessdata[i].name }}</td>
+                    <td class="borderSet-line-right text-left layui-font-20" colspan="2">确诊日期:&nbsp;{{ illnessdata[i].date }}</td>
+                {{# } else { }}
+                    <td class="borderSet-line-left layui-font-20" colspan="3" ></td>
+                    <td class="borderSet-line-right layui-font-20" colspan="2" ></td>
+                {{# }}}
+            </tr>
+            {{#  } }}
+            <tr height="41.67" style='height:40.00pt;'>
+                <td class="borderSet layui-font-20" height="166.67" rowspan="4" style='height:100.00pt' x:str>家族史</td>
+                {{# if(typeof d.HealthInfo !== 'undefined' && d.HealthInfo != null && typeof d.HealthInfo.family_history !== 'undefined' && d.HealthInfo.family_history != null && d.HealthInfo.family_history !== ''){ }}
+                    {{# d.HealthInfo.familyhdata = json_parse(d.HealthInfo.family_history) }}
+                    <td class="borderSet layui-font-20">{{ d.HealthInfo.familyhdata[0].relationship }}</td>
+                    <td class="borderSet layui-font-20" colspan="4">{{ d.HealthInfo.familyhdata[0].history }}</td>
+                {{# } else { }}
+                    <td class="borderSet layui-font-20"></td>
+                    <td class="borderSet layui-font-20" colspan="4"></td>
+                {{# } }}
+            </tr>
+            {{# for(var i=1; i<=3; i++) { }}
+            <tr height="41.67" style='height:40.00pt;'>
+                <td class="borderSet layui-font-20"></td>
+                <td class="borderSet layui-font-20" colspan="4"></td>
+            </tr>
+            {{# }}}
+            <tr height="116.67" style='height:110.00pt'>
+                <td class="borderSet layui-font-20" height="116.67" style='height:110.00pt;' x:str>遗传病史</td>
+                <td class="borderSet layui-font-20" colspan="5">
+                    {{# if(typeof d.HealthInfo!== 'undefined' && d.HealthInfo!= null && typeof d.HealthInfo.genetic!== 'undefined' && d.HealthInfo.genetic!= null ){ }}
+                        {{ d.HealthInfo.genetic }}
+                    {{# }}}
+                </td>
+            </tr>
+            <tr height="66.67" style='height:50.00pt'>
+                <td class="borderSet layui-font-20" height="66.67" style='height:50.00pt;' x:str>签字确认</td>
+                <td class="borderSet layui-font-20" colspan="3"></td>
+                <td class="borderSet layui-font-20" x:str>日期</td>
+                <td class="borderSet layui-font-20" x:str>2023年12月4日</td>
+            </tr>
+    </script>
+</html>

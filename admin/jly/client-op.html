@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        编辑信息
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+	<meta http-equiv="Pragma" content="no-cache">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+	<link rel="stylesheet" href="../lib/layui/css/layui.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript" src="./js/base.js"></script>
+
+</head>
+
+<body>
+
+<div class="layui-card">
+    <form class="layui-form layui-form-pane" action="" id="modify" lay-filter="modify">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+			<input type="hidden" id="from">
+
+			<br>
+			
+			<div class="layui-row  layui-col-space5">
+				<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+					<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid"  type="button" lay-filter="application" onclick="onApplication();">入住申请</button>
+				</div>
+				<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+					<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid"  type="button" lay-filter="health_info" onclick="onHealthInfo();">健康信息</button>
+				</div>
+			</div>	
+			
+			<div class="layui-tab-item layui-show">
+				<table class="layui-table" lay-skin="line">
+					<col class="layui-form-item"/>
+					<col class="layui-form-item"/>
+					<col class="layui-form-item"/>
+					<tr>
+						<td class="layui-form-item" style="height:206px;width:147px" rowspan="4">
+							<div class="layui-upload-drag" id="upload">
+								<div class="layui-hide" id="uploadAvatar">									
+									<img src="" alt="上传成功后渲染" style="height: 206px;width: 147px;max-width: 147px" id="avatarImg">
+								</div>
+								
+								<div id="uploadView">
+									<i class="layui-icon"></i>
+									<p>点击上传，或将文件拖拽到此处</p>
+								</div>
+							</div>
+						</td>
+						<td class="layui-form-item">
+							<div class="layui-row">
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>姓名
+									</label>
+									<div class="layui-input-block">
+										<input type="text" name="name" id="name" disabled="disable" lay-verify="required" autocomplete="off" value="" class="layui-input">
+									</div>
+								</div>
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>身份证号</label>
+									<div class="layui-input-block">
+										<input type="text" name="chinaid" id="chinaid" disabled="disable" lay-verify="required|identity" autocomplete="off" value="" class="layui-input">
+									</div>
+								</div>
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">
+										联系电话
+									</label>
+									<div class="layui-input-block">
+										<input type="text" name="phone" id="phone" autocomplete="off" value="" class="layui-input" disabled="disable">
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="layui-form-item">
+							<div class="layui-row">
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">性别</label>
+									<div class="layui-input-block">
+										<input type="text" name="sex" id="sex" lay-verify="" autocomplete="off" value="" class="layui-input" disabled="disabled">
+									</div>
+								</div>
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">年龄</label>
+									<div class="layui-input-block">
+										<input type="text" lay-verify="required|number" disabled="disabled" name="age" id="age" autocomplete="off" value="" class="layui-input">
+									</div>
+								</div>
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>婚姻状况
+									</label>
+									<div class="layui-input-block">
+										<select name="marriage" id="marriage" disabled="disabled" lay-verify="required">
+											<option value="未婚">未婚</option>
+											<option value="已婚">已婚</option>
+											<option value="丧偶">丧偶</option>
+											<option value="离异">离异</option> 
+										</select>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="layui-form-item">
+							<div class="layui-row">
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>民族
+									</label>
+									<div class="layui-input-block">
+										<input type="text" name="nation" id="nation" lay-verify="" autocomplete="off" value="" class="layui-input" disabled="disabled">
+									</div>
+								</div>
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>文化程度
+									</label>
+									<div class="layui-input-block">
+										<select name="culture" id="culture" lay-verify="required" disabled="disable">
+											<option value="文盲及半文盲">文盲及半文盲</option>
+											<option value="小学">小学</option>
+											<option value="初中">初中</option>
+											<option value="高中/技校/中专">高中/技校/中专</option>
+											<option value="大学专科及以上">大学专科及以上</option>
+											<option value="不详">不详</option>
+										</select>
+									</div>
+								</div>
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>政治面貌
+									</label>
+									<div class="layui-input-block">
+										<select name="politics" id="politics" lay-verify="required" disabled="disable">
+											<option value="群众">群众</option>
+											<option value="中共党员">中共党员</option>
+											<option value="民主党派">民主党派人士</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="layui-form-item">
+							<div class="layui-row">
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>人员类型
+									</label>
+									<div class="layui-input-block">
+										<select name="client_type" id="client_type" lay-verify="required" disabled="disable">
+											<option value="社会老人">社会老人</option>
+											<option value="农村低保老人">农村低保老人</option>
+											<option value="城镇低保老人">城镇低保老人</option> 
+											<option value="五保老人">五保老人</option>
+										</select>
+									</div>
+								</div>
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>缴费类型
+									</label>
+									<div class="layui-input-block">
+										<select name="pay_type" id="pay_type" lay-verify="required" disabled="disable">
+											<option value="自费">自费</option>
+											<option value="低保">低保</option>
+											<option value="五保">五保</option>
+										</select>
+									</div>
+								</div>
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label for="indate" class="layui-form-label">
+										<span class='x-red'>*</span>政府托管
+									</label>
+									<div class="layui-input-block">
+										<select name="trusteeship" id="trusteeship" lay-verify="required" disabled="disable">
+											<option value="否">否</option>
+											<option value="是">是</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+					<label class="layui-form-label">
+						<span class='x-red'>*</span>住址
+					</label>
+					<div class="layui-input-block">
+						<input type="text" lay-verify="required" name="addr" id="addr" autocomplete="off" value="" class="layui-input" disabled="disable">
+					</div>
+				</div>
+				<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+					<label class="layui-form-label">
+						<span class='x-red'>*</span>入住日期
+					</label>
+					<div class="layui-input-block">
+						<input type="text" lay-verify="required" name="indate" id="indate" autocomplete="off" value="" class="layui-input" disabled="disable">
+					</div>
+				</div>
+			</div>
+			<!--  <form class="layui-form layui-form-pane" action="" id="add">-->
+			<fieldset class="layui-elem-field">
+				<legend class="layui-font-14">联系人</legend>
+				<div class="layui-field-box">
+					<div class="layui-form-item">
+						<table class="layui-hide" id="contacts" name="contacts" lay-filter="test"></table>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="layui-elem-field">
+				<legend class="layui-font-14">兴趣爱好</legend>
+				<div class="layui-field-box">
+					<div class="seach-box">
+						<input type="checkbox" name="棋牌" lay-skin="primary" id="棋牌" title="棋牌" disabled="disable">
+						<input type="checkbox" name="戏曲" lay-skin="primary" id="戏曲" title="戏曲" disabled="disable"> 
+						<input type="checkbox" name="舞蹈" lay-skin="primary" id="舞蹈" title="舞蹈" disabled="disable">
+						<input type="checkbox" name="唱歌" lay-skin="primary" id="唱歌" title="唱歌" disabled="disable">
+						<input type="checkbox" name="乐器" lay-skin="primary" id="乐器" title="乐器" disabled="disable">
+						<input type="checkbox" name="阅读" lay-skin="primary" id="阅读" title="阅读" disabled="disable">
+						<input type="checkbox" name="聊天" lay-skin="primary" id="聊天" title="聊天" disabled="disable">
+						<input type="checkbox" name="其他" lay-skin="primary" id="其他" title="其他" lay-filter="other" disabled="disable">
+					</div>
+					<textarea id="interest_other" name="interest_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
+				</div>
+			</fieldset>
+			<fieldset class="layui-elem-field">
+					<legend class="layui-font-14">宗教信仰</legend>
+					<div class="layui-field-box">
+						<div class="layui-form-item" id="religion">
+							<input type="radio" disabled="disable" name="religion" value="无神论" title="无神论" checked="">
+							<input type="radio" disabled="disable" name="religion" value="佛教" title="佛教">
+							<input type="radio" disabled="disable" name="religion" value="基督教" title="基督教">
+							<input type="radio" disabled="disable" name="religion" value="其他" title="其他">
+							<textarea id="religion_other" name="religion_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="layui-elem-field">
+					<legend class="layui-font-14">医疗保险</legend>
+					<div class="layui-field-box">
+						<div class="layui-form-item" id="treat">
+							<input type="radio" name="treat" disabled="disable" value="城镇职工医疗保险" title="城镇职工医疗保险" checked="">
+							<input type="radio" name="treat" disabled="disable" value="城镇居民医疗保险" title="城镇居民医疗保险">
+							<input type="radio" name="treat" disabled="disable" value="新型农村合作医疗" title="新型农村合作医疗">
+							<input type="radio" name="treat" disabled="disable" value="全公费" title="全公费">
+							<input type="radio" name="treat" disabled="disable" value="全自费" title="全自费">
+							<input type="radio" name="treat" disabled="disable" value="其他" title="其他">
+							<textarea id="treat_other" name="treat_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+    </form>
+</div>
+
+<script>	
+	
+	let load_application_over = false;
+	let load_healthrecord_over = false;
+	let local;
+	let loading_idx = 0;
+    layui.use(['element','layer','form','upload', 'table', 'laydate', 'laytpl', 'layer'], function(){
+        var  $ = layui.jquery;//jquery
+        var lement = layui.element;//面包导航
+        var layer = layui.layer;//弹出层
+        var form = layui.form;
+        var upload = layui.upload;
+		var table = layui.table;
+		var laydate = layui.laydate;
+		var laytpl =layui.laytpl
+		var layer = layui.layer;
+		
+		
+		local = layui.sessionData("jly-client-list")
+		loading_idx = layer.load(0, {shade: [0.1,'#fff']});
+		init(local, form, table);
+		loadApplication();
+		loadHealth();
+
+		// 入住日期
+		var date= new Date();
+		laydate.render({
+			elem: '#indate'
+			,isInitValue: true
+			,type: 'date'
+			,value: date
+		});
+		
+		if (local.op.AvatarPath !== "") {
+			layui.$('#uploadAvatar').removeClass('layui-hide').find('img').attr('src', local.op.AvatarPath);
+			layui.$('#uploadView').addClass('layui-hide');
+		}
+
+		$.ajaxSetup({
+			headers: {'Access-Control-Allow-Origin' : Domain,},
+			xhrFields: {withCredentials: true},
+		});
+		
+		
+		//拖拽上传
+		upload.render({
+			elem: '#upload'
+			,url: BasePath + '/uploadavatar'
+			,data: {idx: local.op["Idx"], name:local.op["Name"]}
+			,accept: 'images'
+			,acceptMime:'image/jpg'
+			,done: function(res){
+				var path = BasePath + '/avatarphoto/' + local.op["Idx"] + "-" + local.op["Name"] + ".jpg"
+				layui.$('#uploadAvatar').removeClass('layui-hide').find('img').attr('src', path);
+				layui.$('#uploadView').addClass('layui-hide');
+
+				local.op["Avatar"] = local.op["Idx"] + "-" + local.op["Name"];
+				local.op["AvatarPath"] = path;
+				layui.sessionData("jly-client-list", {key:"op", value:local.op})
+			}
+		});
+		
+		table.render({
+			elem: '#contacts'
+			,height: 270
+			,data: JSON.parse(local.op["Contacts"])
+			,toolbar:'defalut'
+			,cols: [[
+				,{field:'id', width: '1%', align:'center', title: '序号', hide: true}
+				,{field:'name', width: '10%', align:'center', title: '姓名'}
+				,{field:'phone', width: '20%', align:'center', title: '联系电话'}
+				,{field:'relationship', width: '10%', align:'center', title: '与老人关系'}
+				,{field:'address', width: '59%', align:'center', title: '家庭住址'}
+			]]
+		});
+		
+		table.on('tool(test)', function(obj) {
+			var data = obj.data;
+			console.log(obj.event);
+			
+			if (obj.event === 'delete') {
+				if (data.name == "") {
+					var table_data = table.cache["contacts"];
+					table_data.splice(obj.tr.data("index"), 1);
+					table.reload("contacts", {data: table_data})
+				} else {
+					layer.confirm('确定要删除[' + data.name + ']么?',
+						{btn:['确定', '取消']},
+						function(index, layero) {
+							var table_data = table.cache["contacts"];
+							table_data.splice(obj.tr.data("index"), 1);
+							table.reload("contacts", {data: table_data})
+							layer.close(index);
+						});
+				}
+			}
+		});
+		
+		//初始赋值
+		laydate.render({
+			elem: '#registrant_time'
+			,value: new Date()
+			,isInitValue: true
+		 });
+		 
+		 //鼠标失去焦点事件
+        $(document).ready(function () {
+            $("#chinaid").blur(function () {
+                var china_id = $(this).val();
+				console.log(china_id);
+				var age = GetAge(china_id);
+				if (age != 0) {
+					$("#age").val(age);
+				}
+				document.getElementById("sex").value = GetSex(china_id);
+				form.render("select");
+            })
+        });
+		
+		$(document).keyup(function(event){
+			if (event.keyCode == 27) {
+			
+				var childFrame = window.frames[0];
+				console.log(childFrame);
+				
+				var len = window.frames.length;
+				if (len == 0) {
+					// 获得frame索引
+					var index = parent.layer.getFrameIndex(window.name);
+					//关闭当前frame
+					parent.layer.close(index);
+				} else {
+					var childFrame = window.frames[len-1];
+					// 获得frame索引
+					var index = layer.getFrameIndex(childFrame.name);
+					//关闭当前frame
+					layer.close(index);
+				}
+			}
+		})
+
+		modifyInterestCss();
+		modifyReligionCss();
+		modifyTreatCss();
+    })
+
+	function init(data, form, table) {
+
+		data.op["AvatarPath"] = "";
+		if (data.op["Avatar"] !== "") {
+			data.op["AvatarPath"] = BasePath + '/avatarphoto/' + data.op["Avatar"] + '.jpg'
+		}
+		data.op.ContactData = JSON.parse(data.op["Contacts"]);
+		layui.sessionData("jly-client-list", {key:"op", value:data.op})
+
+		var interest = JSON.parse(data.op["Interest"])
+		form.val("modify", {
+			"name": data.op["Name"],
+			"chinaid": data.op["ChinaId"],
+			"sex": GetSex(data.op["ChinaId"]),
+			"age": GetAge(data.op["ChinaId"]),
+			"phone": data.op["Phone"],
+			"marriage": data.op["Marriage"],
+			"nation": data.op["Nation"],
+			"culture": data.op["Culture"],
+			"politics": data.op["Politics"],
+			"client_type": data.op["ClientType"],
+			"pay_type": data.op["PayType"],
+			"trusteeship": data.op["Trusteeship"],
+			"address": data.op["Address"],
+			"addr": data.op["Addr"],
+			"棋牌": interest.includes("棋牌"),			
+			"戏曲": interest.includes("戏曲"),
+			"唱歌": interest.includes("唱歌"),
+			"乐器": interest.includes("乐器"),
+			"阅读": interest.includes("阅读"), 
+			"聊天": interest.includes("聊天"),
+			"其他": interest.includes("其他"),
+			"interest_other": data.op["InterestOther"],
+			"religion": data.op["Religion"],
+			"religion_other": data.op["ReligionOther"],
+			"treat": data.op["Treat"],
+			"treat_other": data.op["TreatOther"],
+		});
+
+	}
+
+	function loadApplication() {
+		$.ajax({
+			type: "post",
+			url: BasePath + '/getApplication',
+			data:  {idx: local.op.Idx},
+			dataType: "json",
+			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			xhrFields: {withCredentials: true},
+			success: function(data){
+
+				load_application_over = true;
+				if (load_healthrecord_over && load_application_over) {
+					layui.layer.close(loading_idx);
+				}
+
+				if(data.code==0){
+					local.op["Application"] = data.data[0];
+					layui.sessionData("jly-client-list", {key:"op", value:local.op})
+					return false;
+				}else if(data.code==1001) {
+					// cookie 失效
+					var from = document.getElementById("from").value;
+					if (from == "client-list") {
+						parent.parent.location.href = "../../index.html";
+					} else {
+						parent.location.href = "../../index.html";
+					}
+					return false;
+				}else{
+					layer.msg(data.msg,{icon:5,time:5000});
+					return false;
+				}
+			}
+		});
+	}
+
+	function loadHealth() {
+		$.ajax({
+			type: "post",
+			url: BasePath + '/getHealth',
+			data: {idx: local.op.Idx},
+			dataType: "json",
+			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			xhrFields: {withCredentials: true},
+			success: function(data){
+
+				load_healthrecord_over = true;
+				if (load_healthrecord_over && load_application_over) {
+					layui.layer.close(loading_idx);
+				}
+
+				if(data.code==0){
+					local.op["HealthInfo"] = data.data[0];
+					layui.sessionData("jly-client-list", {key:"op", value:local.op})
+					return false;
+				}else if(data.code==1001) {
+					// cookie 失效
+					var from = document.getElementById("from").value;
+					if (from == "client-list") {
+						parent.parent.location.href = "../../index.html";
+					} else {
+						parent.location.href = "../../index.html";
+					}
+					return false;
+				}else{
+					layer.msg(data.msg,{icon:5,time:5000});
+					return false;
+				}
+			}
+		});
+	}
+	
+	function onApplication() {
+		const layertitle = "敬老院服务管理-操作-" + local.op.Name + "-入住申请";
+		console.log(window)
+		layer.open({
+			type: 2,
+			area: ['900px', '600px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: layertitle,
+			content: 'client-application.html',
+			success:function(layero,index){
+				var body = layer.getChildFrame('body', index);
+				console.log(body.contents().find("#from"));
+				body.contents().find("#from").val("client-op");
+				layer.full(index);
+			}
+		});
+	}
+
+	function onHealthInfo() {
+		const layertitle = "敬老院服务管理-操作-" + local.op.Name + "-健康信息";
+		console.log(window)
+		layer.open({
+			type: 2,
+			area: ['900px', '600px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: layertitle,
+			content: 'client-health.html',
+			success:function(layero,index){
+				var body = layer.getChildFrame('body', index);
+				console.log(body.contents().find("#from"));
+				body.contents().find("#from").val("client-op");
+				layer.full(index);
+			}
+		});
+	}
+
+	function backSetApplication(application) {
+		local.op.Application = application
+		layui.sessionData("jly-client-list", {key:"op", value:local.op})
+	}
+
+	function backSetHealthInfo(healthInfo) {
+		local.op.HealthInfo = healthInfo
+		layui.sessionData("jly-client-list", {key:"op", value:local.op})
+	}
+
+
+	function modifyInterestCss() {
+		document.querySelector(".seach-box")
+			.querySelectorAll(".layui-form-checked")
+			.forEach(function(checkbox) {
+				checkbox.classList.remove("layui-checkbox-disabled");
+			});
+	}
+
+	function modifyReligionCss() {
+		document.getElementById("religion")
+			.querySelectorAll(".layui-form-radioed")
+			.forEach(function(radio) {
+				radio.classList.remove("layui-radio-disabled");
+			});
+	}
+
+	function modifyTreatCss() {
+		document.getElementById("treat")
+			.querySelectorAll(".layui-form-radioed")
+			.forEach(function(radio) {
+				radio.classList.remove("layui-radio-disabled");
+			});
+	}
+
+</script>
+
+</body>
+</html>
