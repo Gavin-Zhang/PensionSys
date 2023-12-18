@@ -131,7 +131,7 @@
 							<cite>总览</cite></a>
 					</li>
 				</ul>
-				<ul class="sub-menu">
+				<!-- <ul class="sub-menu">
 					<li class="layui-nav-item">
 						<a href="javascript:;">
 							<i class="iconfont left-nav-li" lay-tips="服务对象管理">&#xe6b8;</i>
@@ -160,7 +160,7 @@
 							</li>
 						</ul>
 					</li>
-				</ul>
+				</ul> -->
 			</li>
 			{{#  } else if(d.Power === 1){ }}
 				<li class="layui-nav-item">
@@ -315,6 +315,10 @@
 </html>
 
 <script>
+	function oniframeClose(data) {
+		console.log("oniframeClose",data)
+	}
+
     window.onload=function () {
 	/*
         var click=document.getElementById('new-nav');
@@ -339,7 +343,7 @@
 	
 	layui.use(['laytpl'], function(){
 		var laytpl = layui.laytpl;
-		
+
 		var data = layui.data('yl-user').user;
 		var getTpl = username.innerHTML;
 		var view = document.getElementById('username_li');
