@@ -69,73 +69,29 @@
             </tr>
             <tr height="55" style='height:41.00pt;'>
                 <td class="borderSet layui-font-20" height="41.67" style='height:25.00pt;' x:str>居住情况</td>
-                <td class="borderSet-left" colspan="9" x:str>
+                <td class="borderSet-left" colspan="9" x:str><span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    {{# let live_list = ["独居","与子女同住","与孙辈同住","与其他亲属同住","与非亲属关系的人同住"] }}
+                    {{# let live_selecte = false; }}
                     {{# if(typeof d.Application === 'undefined' || d.Application === null || typeof d.Application.live === 'undefined' || d.Application.live === null || d.Application.live === ''){ }}
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>独居</font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>与配偶同住</font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>与子女同住</font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>与孙辈同住</font>
-                    {{# } else if(d.Application.live==='独居'){ }}
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'><b>☑</b></font>
-                        <font class='layui-font-20'><b>独居</b></font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>与配偶同住</font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>与子女同住</font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>与孙辈同住</font>
-                    {{# } else if(d.Application.live==='与配偶同住'){ }}
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>独居</font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'><b>☑</b></font>
-                        <font class='layui-font-20'><b>与配偶同住</b></font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>与子女同住</font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>与孙辈同住</font>
-                    {{# } else if(d.Application.live==='与子女同住'){ }}
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>独居</font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>与配偶同住</font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'><b>☑</b></font>
-                        <font class='layui-font-20'><b>与子女同住</b></font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>与孙辈同住</font>
-                    {{# } else if(d.Application.live==='与孙辈同住'){ }}
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>独居</font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>与配偶同住</font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'>□</font>
-                        <font class='layui-font-20'>与子女同住</font>
-                        <span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <font class='font-simsun layui-font-20'><b>☑</b></font>
-                        <font class='layui-font-20'><b>与孙辈同住</b></font>
-                    {{#  } }}
+                        {{# for (var i = 0; i < live_list.length; i++) { }}
+                            <font class='font-simsun layui-font-20'>□</font>
+                            <font class='layui-font-20'>{{ live_list[i] }}</font>
+                            <span class='layui-font-20'>&nbsp;&nbsp;</span>
+                        {{# } }}    
+                    {{# } else { }}
+                        {{# for (var i = 0; i < live_list.length; i++) { }}
+                            {{# if(!live_selecte && live_list[i] === d.Application.live){ }}
+                                <font class='font-simsun layui-font-20'><b>☑</b></font>
+                                <font class='layui-font-20'><b>{{ live_list[i] }}</b></font>
+                                <span class='layui-font-20'>&nbsp;&nbsp;</span>
+                                {{# live_selecte = true; }}
+                            {{# } else {}}
+                                <font class='font-simsun layui-font-20'>□</font>
+                                <font class='layui-font-20'>{{ live_list[i] }}</font>
+                                <span class='layui-font-20'>&nbsp;&nbsp;</span>
+                            {{# } }}
+                        {{# } }}
+                    {{# } }}
                 </td>
                 <td></td>
             </tr>
@@ -235,7 +191,7 @@
                         {{# if(d.Interest.indexOf('其他') != -1){ }}
                             <font class='font-simsun layui-font-20'><b>☑</b></font>
                             <font class='layui-font-20'><b>其他</b></font>
-                            <span class='layui-font-20'>&nbsp;&nbsp;</span>
+                            <span class='layui-font-20'>&nbsp;</span>
                             <font class='layui-font-20'><b>:<u>{{= d.InterestOther }}</u></b></font>
                         {{# } else {}}
                             <font class='font-simsun layui-font-20'>□</font>
@@ -321,9 +277,8 @@
             </tr>
             <tr height="58.33" style='height:41.00pt;'>
                 <td class="borderSet layui-font-18" height="58.33" style='height:41.00pt;' x:str>费用承担</td>
-                <td class="borderSet-left" colspan="9" x:str>
+                <td class="borderSet-left" colspan="9" x:str><span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     {{# if(typeof d.Application === 'undefined' || d.Application === null || typeof d.Application.cost === 'undefined' || d.Application.cost === null || d.Application.cost === '') { }}
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>入住费用由本人承担</font>
                         <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -336,7 +291,6 @@
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>其他</font>
                     {{# } else if(d.Application.cost==='入住费用由本人承担'){ }}
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'><b>☑</b></font>
                         <font class='layui-font-18'><b>入住费用由本人承担</b></font>
                         <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -349,7 +303,6 @@
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>其他</font>
                     {{# } else if(d.Application.cost==='入住费用子女人承担'){ }}
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>入住费用由本人承担</font>
                         <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -362,7 +315,6 @@
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>其他</font>
                     {{# } else if(d.Application.cost==='入住费用由本人及子女共同承担'){ }}
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>入住费用由本人承担</font>
                         <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -375,7 +327,6 @@
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>其他</font>
                     {{# } else if(d.Application.cost==='其他'){ }}
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>入住费用由本人承担</font>
                         <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -395,135 +346,134 @@
             </tr>
             <tr height="58.33" style='height:41.00pt;'>
                 <td class="borderSet layui-font-18" height="58.33" style='height:41.00pt;' x:str>医疗保险</td>
-                <td class="borderSet-left" colspan="9" x:str>
+                <td class="borderSet-left" colspan="9" x:str><span class='layui-font-20'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     {{# if(typeof d.Treat === 'undefined'|| d.Treat ==null || d.Treat==='') { }}
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>城镇职工医疗保险</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>城镇居民医疗保险</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>新型农村合作医疗</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>全公费</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>全自费</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>其他</font>
                     {{# } else if(d.Treat==='城镇职工医疗保险'){ }}
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'><b>☑</b></font>
                         <font class='layui-font-18'><b>城镇职工医疗保险</b></font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>城镇居民医疗保险</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>新型农村合作医疗</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>全公费</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>全自费</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>其他</font>
                     {{# } else if(d.Treat==='城镇居民医疗保险'){ }}
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>城镇职工医疗保险</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'><b>☑</b></font>
                         <font class='layui-font-18'><b>城镇居民医疗保险</b></font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>新型农村合作医疗</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>全公费</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>全自费</font>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>其他</font>
                     {{# } else if(d.Treat==='新型农村合作医疗'){ }}
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>城镇职工医疗保险</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>城镇居民医疗保险</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'><b>☑</b></font>
                         <font class='layui-font-18'><b>新型农村合作医疗</b></font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>全公费</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>全自费</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>其他</font>
                     {{# } else if(d.Treat==='全公费'){ }}
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>城镇职工医疗保险</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>城镇居民医疗保险</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>新型农村合作医疗</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'><b>☑</b></font>
                         <font class='layui-font-18'><b>全公费</b></font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>全自费</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>其他</font>
                     {{# } else if(d.Treat==='全自费'){ }}
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>城镇职工医疗保险</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>城镇居民医疗保险</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>新型农村合作医疗</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>全公费</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'><b>☑</b></font>
                         <font class='layui-font-18'><b>全自费</b></font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>其他</font>
                     {{# } else if(d.Treat==='其他'){ }}
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>城镇职工医疗保险</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>城镇居民医疗保险</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'>□</font>
                         <font class='layui-font-18'>新型农村合作医疗</font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>全公费</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
+                        <font class='font-simsun layui-font-18'>□</font>
+                        <font class='layui-font-18'>全自费</font>
+                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-18'><b>☑</b></font>
                         <font class='layui-font-18'><b>其他</b></font>
-                        <span class='layui-font-18'>&nbsp;&nbsp;</span>
-                        <font class='layui-font-18'><b>:<u>{{= d.Treat_other }}</u></b></font>
+                        <span class='layui-font-18'>&nbsp;</span>
+                        <font class='layui-font-18'><b>:<u>{{= d.TreatOther }}</u></b></font>
                     {{#  } }}
                 </td>
                 <td></td>

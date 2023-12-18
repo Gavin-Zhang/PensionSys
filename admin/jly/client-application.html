@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="x-admin-sm">
 <head>
     <meta charset="utf-8">
     <title>
@@ -23,19 +23,21 @@
 			<input type="hidden" id="idx" name="idx">
 			<input type="hidden" id="client_idx" name="client_idx">
 
+			
 			<div class="layui-tab-item layui-show">
-
+				<br>
 				<div class="layui-row layui-col-space5">
-					<div class="layui-col-xs1 layui-col-sm1 layui-col-md1">
+					<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
 						<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid"  type="button" id="print" lay-filter="print" onclick="onPrint();">打印申请表</button>
 					</div>
-					<div class="layui-col-xs1 layui-col-sm1 layui-col-md1 layui-col-md-offset9">
+					<div class="layui-col-xs1 layui-col-sm1 layui-col-md1 layui-col-md-offset8">
 						<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid layui-hide"  type="button" id="edit_cancel" onclick="on_cancel();">取消</button>
 					</div>
 					<div class="layui-col-xs1 layui-col-sm1 layui-col-md1">
 						<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid"  type="button" id="edit_save" lay-filter="save" lay-submit>编辑</button>
 					</div>
 				</div>	
+				<br>
 				<div class="layui-form-item">
 					<legend class="layui-font-14">居住情况</legend>
 					<div class="layui-field-box">
@@ -44,6 +46,8 @@
 							<input type="radio" disabled="disable" name="live" value="与配偶同住" title="与配偶同住">
 							<input type="radio" disabled="disable" name="live" value="与子女同住" title="与子女同住">
 							<input type="radio" disabled="disable" name="live" value="与孙辈同住" title="与孙辈同住">
+							<input type="radio" disabled="disable" name="live" value="与其他亲属同住" title="与其他亲戚同住">
+							<input type="radio" disabled="disable" name="live" value="与非亲属关系的人同住" title="与非亲属关系的人同住">
 						</div>
 					</div>
 				</div>
@@ -104,6 +108,11 @@
 
 <script>
 
+	// 通过url获取参数
+	const params = new URLSearchParams(window.location.search);
+	const idx = params.get('idx');
+	const sessiondata_key = "op-" + idx;
+
 	let session_data;
 	let doms = {
 		live 		: document.getElementById("live"),
@@ -117,7 +126,7 @@
         var layer = layui.layer;//弹出层
         var form = layui.form;
 
-		session_data = layui.sessionData("jly-client-list").op.Application;
+		session_data = layui.sessionData("jly-client-list")[sessiondata_key.toString()].Application;
 		init(session_data);
 		
 		form.on('radio', function(data) {   
@@ -176,7 +185,6 @@
                         layer.msg("保存成功", {icon: 6,time:2000},function () {
 							// 回写seesion data
 							session_data = form_data.field;
-							console.log("--》", session_data)
 							parent.backSetApplication(session_data);
                         });
                         return false;
@@ -278,7 +286,7 @@
 			fixed: false, //不固定
 			maxmin: true,
 			title: "敬老院服务管理-总览-操作",
-			content: 'client-application-print.html',
+			content: 'client-application-print.html' + window.location.search,
 			success:function(layero,index){
 				layer.full(index);
 			}

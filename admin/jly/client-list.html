@@ -66,20 +66,23 @@
 </script>
 
 <script>
+
+	let search_data = {name: "", phone: "", chinaid: ""};
     layui.use(['table', 'laydate','form'], function(){
         var table = layui.table
 		var laydate = layui.laydate;
         var form = layui.form;
 
-        //执行一个laydate实例
-        laydate.render({
-            elem: '#start' //指定元素
-        });
 
         //执行一个laydate实例
-        laydate.render({
-            elem: '#end' //指定元素
-        });
+        // laydate.render({
+        //     elem: '#start' //指定元素
+        // });
+
+        // //执行一个laydate实例
+        // laydate.render({
+        //     elem: '#end' //指定元素
+        // });
 		
 		$.ajaxSetup({
 			headers: {'Access-Control-Allow-Origin' : Domain,},
@@ -89,21 +92,40 @@
 		table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
 			var data = obj.data //获得当前行数据
 			,layEvent = obj.event; //获得 lay-event 对应的值
+
+			// 每次点击操作时，都重新从服务器获取一次数据，以防本地数据已过时
 			if(layEvent === 'op'){
-				layui.sessionData("jly-client-list", {key:"op", value:data})
-				// layer.open({
-				// 	type: 2,
-				// 	area: ['900px', '600px'],
-				// 	fixed: false, //不固定
-				// 	maxmin: true,
-				// 	title: "敬老院服务管理-总览-操作",
-				// 	content: 'client-op.html',
-				// 	success:function(layero,index){
-				// 		layer.full(index);
-				// 	}
-				// })
-				const title = "敬老院服务管理-操作-" + data.Name;
-				parent.xadmin.add_tab(title, 'jly/client-op.html')
+				console.log(data.Idx)
+				$.ajax({
+					type: "post",
+					url: BasePath + '/getclient',
+					data: {"idx" : data.Idx},
+					dataType: "json",
+					headers: {'Access-Control-Allow-Origin' : BasePath,},
+					xhrFields: {withCredentials: true},
+					success: function(data){
+						console.log(data)
+						if(data.code==0){
+							
+							ParseClientInfo(data.data[0]);
+							const sessiondata_key = "op-" + data.data[0].Idx;
+							layui.sessionData("jly-client-list", {key:sessiondata_key, value:data.data[0]})
+
+							const title = "敬老院服务管理-操作【" + data.data[0].Name + "】";
+							const url = 'jly/client-op.html?idx='+data.data[0].Idx;
+							parent.xadmin.add_tab(title, url)
+
+							return false;
+						}else if(data.code==1001) {
+							// cookie 失效
+							parent.location.href = "../../index.html";
+							return false;
+						}else{
+							layer.msg(data.msg,{icon:5,time:5000});
+							return false;
+						}
+					}
+				});
 			}
 		});
 		
@@ -121,38 +143,23 @@
 			,title:"列表"
 			,limits:[10,20,30,50,100,150,200,300,400,500,1000]
 			,cols: [[
-				,{field:'Name', title: '姓名', align:'center', minWidth: 300, fixed: 'left'}
-				,{field:'Sex', title: '性别', align:'center'}
-				,{field:'Age', title: '年龄', align:'center'} 
-				,{field:'ChinaId', title: '证件号码', align:'center', minWidth: 200 }
-				,{field:'Phone', title: '联系方式', align:'center'}
-				,{field:'ClientType', title: '人员类型', align:'center'}
-				,{field:'PayType', title: '缴费类型', align:'center'}
-				,{field:'Trusteeship', title: '政府托管', align:'center'}
-				,{field:'Status', title: '状态', align:'center'}
-				,{field:'InDate', title: '入住时间', align:'center'}
-				,{field:'OutDate', title: '离院时间', align:'center'}
-				,{title: '操作', align:'center', toolbar: '#fieldtool', minWidth: 150, fixed: 'right'}
+				,{field:'Name', title: '姓名', align:'center', minWidth: 300, width: '10%', fixed: 'left'}
+				,{field:'Sex', title: '性别', align:'center', width: '5%'}
+				,{field:'Age', title: '年龄', align:'center', width: '5%'} 
+				,{field:'ChinaId', title: '证件号码', align:'center', minWidth: 200, width: '15%' }
+				,{field:'Phone', title: '联系方式', align:'center', width: '15%'}
+				,{field:'ClientType', title: '人员类型', align:'center', width: '5%'}
+				,{field:'PayType', title: '缴费类型', align:'center', width: '5%'}
+				,{field:'Trusteeship', title: '政府托管', align:'center', width: '5%'}
+				,{field:'Status', title: '状态', align:'center', width: '5%'}
+				,{field:'InDate', title: '入住时间', align:'center', width: '10%'}
+				,{field:'OutDate', title: '离院时间', align:'center', width: '10%'}
+				,{title: '操作', align:'center', toolbar: '#fieldtool', minWidth: 150, width: '10%', fixed: 'right'}
 			]]
 			,parseData: function(res){ //res 即为原始返回的数据
 				if (res.code == 0) {
 					for(var tableitem of res.data[0]) {
-						tableitem["Sex"] = GetSex(tableitem.ChinaId);
-						tableitem["Age"] = GetAge(tableitem.ChinaId);
-						tableitem["Birthday"] = GetBirthdateFromIdCard(tableitem.ChinaId);
-						
-						var date = new Date(tableitem.InDate)
-						tableitem["InDate"] = date.toLocaleDateString().split('/').join('-')
-						if (tableitem.InDate === '1-1-1') {
-							tableitem.InDate = ""
-						}
-						
-						date = new Date(tableitem.OutDate)
-						tableitem["OutDate"] = date.toLocaleDateString().split('/').join('-')
-						if (tableitem.OutDate === '1-1-1') {
-							tableitem.OutDate = ""
-						}
-							
+						ParseClientInfo(tableitem);
 					}
 
 					return {
@@ -180,30 +187,23 @@
 		
 		//监听提交
         form.on('submit(sreach)', function(data){
-			var chinaid = $('#chinaid').val()
-			var name = $('#username').val()
-			var phone = $('#phone').val()
-			
-			if (name=="" && phone=="" && chinaid=="" ) {
-				table.reload('clients', {where:{}})
-				return;
-			}
-			
-			var where = {};
-			if (name != "") {
-				where["name"] = name;
-			}
-			if (phone != "") {
-				where["phone"] = phone;
-			}
-			if (chinaid != "") {
-				where["chinaid"] = chinaid;
-			}
-			
-            table.reload('clients', {
-				where: where
-			})
+			sreachClient();
         });
+		$("input[name='username']").keypress(function (e) {
+			if (e.which == key_enter) {
+				sreachClient()
+			}
+		});
+		$("input[name='phone']").keypress(function (e) {
+			if (e.which == key_enter) {
+				sreachClient()
+			}
+		});
+		$("input[name='chinaid']").keypress(function (e) {
+			if (e.which == key_enter) {
+				sreachClient()
+			}
+		});
 		
 		form.verify({
 			chinaid: function(value, item){
@@ -230,6 +230,37 @@
 			}
 		});
 	}
+
+	function sreachClient() {
+		var chinaid = layui.$('#chinaid').val()
+		var name = layui.$('#username').val()
+		var phone = layui.$('#phone').val()
+		
+		if (name==search_data.name && phone==search_data.phone && chinaid==search_data.chinaid ) {
+			return;
+		}
+
+		search_data.name = name;
+		search_data.phone = phone;
+		search_data.chinaid = chinaid;
+		if (name=="" && phone=="" && chinaid=="" ) {
+			layui.table.reload('clients', {where:{}})
+			return;
+		}
+
+		let where = {}
+		if (name != "") {
+			where.name = name
+		}
+		if (phone != "") {
+			where.phone = phone
+		}
+		if (chinaid != "") {
+			where.chinaid = chinaid
+		}
+		layui.table.reload('clients', { where: where })
+	}
+
 </script>
 </body>
 </html>

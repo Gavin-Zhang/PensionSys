@@ -9,9 +9,9 @@
 		<script src="../lib/layui/layui.js" charset="utf-8"></script>
         <link rel="stylesheet" href="../css/font.css">
         <link rel="stylesheet" href="../css/index.css">
-		<link rel="stylesheet" media="print" href="./css/application.css">
+		<link rel="stylesheet" media="print" href="./css/nurse.css">
 		<script type="text/javascript" src="./js/base.js"></script>
-		<iframe src="./print/application.html" hidden="true"></iframe>
+		<iframe src="./print/nurse.html" hidden="true"></iframe>
     </head>
 
     <body>
@@ -22,19 +22,29 @@
 		const params = new URLSearchParams(window.location.search);
 		const idx = params.get('idx');
 		const sessiondata_key = "op-" + idx;
+		const nurse_key = "nurse-" + idx;
 
 		layui.use('laytpl', function(){
 			var laytpl = layui.laytpl;
 
 			var iframe = document.querySelector('iframe');
-			iframe.addEventListener('load', function(){
-				var sessiondata = layui.sessionData("jly-client-list")[sessiondata_key.toString()];
+			iframe.addEventListener('load', function() {
+				let session = layui.sessionData("jly-client-list");
+
+				var sessiondata = session[sessiondata_key.toString()];
 				if (typeof sessiondata === 'undefined') {
 					sessiondata = {}
 				}
 
+				var rowdata = session[nurse_key.toString()];
+				if (typeof rowdata === 'undefined') {
+					rowdata = {}
+				}
+				sessiondata.Row = rowdata;
+				console.log(sessiondata);
+
 				var iframeWindow = iframe.contentWindow;
-				var sprite = iframeWindow.document.getElementById('application-page');
+				var sprite = iframeWindow.document.getElementById('nurse-page');
 
 				var div = document.createElement("div");
 				layui.laytpl(sprite.innerHTML).render(sessiondata, function(html){
@@ -43,6 +53,7 @@
 				document.body.appendChild(div)
 			})
 			
+			//{scale: 0.8}
 			window.print();
 			setTimeout(() => {
 				var index = parent.layer.getFrameIndex(window.name);

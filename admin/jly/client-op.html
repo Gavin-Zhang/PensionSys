@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="x-admin-sm">
 <head>
     <meta charset="utf-8">
     <title>
@@ -20,10 +20,52 @@
     <script type="text/javascript" src="../js/index.js"></script>
 	<script type="text/javascript" src="./js/base.js"></script>
 
+	<style>
+		a.disabled {
+			pointer-events: none;
+			color: #ccc;
+		}
+	</style>
+	<style>
+		.chosen-area {
+			display: inline-block;
+			width: 100pt;
+			min-height: 30px;
+			border: 1px solid #cccccc;
+			line-height: 30px;
+			box-sizing: border-box;
+			padding: 0px 10px;
+		}
+
+		.chosen-area span {
+			font-size: 10px;
+			color: #000;
+			margin-top: 2px;
+		}
+
+		.chosen-area:hover {
+			border: 1px solid #16baaa;
+			cursor: pointer;
+		}
+		a.disabled {
+			pointer-events: none;
+			color: #ccc;
+		}
+	</style>
 </head>
 
 <body>
-
+<div class="x-nav">
+	<span class="layui-breadcrumb">
+		<a href="">首页</a>
+		<a href="">敬老院服务管理</a>
+		<a href="">总览</a>
+		<a>
+		<cite>操作</cite></a>
+	</span>
+	<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+	<i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
+</div>
 <div class="layui-card">
     <form class="layui-form layui-form-pane" action="" id="modify" lay-filter="modify">
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
@@ -31,13 +73,20 @@
 
 			<br>
 			
-			<div class="layui-row  layui-col-space5">
-				<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-					<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid"  type="button" lay-filter="application" onclick="onApplication();">入住申请</button>
+			<div class="layui-btn-container">
+				<button class="layui-btn layui-btn-radius layui-btn-normal" type="button" lay-filter="application" onclick="onApplication();">入住申请</button>
+				<button class="layui-btn layui-btn-radius layui-btn-normal" type="button" lay-filter="health_info" onclick="onHealthInfo();">健康信息</button>
+				<button class="layui-btn layui-btn-radius layui-btn-normal" type="button" lay-filter="assessment" onclick="onAssessment();">能力评估</button>
+				<button class="layui-btn layui-btn-radius layui-btn-normal" type="button" lay-filter="nurse" onclick="onNurse();">照护计划</button>
+			</div>
+
+			<div class="layui-btn-container">
+				<div class="layui-inline">
+					<button class="layui-btn layui-btn-radius" id="edit" type="button" onclick="onEdit();">编辑</button>
+					<button class="layui-btn layui-btn-radius layui-hide" id="save" type="button" lay-filter="save" lay-submit>保存</button>
 				</div>
-				<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-					<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid"  type="button" lay-filter="health_info" onclick="onHealthInfo();">健康信息</button>
-				</div>
+				
+				<button class="layui-btn layui-btn-radius layui-hide" id="cancel" type="button" onclick="onCancel();">取消</button>
 			</div>	
 			
 			<div class="layui-tab-item layui-show">
@@ -45,8 +94,9 @@
 					<col class="layui-form-item"/>
 					<col class="layui-form-item"/>
 					<col class="layui-form-item"/>
+					<col class="layui-form-item"/>
 					<tr>
-						<td class="layui-form-item" style="height:206px;width:147px" rowspan="4">
+						<td class="layui-form-item" style="height:206px;width:147px" rowspan="5">
 							<div class="layui-upload-drag" id="upload">
 								<div class="layui-hide" id="uploadAvatar">									
 									<img src="" alt="上传成功后渲染" style="height: 206px;width: 147px;max-width: 147px" id="avatarImg">
@@ -92,13 +142,13 @@
 								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
 									<label class="layui-form-label">性别</label>
 									<div class="layui-input-block">
-										<input type="text" name="sex" id="sex" lay-verify="" autocomplete="off" value="" class="layui-input" disabled="disabled">
+										<input type="text" id="sex" lay-verify="" autocomplete="off" value="" class="layui-input" disabled="disabled">
 									</div>
 								</div>
 								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
 									<label class="layui-form-label">年龄</label>
 									<div class="layui-input-block">
-										<input type="text" lay-verify="required|number" disabled="disabled" name="age" id="age" autocomplete="off" value="" class="layui-input">
+										<input type="text" lay-verify="required|number" disabled="disabled" id="age" autocomplete="off" value="" class="layui-input">
 									</div>
 								</div>
 								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
@@ -200,33 +250,129 @@
 							</div>
 						</td>
 					</tr>
+					<tr>
+						<td class="layui-form-item">
+							<div class="layui-row">
+								<div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>住址
+									</label>
+									<div class="layui-input-block">
+										<input type="text" lay-verify="required" name="addr" id="addr" autocomplete="off" value="" class="layui-input" disabled="disable">
+									</div>
+								</div>
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>入住日期
+									</label>
+									<div class="layui-input-block">
+										<input type="text" lay-verify="required" name="indate" id="indate" autocomplete="off" value="" class="layui-input" disabled="disable">
+									</div>
+								</div>
+							</div>
+						</td>
+					</tr>
 				</table>
 			</div>
-			<div class="layui-form-item">
-				<div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
-					<label class="layui-form-label">
-						<span class='x-red'>*</span>住址
-					</label>
-					<div class="layui-input-block">
-						<input type="text" lay-verify="required" name="addr" id="addr" autocomplete="off" value="" class="layui-input" disabled="disable">
+			<fieldset class="layui-elem-field">
+				<legend class="layui-font-14">档案编号</legend>
+				<div class="layui-field-box">
+					<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+						<label class="layui-form-label">
+							入住档案编号
+						</label>
+						<div class="layui-input-block">
+							<input type="text" lay-verify="required" id="checkin_num" autocomplete="off" value="" class="layui-input" disabled="disable">
+						</div>
+					</div>
+					<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+						<label class="layui-form-label">
+							健康档案编号
+						</label>
+						<div class="layui-input-block">
+							<input type="text" lay-verify="required" id="health_num" autocomplete="off" value="" class="layui-input" disabled="disable">
+						</div>
 					</div>
 				</div>
-				<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-					<label class="layui-form-label">
-						<span class='x-red'>*</span>入住日期
-					</label>
-					<div class="layui-input-block">
-						<input type="text" lay-verify="required" name="indate" id="indate" autocomplete="off" value="" class="layui-input" disabled="disable">
+			</fieldset>
+			<fieldset class="layui-elem-field">
+				<legend class="layui-font-14">能力等级及护理等级</legend>
+				<div class="layui-field-box">
+					<div class="layui-row">
+						<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+							<label class="layui-form-label layui-inline">
+								评估编号
+							</label>
+							<div class="layui-input-block">
+								<input type="text" id="capability_idx" name="capability_idx" class="layui-input" disabled/>
+							</div>
+						</div>
+						<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+							<label class="layui-form-label layui-inline">
+								评估日期
+							</label>
+							<div class="layui-input-block">
+								<input type="text" id="capability_date" name="capability_date" class="layui-input" disabled/>
+							</div>
+						</div>
+						<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+							<label class="layui-form-label layui-inline">
+								评估结果
+							</label>
+							<div class="layui-input-block">
+								<input type="text" id="capability_result" name="capability_result" class="layui-input" disabled/>
+							</div>
+						</div>
+					</div>
+					<div class="layui-row">
+						<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+							<label class="layui-form-label layui-inline">
+								计划编号
+							</label>
+							<div class="layui-input-block">
+								<input type="text" id="nurse_idx" name="nurse_idx" class="layui-input" disabled/>
+							</div>
+						</div>
+						<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+							<label class="layui-form-label layui-inline">
+								创建日期
+							</label>
+							<div class="layui-input-block">
+								<input type="text" id="nurse_date" name="nurse_date" class="layui-input" disabled/>
+							</div>
+						</div>
+						<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+							<label class="layui-form-label layui-inline">
+								照护等级
+							</label>
+							<div class="layui-input-block">
+								<input type="text" id="nurse_level" name="nurse_level" class="layui-input" disabled/>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-			<!--  <form class="layui-form layui-form-pane" action="" id="add">-->
+			</fieldset>
 			<fieldset class="layui-elem-field">
 				<legend class="layui-font-14">联系人</legend>
-				<div class="layui-field-box">
-					<div class="layui-form-item">
-						<table class="layui-hide" id="contacts" name="contacts" lay-filter="test"></table>
+				<div class="layui-field-box layui-row layui-col-space10">
+					<div class="layui-inline layui-col-xs1 layui-col-sm1 layui-col-md1">
+						<input type="text" class="layui-input" id="contact_name" placeholder="姓名">
 					</div>
+					<div class="layui-inline layui-col-xs1 layui-col-sm1 layui-col-md1">
+						<input type="text" class="layui-input" id="contact_phone" placeholder="联系方式">
+					</div>
+					<div class="layui-inline layui-col-xs1 layui-col-sm1 layui-col-md1">
+						<input type="text" class="layui-input" id="contact_relationship" placeholder="关系">
+					</div>
+					<div class="layui-inline layui-col-xs3 layui-col-sm3 layui-col-md3">
+						<input type="text" class="layui-input" id="contact_addr" placeholder="家庭地址">
+					</div>
+					<div class="layui-inline layui-col-xs1 layui-col-sm1 layui-col-md1">
+						<button class="layui-btn" id="contact_add" type="button" onclick="onCntactAdd();">添加</button>
+					</div>
+				</div>
+				<div class="layui-field-box">
+					<table class="layui-hide" id="contacts" name="contacts" lay-filter="test"></table>
 				</div>
 			</fieldset>
 			<fieldset class="layui-elem-field">
@@ -246,43 +392,95 @@
 				</div>
 			</fieldset>
 			<fieldset class="layui-elem-field">
-					<legend class="layui-font-14">宗教信仰</legend>
-					<div class="layui-field-box">
-						<div class="layui-form-item" id="religion">
-							<input type="radio" disabled="disable" name="religion" value="无神论" title="无神论" checked="">
-							<input type="radio" disabled="disable" name="religion" value="佛教" title="佛教">
-							<input type="radio" disabled="disable" name="religion" value="基督教" title="基督教">
-							<input type="radio" disabled="disable" name="religion" value="其他" title="其他">
-							<textarea id="religion_other" name="religion_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
-						</div>
+				<legend class="layui-font-14">宗教信仰</legend>
+				<div class="layui-field-box">
+					<div class="layui-form-item" id="religion">
+						<input type="radio" disabled="disable" lay-filter="religion_radio" name="religion" value="无神论" title="无神论" checked="">
+						<input type="radio" disabled="disable" lay-filter="religion_radio" name="religion" value="佛教" title="佛教">
+						<input type="radio" disabled="disable" lay-filter="religion_radio" name="religion" value="基督教" title="基督教">
+						<input type="radio" disabled="disable" lay-filter="religion_radio" name="religion" value="其他" title="其他">
+						<textarea id="religion_other" name="religion_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
 					</div>
-				</fieldset>
-				<fieldset class="layui-elem-field">
-					<legend class="layui-font-14">医疗保险</legend>
-					<div class="layui-field-box">
-						<div class="layui-form-item" id="treat">
-							<input type="radio" name="treat" disabled="disable" value="城镇职工医疗保险" title="城镇职工医疗保险" checked="">
-							<input type="radio" name="treat" disabled="disable" value="城镇居民医疗保险" title="城镇居民医疗保险">
-							<input type="radio" name="treat" disabled="disable" value="新型农村合作医疗" title="新型农村合作医疗">
-							<input type="radio" name="treat" disabled="disable" value="全公费" title="全公费">
-							<input type="radio" name="treat" disabled="disable" value="全自费" title="全自费">
-							<input type="radio" name="treat" disabled="disable" value="其他" title="其他">
-							<textarea id="treat_other" name="treat_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
-						</div>
+				</div>
+			</fieldset>
+			<fieldset class="layui-elem-field">
+				<legend class="layui-font-14">医疗保险</legend>
+				<div class="layui-field-box">
+					<div class="layui-form-item" id="treat">
+						<input type="radio" name="treat" lay-filter="treat_radio" disabled="disable" value="城镇职工医疗保险" title="城镇职工医疗保险" checked="">
+						<input type="radio" name="treat" lay-filter="treat_radio" disabled="disable" value="城镇居民医疗保险" title="城镇居民医疗保险">
+						<input type="radio" name="treat" lay-filter="treat_radio" disabled="disable" value="新型农村合作医疗" title="新型农村合作医疗">
+						<input type="radio" name="treat" lay-filter="treat_radio" disabled="disable" value="全公费" title="全公费">
+						<input type="radio" name="treat" lay-filter="treat_radio" disabled="disable" value="全自费" title="全自费">
+						<input type="radio" name="treat" lay-filter="treat_radio" disabled="disable" value="其他" title="其他">
+						<textarea id="treat_other" name="treat_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
 					</div>
-				</fieldset>
-			</div>
+				</div>
+			</fieldset>
 		</div>
     </form>
 </div>
 
+<script type="text/html" id="fieldtool">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" id="contact_delete" lay-event="delete">删除</a>
+</script>
+
 <script>	
+
+	layui.config({
+		base: '../../layui-exts'
+    }).extend({
+		'dropdownTable': '/dropdownTable/dropdownTable'
+    });
+
+	// 通过url获取参数
+	const params = new URLSearchParams(window.location.search);
+	const idx = params.get('idx');
+	const sessiondata_key = "op-" + idx;
+
+	let isRefresh = false;
+	// 判断是否刷新页面
+	window.addEventListener('beforeunload', function(e) {
+		var performance = window.performance || window.msPerformance || window.webkitPerformance || window.mozPerformance || {};
+		var navigation = performance.navigation || {};
+		if (navigation.type < 2) {
+			isRefresh = true;
+		}
+	});
+
+	// 页面关闭时，清除session
+	window.addEventListener('unload', function(e) {
+		if (isRefresh) {
+			isRefresh = false;
+			return;
+		}
+		layui.sessionData("jly-client-list", {key:sessiondata_key, remove:true})
+	})
+
+	let doms = {
+		sex : document.getElementById("sex"),
+		age : document.getElementById("age"),
+		contact_name : document.getElementById("contact_name"),
+		contact_phone : document.getElementById("contact_phone"),
+		contact_relationship : document.getElementById("contact_relationship"),
+		contact_address : document.getElementById("contact_addr"),
+		contact_add : document.getElementById("contact_add"),
+		interest_other : document.getElementById('interest_other'),
+		religion_other : document.getElementById("religion_other"),
+		treat_other : document.getElementById('treat_other'),
+		inputs : document.querySelectorAll('input[type="text"]'),
+		selects : document.querySelectorAll('select'),
+		radios : document.querySelectorAll('input[type="radio"]'),
+		checkboxs : document.querySelectorAll('input[type="checkbox"]')
+	}
 	
 	let load_application_over = false;
 	let load_healthrecord_over = false;
+	let load_assessment_over = false;
+	let load_nurse_over = false;
 	let local;
 	let loading_idx = 0;
-    layui.use(['element','layer','form','upload', 'table', 'laydate', 'laytpl', 'layer'], function(){
+    layui.use(['element','layer','form','upload', 'table', 'laydate', 'laytpl', 'layer', 'dropdownTable'], function(){
         var  $ = layui.jquery;//jquery
         var lement = layui.element;//面包导航
         var layer = layui.layer;//弹出层
@@ -292,13 +490,16 @@
 		var laydate = layui.laydate;
 		var laytpl =layui.laytpl
 		var layer = layui.layer;
-		
-		
-		local = layui.sessionData("jly-client-list")
+		var dropdownTable = layui.dropdownTable;
+
+		local = layui.sessionData("jly-client-list")[sessiondata_key.toString()]
 		loading_idx = layer.load(0, {shade: [0.1,'#fff']});
-		init(local, form, table);
+		console.log(local)
+		init(local);
 		loadApplication();
 		loadHealth();
+		loadAssessment();
+		loadNurse();
 
 		// 入住日期
 		var date= new Date();
@@ -306,11 +507,11 @@
 			elem: '#indate'
 			,isInitValue: true
 			,type: 'date'
-			,value: date
+			,value: local.InDate
 		});
 		
-		if (local.op.AvatarPath !== "") {
-			layui.$('#uploadAvatar').removeClass('layui-hide').find('img').attr('src', local.op.AvatarPath);
+		if (local.AvatarPath !== "") {
+			layui.$('#uploadAvatar').removeClass('layui-hide').find('img').attr('src', local.AvatarPath);
 			layui.$('#uploadView').addClass('layui-hide');
 		}
 
@@ -324,31 +525,32 @@
 		upload.render({
 			elem: '#upload'
 			,url: BasePath + '/uploadavatar'
-			,data: {idx: local.op["Idx"], name:local.op["Name"]}
+			,data: {idx: local["Idx"], name:local["Name"]}
 			,accept: 'images'
 			,acceptMime:'image/jpg'
 			,done: function(res){
-				var path = BasePath + '/avatarphoto/' + local.op["Idx"] + "-" + local.op["Name"] + ".jpg"
+				var path = BasePath + '/avatarphoto/' + local["Idx"] + "-" + local["Name"] + ".jpg"
 				layui.$('#uploadAvatar').removeClass('layui-hide').find('img').attr('src', path);
 				layui.$('#uploadView').addClass('layui-hide');
 
-				local.op["Avatar"] = local.op["Idx"] + "-" + local.op["Name"];
-				local.op["AvatarPath"] = path;
-				layui.sessionData("jly-client-list", {key:"op", value:local.op})
+				local["Avatar"] = local["Idx"] + "-" + local["Name"];
+				local["AvatarPath"] = path;
+				layui.sessionData("jly-client-list", {key:sessiondata_key, value:local})
 			}
 		});
 		
 		table.render({
 			elem: '#contacts'
 			,height: 270
-			,data: JSON.parse(local.op["Contacts"])
-			,toolbar:'defalut'
+			,data: JSON.parse(local["Contacts"])
+			,editTrigger: 'dblclick'
 			,cols: [[
 				,{field:'id', width: '1%', align:'center', title: '序号', hide: true}
 				,{field:'name', width: '10%', align:'center', title: '姓名'}
 				,{field:'phone', width: '20%', align:'center', title: '联系电话'}
 				,{field:'relationship', width: '10%', align:'center', title: '与老人关系'}
-				,{field:'address', width: '59%', align:'center', title: '家庭住址'}
+				,{field:'address', width: '49%', align:'center', title: '家庭住址'}
+				,{field:'op', title: '操作', width: '10%', align:'center', toolbar: '#fieldtool', fixed: 'right'}
 			]]
 		});
 		
@@ -394,6 +596,42 @@
 				form.render("select");
             })
         });
+
+		form.on('checkbox(other)', function(data) {   
+			if (data.elem.checked) { // 判断当前 checkbox 是否选中   
+				doms.interest_other.disabled = false;				
+			} else {  
+				doms.interest_other.value = "";
+				doms.interest_other.disabled = true;
+			}
+		});
+
+		form.on('radio(religion_radio)', function(data) {
+			if (data.elem.value === "其他") {
+				doms.religion_other.disabled = !data.elem.checked;
+				form.render();
+			} else {
+				if (!doms.religion_other.disabled) {
+					doms.religion_other.value = "";
+					doms.religion_other.disabled = true;
+					form.render();
+				}
+			} 
+		});
+
+		form.on('radio(treat_radio)', function(data) {
+			console.log(data.elem.value)
+			if (data.elem.value === "其他") {
+				doms.treat_other.disabled = !data.elem.checked;
+				form.render();
+			} else {
+				if (!doms.treat_other.disabled) {
+					doms.treat_other.value = "";
+					doms.treat_other.disabled = true;
+					form.render();
+				}
+			} 
+		});
 		
 		$(document).keyup(function(event){
 			if (event.keyCode == 27) {
@@ -417,36 +655,93 @@
 			}
 		})
 
+		//监听提交
+        form.on('submit(save)', function(data){
+			// 兴趣
+			var interest = [];
+			var child = $(".seach-box input[type='checkbox']");
+			child.each(function (index, item) {
+				if (item.checked) {
+					interest.push(item.id);
+				}
+			});
+			data.field["interest"] = JSON.stringify(interest);
+			// 联系人
+			data.field["contacts"] = JSON.stringify(table.cache["contacts"]);
+			data.field["idx"] = local["Idx"]
+			data.field["status"] = local["Status"]
+			data.field["avatar"] = local["Avatar"]
+			
+            $.ajax({
+                type: "post",
+                url: BasePath + '/updateclient',
+                data: data.field,
+                dataType: "json",
+				headers: {'Access-Control-Allow-Origin' : BasePath,},
+				xhrFields: {withCredentials: true},
+                success: function(data){
+					console.log(data)
+                    if(data.code==0){
+                        layer.msg("保存成功", {icon: 6,time:2000},function () {
+							ParseClientInfo(data.data[0]);
+							const dataobj =  data.data[0];
+							dataobj.Application = local.Application;
+							dataobj.HealthInfo = local.HealthInfo;
+                            init(dataobj);
+							onSave();
+                        });
+                        return false;
+                    }else if(data.code==1001) {
+						// cookie 失效
+						var from = document.getElementById("from").value;
+						if (from == "client-op") {
+							parent.parent.location.href = "../../index.html";
+						} else {
+							parent.location.href = "../../index.html";
+						}
+                        return false;
+					}else{
+                        layer.msg(data.msg,{icon:5,time:5000});
+						return false;
+                    }
+                }
+            });
+        });
+
+		controlDisabled(true);
 		modifyInterestCss();
 		modifyReligionCss();
 		modifyTreatCss();
-    })
+	});
+	
+	function init(data) {
 
-	function init(data, form, table) {
-
-		data.op["AvatarPath"] = "";
-		if (data.op["Avatar"] !== "") {
-			data.op["AvatarPath"] = BasePath + '/avatarphoto/' + data.op["Avatar"] + '.jpg'
+		data["AvatarPath"] = "";
+		if (data["Avatar"] !== "") {
+			data["AvatarPath"] = BasePath + '/avatarphoto/' + data["Avatar"] + '.jpg'
 		}
-		data.op.ContactData = JSON.parse(data.op["Contacts"]);
-		layui.sessionData("jly-client-list", {key:"op", value:data.op})
+		console.log(data)
+		data.ContactData = JSON.parse(data["Contacts"]);
+		layui.sessionData("jly-client-list", {key:sessiondata_key, value:data})
 
-		var interest = JSON.parse(data.op["Interest"])
-		form.val("modify", {
-			"name": data.op["Name"],
-			"chinaid": data.op["ChinaId"],
-			"sex": GetSex(data.op["ChinaId"]),
-			"age": GetAge(data.op["ChinaId"]),
-			"phone": data.op["Phone"],
-			"marriage": data.op["Marriage"],
-			"nation": data.op["Nation"],
-			"culture": data.op["Culture"],
-			"politics": data.op["Politics"],
-			"client_type": data.op["ClientType"],
-			"pay_type": data.op["PayType"],
-			"trusteeship": data.op["Trusteeship"],
-			"address": data.op["Address"],
-			"addr": data.op["Addr"],
+
+		doms.sex.value = GetSex(data["ChinaId"]);
+		doms.age.value = GetAge(data["ChinaId"]);
+
+		var interest = JSON.parse(data["Interest"])
+		layui.form.val("modify", {
+			"name": data["Name"],
+			"chinaid": data["ChinaId"],
+			"phone": data["Phone"],
+			"marriage": data["Marriage"],
+			"nation": data["Nation"],
+			"culture": data["Culture"],
+			"politics": data["Politics"],
+			"client_type": data["ClientType"],
+			"pay_type": data["PayType"],
+			"trusteeship": data["Trusteeship"],
+			"address": data["Address"],
+			"addr": data["Addr"],
 			"棋牌": interest.includes("棋牌"),			
 			"戏曲": interest.includes("戏曲"),
 			"唱歌": interest.includes("唱歌"),
@@ -454,33 +749,33 @@
 			"阅读": interest.includes("阅读"), 
 			"聊天": interest.includes("聊天"),
 			"其他": interest.includes("其他"),
-			"interest_other": data.op["InterestOther"],
-			"religion": data.op["Religion"],
-			"religion_other": data.op["ReligionOther"],
-			"treat": data.op["Treat"],
-			"treat_other": data.op["TreatOther"],
+			"interest_other": data["InterestOther"],
+			"religion": data["Religion"],
+			"religion_other": data["ReligionOther"],
+			"treat": data["Treat"],
+			"treat_other": data["TreatOther"],
 		});
-
 	}
 
 	function loadApplication() {
 		$.ajax({
 			type: "post",
 			url: BasePath + '/getApplication',
-			data:  {idx: local.op.Idx},
+			data:  {idx: local.Idx},
 			dataType: "json",
 			headers: {'Access-Control-Allow-Origin' : BasePath,},
 			xhrFields: {withCredentials: true},
 			success: function(data){
 
 				load_application_over = true;
-				if (load_healthrecord_over && load_application_over) {
+				if (load_healthrecord_over && load_application_over && load_assessment_over && load_nurse_over) {
 					layui.layer.close(loading_idx);
 				}
 
 				if(data.code==0){
-					local.op["Application"] = data.data[0];
-					layui.sessionData("jly-client-list", {key:"op", value:local.op})
+					local["Application"] = data.data[0];
+					document.getElementById("checkin_num").value = data.data[0].idx;
+					layui.sessionData("jly-client-list", {key:sessiondata_key, value:local})
 					return false;
 				}else if(data.code==1001) {
 					// cookie 失效
@@ -503,20 +798,21 @@
 		$.ajax({
 			type: "post",
 			url: BasePath + '/getHealth',
-			data: {idx: local.op.Idx},
+			data: {idx: local.Idx},
 			dataType: "json",
 			headers: {'Access-Control-Allow-Origin' : BasePath,},
 			xhrFields: {withCredentials: true},
 			success: function(data){
 
 				load_healthrecord_over = true;
-				if (load_healthrecord_over && load_application_over) {
+				if (load_healthrecord_over && load_application_over && load_assessment_over && load_nurse_over) {
 					layui.layer.close(loading_idx);
 				}
 
 				if(data.code==0){
-					local.op["HealthInfo"] = data.data[0];
-					layui.sessionData("jly-client-list", {key:"op", value:local.op})
+					local["HealthInfo"] = data.data[0];
+					document.getElementById("health_num").value = data.data[0].idx;
+					layui.sessionData("jly-client-list", {key:sessiondata_key, value:local})
 					return false;
 				}else if(data.code==1001) {
 					// cookie 失效
@@ -534,17 +830,82 @@
 			}
 		});
 	}
+
+	// 加载评估结果
+	function loadAssessment() {
+		$.ajax({
+			type: "post",
+			url: BasePath + '/getassessmentlevel',
+			data: {client_idx: local.Idx},
+			dataType: "json",
+			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			xhrFields: {withCredentials: true},
+			success: function(data){
+
+				load_assessment_over = true;
+				if (load_healthrecord_over && load_application_over && load_assessment_over && load_nurse_over) {
+					layui.layer.close(loading_idx);
+				}
+
+				if(data.code==0){
+					local["Assessment"] = data.data[0];
+					layui.sessionData("jly-client-list", {key:sessiondata_key, value:local})
+					init_capability()
+					return false;
+				}else if(data.code==1001) {
+					// cookie 失效
+					window.top.location = "../../index.html";
+					return false;
+				}else{
+					layer.msg(data.msg,{icon:5,time:5000});
+					return false;
+				}
+			}
+		});
+	}
+
+	// 加载照护计划
+	function loadNurse() {
+		// TODO
+		$.ajax({
+			type: "post",
+			url: BasePath + '/getnurselevel',
+			data: {client_idx: local.Idx},
+			dataType: "json",
+			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			xhrFields: {withCredentials: true},
+			success: function(data){
+
+				load_nurse_over = true;
+				if (load_healthrecord_over && load_application_over && load_assessment_over && load_nurse_over) {
+					layui.layer.close(loading_idx);
+				}
+
+				if(data.code==0){
+					local["Nurse"] = data.data[0];
+					layui.sessionData("jly-client-list", {key:sessiondata_key, value:local})
+					init_nurse()
+					return false;
+				}else if(data.code==1001) {
+					// cookie 失效
+					window.top.location = "../../index.html";
+					return false;
+				}else{
+					layer.msg(data.msg,{icon:5,time:5000});
+					return false;
+				}
+			}
+		});
+	}
 	
 	function onApplication() {
-		const layertitle = "敬老院服务管理-操作-" + local.op.Name + "-入住申请";
-		console.log(window)
 		layer.open({
 			type: 2,
 			area: ['900px', '600px'],
 			fixed: false, //不固定
 			maxmin: true,
-			title: layertitle,
-			content: 'client-application.html',
+			title: "入住申请",
+			content: 'client-application.html' + window.location.search,
 			success:function(layero,index){
 				var body = layer.getChildFrame('body', index);
 				console.log(body.contents().find("#from"));
@@ -555,15 +916,47 @@
 	}
 
 	function onHealthInfo() {
-		const layertitle = "敬老院服务管理-操作-" + local.op.Name + "-健康信息";
-		console.log(window)
 		layer.open({
 			type: 2,
 			area: ['900px', '600px'],
 			fixed: false, //不固定
 			maxmin: true,
-			title: layertitle,
-			content: 'client-health.html',
+			title: "健康信息",
+			content: 'client-health.html' + window.location.search,
+			success:function(layero,index){
+				var body = layer.getChildFrame('body', index);
+				console.log(body.contents().find("#from"));
+				body.contents().find("#from").val("client-op");
+				layer.full(index);
+			}
+		});
+	}
+
+	function onAssessment() {
+		layer.open({
+			type: 2,
+			area: ['900px', '600px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "能力评估",
+			content: 'client-assessment.html' + window.location.search,
+			success:function(layero,index){
+				var body = layer.getChildFrame('body', index);
+				console.log(body.contents().find("#from"));
+				body.contents().find("#from").val("client-op");
+				layer.full(index);
+			}
+		});
+	}
+
+	function onNurse() {
+		layer.open({
+			type: 2,
+			area: ['900px', '600px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "照护计划",
+			content: 'client-nurse.html' + window.location.search,
 			success:function(layero,index){
 				var body = layer.getChildFrame('body', index);
 				console.log(body.contents().find("#from"));
@@ -574,13 +967,13 @@
 	}
 
 	function backSetApplication(application) {
-		local.op.Application = application
-		layui.sessionData("jly-client-list", {key:"op", value:local.op})
+		local.Application = application
+		layui.sessionData("jly-client-list", {key:sessiondata_key, value:local})
 	}
 
 	function backSetHealthInfo(healthInfo) {
-		local.op.HealthInfo = healthInfo
-		layui.sessionData("jly-client-list", {key:"op", value:local.op})
+		local.HealthInfo = healthInfo
+		layui.sessionData("jly-client-list", {key:sessiondata_key, value:local})
 	}
 
 
@@ -606,6 +999,110 @@
 			.forEach(function(radio) {
 				radio.classList.remove("layui-radio-disabled");
 			});
+	}
+
+	function onEdit() {
+		document.getElementById("edit").classList.add("layui-hide");
+		document.getElementById("save").classList.remove("layui-hide");
+		document.getElementById("cancel").classList.remove("layui-hide");
+
+		controlDisabled(false);
+	}
+
+	function onSave() {
+		document.getElementById("edit").classList.remove("layui-hide");
+		document.getElementById("save").classList.add("layui-hide");
+		document.getElementById("cancel").classList.add("layui-hide");
+
+		controlDisabled(true);
+	}
+
+	function onCancel() {
+		document.getElementById("edit").classList.remove("layui-hide");
+		document.getElementById("save").classList.add("layui-hide");
+		document.getElementById("cancel").classList.add("layui-hide");
+
+		init(local);
+
+		controlDisabled(true);
+	}
+
+	function onCntactAdd() {
+		if (doms.contact_add.classList.contains("layui-btn-disabled")) {
+			return false;
+		}	
+		
+		let name = doms.contact_name.value;
+		let phone = doms.contact_phone.value;
+		let relationship = doms.contact_relationship.value;
+		let address = doms.contact_address.value;
+		console.log(name, phone, relationship, address)
+
+		if (name == "" || phone == "" || relationship == "" || address == "") {
+			layui.layer.msg("请填写完整信息");
+			return false;
+		}
+
+		doms.contact_name.value = "";
+		doms.contact_phone.value = "";
+		doms.contact_relationship.value = "";
+		doms.contact_address.value = "";
+
+		var table_data = layui.table.cache["contacts"];
+		console.log(layui.table.cache)
+		table_data.push({
+			"name": name,
+			"phone": phone,
+			"relationship": relationship,
+			"address": address});
+			
+		layui.table.reload("contacts", {data: table_data})
+	}
+
+	function init_capability() {
+		document.getElementById("capability_idx").value = local.Assessment.idx;
+		document.getElementById("capability_date").value = local.Assessment.date;
+		document.getElementById("capability_result").value = local.Assessment.result;
+	}
+
+	function init_nurse() {
+		document.getElementById("nurse_idx").value = local.Nurse.idx;
+		document.getElementById("nurse_date").value = local.Nurse.date;
+		document.getElementById("nurse_level").value = ParseNurseLevel(local.Nurse.level);
+	}
+	
+	function controlDisabled(disable) {
+		doms.inputs.forEach(function(item) {
+			if (item.id == "sex" || item.id == "age" || item.id == "checkin_num" || item.id == "health_num") {
+				return;
+			}
+			item.disabled = disable;
+		})
+
+		doms.selects.forEach(function(item) {
+			item.disabled = disable;
+		})
+
+		doms.radios.forEach(function(item) {
+			item.disabled = disable;
+		})
+
+		doms.checkboxs.forEach(function(item) {
+			item.disabled = disable;
+		})
+
+		disable ? doms.contact_add.classList.add("layui-btn-disabled") : doms.contact_add.classList.remove("layui-btn-disabled");
+		document.querySelectorAll('a[id="contact_delete"]').forEach(function(item){
+			disable ? item.classList.add("disabled") : item.classList.remove("disabled");
+		})
+		// document.querySelectorAll('a[id="capability_level_select"]').forEach(function(item){
+		// 	disable ? item.classList.add("disabled") : item.classList.remove("disabled");
+		// })
+		// document.querySelectorAll('a[id="nurse_level_select"]').forEach(function(item){
+		// 	disable ? item.classList.add("disabled") : item.classList.remove("disabled");
+		// })
+
+		layui.form.render();
 	}
 
 </script>

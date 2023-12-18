@@ -1,0 +1,88 @@
+<!doctype html>
+<html class="x-admin-sm">
+    <script id="nurse-page" type="text/html">
+        <table width="765.33" cellpadding="0" cellspacing="0" style='width:459.20pt;border-collapse:collapse;table-layout:fixed;'>
+            <col width="96.33"/>
+            <col width="157.67"/>
+            <col width="80"/>`
+            <col width="116.75"/>
+            <col width="80"/>
+            <col width="234.58"/>
+            <tr height="26" style='height:15.60pt;'>
+                <td class="indexSet" height="26" width="765.33" colspan="6" style='height:15.60pt;width:459.20pt;border-right:none;border-bottom:none;'>
+                    {{# if(typeof d.Row === 'undefined' || d.Row == null || d.Row.idx == null) { }}
+                        <b>编号:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                    {{# } else { }}
+                        <b>编号: {{= d.Row.idx }}</b>
+                    {{# }}}
+                </td>
+            </tr>
+            <tr height="120" class="titleSet" style='height:72.00pt;'>
+                <td class="titleSet" height="120" colspan="6" style='height:72.00pt;border-right:none;border-bottom:none;' x:str>照 护 服 务 计 划</td>
+            </tr>
+            <tr height="66.67" class="borderSet" style='height:40.00pt;'>
+                <td class="borderSet layui-font-16" height="66.67" style='height:40.00pt;' x:str>姓名</td>
+                <td class="borderSet layui-font-16"><b>{{ d.Name }}</b></td>
+                <td class="borderSet layui-font-16" x:str>性别</td>
+                <td class="borderSet layui-font-16"><b>{{ d.Sex }}</b></td>
+                <td class="borderSet layui-font-16" x:str>身份证</td>
+                <td class="borderSet layui-font-16"><b>{{ d.ChinaId }}</b></td>
+            </tr>
+            <tr height="66.67" class="borderSet" style='height:40.00pt;'>
+                <td class="borderSet layui-font-16" height="66.67" style='height:40.00pt;' x:str>护理等级</td>
+                <td class="borderSet layui-font-16" colspan="3" style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;'>
+                    {{# if(typeof d.Row != 'undefined' && d.Row != null && typeof d.Row.levelstr != 'undfined' && d.Row.levelstr != null) { }}
+                        <b>{{ d.Row.levelstr }}</b>
+                    {{# } }}
+                </td>
+                <td class="borderSet layui-font-16" x:str>日期</td>
+                <td class="borderSet layui-font-16">
+                    {{# if(typeof d.Row != 'undefined' && d.Row != null && typeof d.Row.date != 'undfined' && d.Row.date != null) { }}
+                        <b>{{ d.Row.date }}</b>
+                    {{# } }}
+                </td>
+            </tr>
+            <tr height="233.33" class="borderSet" style='height:170.00pt;'>
+                <td class="borderSet layui-font-16" height="233.33" style='height:170.00pt;' x:str>服务项目</td>
+                <td class="borderSet-text-left layui-font-16" colspan="5" style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;'>
+                    {{#
+                        var parse = function(str) {
+                            return str.split('\n');
+                        }
+                    }}
+
+                    {{# if(typeof d.Row != 'undefined' && d.Row != null && typeof d.Row.service != 'undfined' && d.Row.service != null) { }}
+                        {{# var string_array = parse(d.Row.service) }}
+                        {{# for (var i=0; i<string_array.length; i++) { }}
+                            <b>{{ string_array[i] }}</b><br>
+                        {{# } }}
+                    {{# } }}
+                </td>
+            </tr>
+            <tr height="233.33" class="borderSet" style='height:170.00pt;'>
+                <td class="borderSet layui-font-16" height="233.33" style='height:170.00pt;' x:str>安全保障</td>
+                <td class="borderSet-text-left layui-font-16" colspan="5" style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;'>
+                    {{# if(typeof d.Row != 'undefined' && d.Row != null && typeof d.Row.safe != 'undfined' && d.Row.safe != null) { }}
+                        <b>{{ d.Row.safe }}</b>
+                    {{# } }}
+                </td>
+            </tr>
+            <tr height="233.33" class="borderSet" style='height:170.00pt;'>
+                <td class="borderSet layui-font-16" height="233.33" style='height:170.00pt;' x:str>饮食照护</td>
+                <td class="borderSet-text-left layui-font-16" colspan="5" style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;'>
+                    {{# if(typeof d.Row != 'undefined' && d.Row != null && typeof d.Row.diet != 'undfined' && d.Row.diet != null) { }}
+                        <b>{{ d.Row.diet }}</b>
+                    {{# } }}
+                </td>
+            </tr>
+            <tr height="233.33" class="borderSet" style='height:170.00pt;'>
+                <td class="borderSet layui-font-16" height="233.33" style='height:170.00pt;' x:str>注意事项</td>
+                <td class="borderSet-text-left layui-font-16" colspan="5" style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;'>
+                    {{# if(typeof d.Row != 'undefined' && d.Row != null && typeof d.Row.heed != 'undfined' && d.Row.heed != null) { }}
+                        <b>{{ d.Row.heed }}</b>
+                    {{# } }}
+                </td>
+            </tr>
+        </table>
+    </script>
+</html>

@@ -3,6 +3,7 @@
 ;var AvatarPath = BasePath + "/avatarphoto/";
 ;var PhotoPath =  BasePath + "/imagephoto/";
 ;var CookieName = "bm-cookie";
+;var key_enter = 13;
 
 function GetCookie(name) {
 　　if (document.cookie.length > 0) {
@@ -102,4 +103,47 @@ function GetBirthdateFromIdCard(identityCard) {
 	} else {  
 	  return null;  
 	}  
+}
+
+/**
+ * 
+ * @param {*} clientdata 
+ */
+function ParseClientInfo(clientdata) {
+	clientdata["Sex"] = GetSex(clientdata.ChinaId);
+	clientdata["Age"] = GetAge(clientdata.ChinaId);
+	clientdata["Birthday"] = GetBirthdateFromIdCard(clientdata.ChinaId);
+	
+	var date = new Date(clientdata.InDate)
+	clientdata["InDate"] = date.toLocaleDateString().split('/').join('-')
+	if (clientdata.InDate === '1-1-1') {
+		clientdata.InDate = ""
+	}
+	
+	date = new Date(clientdata.OutDate)
+	clientdata["OutDate"] = date.toLocaleDateString().split('/').join('-')
+	if (clientdata.OutDate === '1-1-1') {
+		clientdata.OutDate = ""
+	}
+}
+
+/**
+ * 
+ * @param {string} level 
+ * @returns string
+ */
+function ParseNurseLevel(level) {
+	switch (level) {
+		case "1":
+			return "I 级";
+		case "2":
+			return "II 级";
+		case "3":
+			return "III 级";
+		case "4":
+			return "IV 级";
+		case "5":
+			return "特级";
+	}
+	return "错误";
 }

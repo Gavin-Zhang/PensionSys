@@ -1,0 +1,55 @@
+@media print {
+    @page {
+        margin: 0.5in 0.25in 0.5in 0.25in;
+    }
+
+    /* body {
+        margin-left: 20mm; 
+    } */
+}
+
+table {
+    margin-left: auto;  
+    margin-right: auto;  
+}
+
+.titleSet {
+    text-align:center;
+    font-size: 30px;
+    font-family:"黑体";
+}
+
+.indexSet {
+    text-align:right;
+}
+
+.borderSet {
+    border:1px solid #000000;
+    text-align:center;
+}
+
+.borderSet-text-left {
+    border:1px solid #000000;
+    text-align:left;
+}
+
+.borderSet-line-left {
+    border-left: 1px solid #000000;
+}
+
+.text-center {
+    text-align:center;
+}
+
+.text-left {
+    text-align:left;
+}
+
+.borderSet-line-right {
+    border-right: 1px solid #000000;
+}
+
+.font-simsun {
+    font-family:"simsun";
+    color:#000000;
+}

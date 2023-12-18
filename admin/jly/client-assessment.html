@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="utf-8">
+    <title>
+        敬老院服务管理-总览-操作-能力评估
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+	<link rel="stylesheet" href="../../layui/css/layui.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript" src="./js/base.js"></script>
+	<style>
+		a.disabled {
+			pointer-events: none;
+			color: #ccc;
+		}
+	</style>
+</head>
+<body>
+	<br>
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md12">
+				<div class="layui-card">
+					<div class="layui-card-body ">
+						<form class="layui-form layui-col-space5">
+							<div class="layui-inline">
+								<input type="text" class="layui-input" placeholder="评估编号" id="serach_idx" lay-filter="serach_idx">
+							</div>
+							<div class="layui-inline">
+								<select id="sreach_type" lay-filter="sreach_type">
+									<option value="">评估原因</option>
+									<option value="首次评估">首次评估</option>
+									<option value="常规评估">常规评估</option>
+									<option value="即时评估">即时评估</option>
+									<option value="因对评估结果有疑问进行的复评">因对评估结果有疑问进行的复评</option>
+									<option value="其他">其他</option>
+								</select>
+							</div>
+							<div class="layui-inline layui-show-xs-block">
+								<button class="layui-btn" lay-submit="" type="button" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<br>
+	<div class="layui-fluid">
+		<div class="layui-row layui-col-space15">
+			<div class="layui-col-md12">
+				<div class="layui-card">
+					<div class="layui-card-body ">
+						<form class="layui-form layui-col-space5">
+							<div class="layui-inline">
+								<select id="type" lay-filter="type">
+									<option value="">评估原因</option>
+									<option value="首次评估">首次评估</option>
+									<option value="常规评估">常规评估</option>
+									<option value="即时评估">即时评估</option>
+									<option value="因对评估结果有疑问进行的复评">因对评估结果有疑问进行的复评</option>
+									<option value="其他">其他</option>
+								</select>
+							</div>
+							
+							<div class="layui-inline">
+								<input type="text" class="layui-input" id="date" placeholder="评估日期">
+							</div>
+	
+							<div class="layui-inline">
+								<button class="layui-btn layui-btn-normal" type="button" id="addButtion" onclick="Add()">添加</button>
+							</div>
+						</form>
+						<br>
+						<table class="layui-hide" id="assessment_table" name="assessment_table" lay-filter="assessment_table"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/html" id="fieldtool">
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="op">操作</a>
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="print">打印</a>
+	<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
+</script>
+
+<script>
+	Date.prototype.Format = function(fmt) {
+		var o = {
+			"M+": this.getMonth() + 1,
+			"d+": this.getDate(),
+			"H+": this.getHours(),
+			"m+": this.getMinutes(),
+			"s+": this.getSeconds(),
+			"q+": Math.floor((this.getMonth()+3)/3),
+			"S": this.getMilliseconds()
+		};
+		
+		if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4-RegExp.$1.length))
+		for (var k in o)
+		if (new RegExp("("+k+")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1)?(o[k]):(("00"+o[k]).substr((""+o[k]).length)))
+		return fmt;
+	}
+	</script>
+
+<script>
+
+	// 通过url获取参数
+	const params = new URLSearchParams(window.location.search);
+	const idx = params.get('idx');
+	const sessiondata_key = "op-" + idx;
+
+	let session_data;
+	let search_data = {serach_idx: "", sreach_type: ""};
+
+    layui.use(['element','layer','form', 'laydate', 'table'], function(){
+        var  $ = layui.jquery;//jquery
+        var element = layui.element;//面包导航
+        var layer = layui.layer;//弹出层
+        var form = layui.form;
+		var laydate = layui.laydate;
+		var table = layui.table;
+		session_data = layui.sessionData("jly-client-list")[sessiondata_key.toString()];
+
+		var cur_date = new Date();
+		laydate.render({
+			elem: '#date' //指定元素
+			,type: 'date'
+			,value: cur_date.Format("yyyy-MM-dd")
+		});
+
+		$.ajaxSetup({
+			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			xhrFields: {withCredentials: true},
+		});
+
+		table.render({
+			elem: '#assessment_table'
+			,height: 'full-150'
+			,url: BasePath + '/getassessments'
+			,method: 'post'
+			,dataType: "json"
+			,where: { client_idx: session_data.Idx, }
+			,page: true //开启分页
+			,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+			,id:"assessments"
+			,limits:[10,20,30,50,100,150,200,300,400,500,1000]
+			,cols: [[
+				{field:'idx', align:'center', title: '编号', width: '20%'}
+				,{field:'type', align:'center', title: '评估原因', width: '20%'}
+				,{field:'date', align:'center', title: '评估时间', width: '20%'}
+				,{field:'result', align:'center', title: '评估结果', width: '20%'}
+				,{field: 'op', width: '10%', align:'center', width: '20%', toolbar: '#fieldtool', fixed: 'right'}
+			]]
+			,parseData: function(res){ //res 即为原始返回的数据
+				if (res.code == 0) {
+					return {
+					  "code": res.code, //解析接口状态
+					  "msg": res.message, //解析提示文本
+					  "count": res.count, //解析数据长度
+					  "data": res.data[0] //解析数据列表
+					};
+				}
+				if (res.code == 1001) {
+					parent.location.href = "../../index.html";
+				}
+				return {
+				  "code": res.code, //解析接口状态
+				  "msg": res.message, //解析提示文本
+				  "count": res.count, //解析数据长度
+				  "data": [] //解析数据列表
+				};
+			}
+		});
+
+		table.on('tool(assessment_table)', function(obj){
+			var data = obj.data
+			,layEvent = obj.event;
+
+			switch (layEvent) {
+				case 'op':
+					DoEdit(data);
+					break;
+				case "delete":
+					DoDelete(data);
+					break;
+				case "print":
+					DoPrint(data);
+					break;
+			}
+		});
+
+		form.on('submit(sreach)', function(data){
+			sreachAssessment();
+        });
+		$("input[id='serach_idx']").keypress(function (e) {
+			if (e.which == key_enter) {
+				sreachAssessment()
+			}
+		});
+		$("input[id='sreach_type']").keypress(function (e) {
+			if (e.which == key_enter) {
+				sreachAssessment()
+			}
+		});
+
+    });
+
+	function Add() {
+		var type = $("#type").val();
+		var date = $("#date").val();
+
+		if(type == null || type == "") {
+			layer.msg("请选择评估原因");
+			return;
+		}
+		if(date == null || date == "") {
+			layer.msg("请选择评估日期");
+			return;
+		}
+		if(session_data.Idx == null || session_data.Idx == "") {
+			layer.msg("请选择评估客户");
+			return;
+		}
+
+		$.ajax({
+			url: BasePath + '/addassessment',
+			type: "POST",
+			data: {
+				type: type,
+				date: date,
+				client_idx: session_data.Idx,
+			},
+			dataType: "json",
+			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			xhrFields: {withCredentials: true},
+			success: function(data){
+				if(data.code==0){
+					layui.table.reload('assessments');
+					return false;
+				}else if(data.code==1001) {
+					parent.location.href = "../../index.html";
+					return false;
+				}else{
+					layer.msg(data.msg,{icon:5,time:5000});
+					return false;
+				}
+			}
+		});
+	}
+
+	function DoEdit(data) {
+		const sesison_key = "assessment-" + session_data.Idx;
+		layui.sessionData("jly-client-list", {key:sesison_key, value:data})
+
+		layer.open({
+			type: 2,
+			area: ['900px', '600px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "【" + data.idx + "】",
+			content: 'client-assessment-op.html' + window.location.search,
+			success:function(layero,index){
+				var body = layer.getChildFrame('body', index);
+				console.log(body.contents().find("#from"));
+				body.contents().find("#from").val("client-assessment");
+				layer.full(index);
+			},
+			end:function(){
+				layui.sessionData("jly-client-list", {key:sesison_key, remove:true});
+			}
+		});
+	}
+
+	function DoDelete(data) {
+		if (data.result != "") {
+			layui.layer.msg("此评估已出结果，无法对其删除", {icon: 5});
+			return; 
+		}
+
+		layer.confirm('确定要删除【' + data.idx + '】么?',
+			{btn:['确定', '取消']},
+			function(index, layero) {
+				$.ajax({
+					type: "post",
+					url: BasePath + '/deleteassessment',
+					data: {idx: data.idx},
+					dataType: "json",
+					headers: {'Access-Control-Allow-Origin' : BasePath,},
+					xhrFields: {withCredentials: true},
+					success: function(data){
+						console.log(data)
+						if(data.code==0){
+							layui.table.reload("assessments")
+							return false;
+						}else if(data.code==1001) {
+							window.location.href = "../../index.html";
+							return false;
+						}else{
+							layer.msg(data.msg,{icon:5,time:5000});
+							return false;
+						}
+					}
+				});
+				layer.close(index);
+			}
+		);
+	}
+
+	function DoPrint(data) {
+		const sesison_key = "assessment-" + session_data.Idx;
+		layui.sessionData("jly-client-list", {key:sesison_key, value:data})
+
+		layer.open({
+			type: 2,
+			area: ['1px', '1px'],
+			offset: ['-100px', '-100px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "敬老院服务管理-总览-操作",
+			content: 'client-assessment-print.html' + window.location.search,
+			success:function(layero,index){
+				layer.full(index);
+			},
+			end:function(){
+				layui.sessionData("jly-client-list", {key:sesison_key, remove:true});
+			}
+		})
+	}
+
+	function sreachAssessment() {
+		var serach_idx = layui.$('#serach_idx').val();
+		var sreach_type = layui.$('#sreach_type').val();
+		if (serach_idx==search_data.serach_idx && sreach_type==search_data.sreach_type) {
+			return;
+		}
+
+		search_data.serach_idx = serach_idx;
+		search_data.sreach_type = sreach_type;
+		console.log(search_data);
+		if (serach_idx=="" && sreach_type=="") {
+			layui.table.reload('assessments', {where:{}})
+			return;
+		}
+
+		let where = {}
+		if (serach_idx != "") {
+			where.serach_idx = serach_idx
+		}
+		if (sreach_type != "") {
+			where.sreach_type = sreach_type
+		}
+		layui.table.reload('assessments', { where: where })
+	}
+
+	function tableReload(notice_parent) {
+		layui.table.reload("assessments");
+		if (notice_parent) {
+			parent.loadAssessment();
+		}
+	}
+
+</script>
+
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="x-admin-sm">
 <head>
     <meta charset="utf-8">
     <title>
@@ -18,16 +18,17 @@
 		.chosen-area {
 			display: inline-block;
 			width: 400pt;
-			min-height: 35px;
+			min-height: 30px;
 			border: 1px solid #cccccc;
-			line-height: 35px;
+			line-height: 30px;
 			box-sizing: border-box;
 			padding: 0px 10px;
 		}
 
 		.chosen-area span {
-			font-size: 13px;
+			font-size: 10px;
 			color: #000;
+			margin-top: 5px;
 		}
 
 		.chosen-area:hover {
@@ -51,7 +52,7 @@
 			<input type="hidden" id="client_idx" name="client_idx">
 			
 			<div class="layui-tab-item layui-show">
-
+				<br>
 				<div class="layui-row layui-col-space5">
 					<div class="layui-col-xs1 layui-col-sm1 layui-col-md1">
 						<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid"  type="button" id="print" lay-filter="print" onclick="onPrint();">打印健康表</button>
@@ -63,6 +64,7 @@
 						<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid"  type="button" id="edit_save" lay-filter="save" lay-submit>编辑</button>
 					</div>
 				</div>	
+				<br>
 				<div class="layui-form-item">
 					<legend class="layui-font-14">血型</legend>
 					<div class="layui-field-box">
@@ -205,6 +207,12 @@
 
 <script>
 
+	// 通过url获取参数
+	const params = new URLSearchParams(window.location.search);
+	const idx = params.get('idx');
+	const sessiondata_key = "op-" + idx;
+	console.log(sessiondata_key)
+
 	let session_data;
 
 	layui.config({
@@ -228,11 +236,7 @@
 			,type: 'month'
 		});
 
-		console.log("jly-client-list", layui.sessionData("jly-client-list"))
-		console.log("jly-client-list op", layui.sessionData("jly-client-list").op)
-		console.log("jly-client-list op healthinfo", layui.sessionData("jly-client-list").op.HealthInfo)
-		session_data = layui.sessionData("jly-client-list").op;
-		console.log(session_data)
+		session_data = layui.sessionData("jly-client-list")[sessiondata_key.toString()];
 		init(session_data);
 
 		$(document).keyup(function(event){
@@ -326,7 +330,6 @@
 
 		table.on('tool(family_history_table)', function(obj) {
 			var data = obj.data;
-			console.log(obj)
 			if (obj.event === 'delete') {
 				if (data.name == "") {
 					var table_data = table.cache["family_history_table"];
@@ -416,7 +419,6 @@
 							// 回写seesion data
 							on_save(btn);
 							session_data = form_data.field;
-							console.log("--》", session_data)
 							parent.backSetHealthInfo(session_data);
                         });
                         return false;
@@ -438,12 +440,12 @@
 			return false;
         });
 
+		controlDisabled(true);
 		modifyCss();
     });
 
 	function init(basedata) {
-		console.log(data)
-
+		console.log(basedata);
 		var data = basedata.HealthInfo;
 
 		var drug_allergy = JSON.parse(data["drug_allergy"]);
@@ -484,8 +486,6 @@
 		layui.$('#print').removeClass('layui-hide');
 
 		controlDisabled(true);
-		layui.form.render();
-
 		modifyCss();
 	}
 
@@ -496,7 +496,6 @@
 		layui.$('#print').addClass('layui-hide');
 
 		controlDisabled(false);
-		layui.form.render();
 	}
 
 	function on_cancel() {
@@ -508,7 +507,6 @@
 
 		controlDisabled(true);
 		modifyCss();
-		layui.form.render();
 	}
 
 	function controlDisabled(disable) {
@@ -542,17 +540,21 @@
 		})
 		// 家族史
 		disable ? document.querySelector("a[id=multiSelect]").classList.add("disabled") : document.querySelector("a[id=multiSelect]").classList.remove("disabled");
-		document.getElementById("family_history_buttion").disabled = disable;
+		disable ? document.getElementById("family_history_buttion").classList.add("layui-btn-disabled") : document.getElementById("family_history_buttion").classList.remove("layui-btn-disabled");
+		document.getElementById("family_history_buttion").disabled = disable
 		//既往史疾病史
 		document.getElementById("illness").disabled = disable;
 		document.getElementById("illdate").disabled = disable;
 		document.getElementById("illness_button").disabled = disable;
+		disable ? document.getElementById("illness_button").classList.add("layui-btn-disabled") : document.getElementById("illness_button").classList.remove("layui-btn-disabled");
+
+		layui.form.render();
 	}
 
 	function addFamilyHistory() {
 		let relationship = document.getElementById("family_history").value
 		if (relationship == "") {
-			layer.msg("请填写关系", {icon: 5,time:2000});
+			layer.msg("请选择关系", {icon: 5,time:2000});
 			return;
 		}
 		let ills = document.getElementById("family_history_ill").value
@@ -598,7 +600,7 @@
 			fixed: false, //不固定
 			maxmin: true,
 			title: "敬老院服务管理-总览-操作",
-			content: 'client-healthinfo-print.html',
+			content: 'client-healthinfo-print.html' + window.location.search,
 			success:function(layero,index){
 				layer.full(index);
 			}

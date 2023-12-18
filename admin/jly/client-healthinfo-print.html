@@ -18,16 +18,21 @@
 	</body>
 	
 	<script>
+
+		// 通过url获取参数
+		const params = new URLSearchParams(window.location.search);
+		const idx = params.get('idx');
+		const sessiondata_key = "op-" + idx;
+
 		layui.use('laytpl', function(){
 			var laytpl = layui.laytpl;
 
 			var iframe = document.querySelector('iframe');
 			iframe.addEventListener('load', function(){
-				var sessiondata = layui.sessionData("jly-client-list")["op"];
+				var sessiondata = layui.sessionData("jly-client-list")[sessiondata_key.toString()];
 				if (typeof sessiondata === 'undefined') {
 					sessiondata = {}
 				}
-                console.log("print", sessiondata)
 
 				var iframeWindow = iframe.contentWindow;
 				var sprite = iframeWindow.document.getElementById('healthinfo-page');
