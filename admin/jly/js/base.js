@@ -1,23 +1,23 @@
-﻿;var Domain = 'http://localhost';
-;var BasePath = Domain + ":8003";
-;var AvatarPath = BasePath + "/avatarphoto/";
-;var PhotoPath =  BasePath + "/imagephoto/";
-;var CookieName = "bm-cookie";
+﻿// ;var Domain = 'http://localhost';
+// ;var BasePath = Domain + ":8003";
+// ;var AvatarPath = BasePath + "/avatarphoto/";
+// ;var PhotoPath =  BasePath + "/imagephoto/";
+// ;var CookieName = "bm-cookie";
 ;var key_enter = 13;
 
 function GetCookie(name) {
-　　if (document.cookie.length > 0) {
+	if (document.cookie.length > 0) {
 		var start = document.cookie.indexOf(name + '=');
 		if (start !== -1) {
-　　　　　　start = start + name.length + 1;
+			start = start + name.length + 1;
 			var end = document.cookie.indexOf(';', start);
-　　　　　　if (end === -1) {
-　　　　　　　　end = document.cookie.length;
+			if (end === -1) {
+				end = document.cookie.length;
 				//return document.cookie.substring(start, end);
-　　　　　　　　return unescape(document.cookie.substring(start, end));
-　　　　　　}
-　　　}
-　　}
+				return unescape(document.cookie.substring(start, end));
+			}
+		}
+	}
 　　return '';
 }
 

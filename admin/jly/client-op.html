@@ -19,6 +19,7 @@
     <script src="../lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="../js/index.js"></script>
 	<script type="text/javascript" src="./js/base.js"></script>
+	<script type="text/javascript" src="../../js/base.js"></script>
 
 	<style>
 		a.disabled {
@@ -524,12 +525,12 @@
 		//拖拽上传
 		upload.render({
 			elem: '#upload'
-			,url: BasePath + '/uploadavatar'
+			,url: BasePathJLY + '/uploadavatar'
 			,data: {idx: local["Idx"], name:local["Name"]}
 			,accept: 'images'
 			,acceptMime:'image/jpg'
 			,done: function(res){
-				var path = BasePath + '/avatarphoto/' + local["Idx"] + "-" + local["Name"] + ".jpg"
+				var path = AvatarPathJLY + local["Idx"] + "-" + local["Name"] + ".jpg"
 				layui.$('#uploadAvatar').removeClass('layui-hide').find('img').attr('src', path);
 				layui.$('#uploadView').addClass('layui-hide');
 
@@ -674,7 +675,7 @@
 			
             $.ajax({
                 type: "post",
-                url: BasePath + '/updateclient',
+                url: BasePathJLY + '/updateclient',
                 data: data.field,
                 dataType: "json",
 				headers: {'Access-Control-Allow-Origin' : BasePath,},
@@ -693,12 +694,7 @@
                         return false;
                     }else if(data.code==1001) {
 						// cookie 失效
-						var from = document.getElementById("from").value;
-						if (from == "client-op") {
-							parent.parent.location.href = "../../index.html";
-						} else {
-							parent.location.href = "../../index.html";
-						}
+						window.top.location.href = "../../index.html";
                         return false;
 					}else{
                         layer.msg(data.msg,{icon:5,time:5000});
@@ -716,9 +712,14 @@
 	
 	function init(data) {
 
+		if (typeof data == "undefined") {
+			xadmin.del_tab();
+			return;
+		}
+
 		data["AvatarPath"] = "";
 		if (data["Avatar"] !== "") {
-			data["AvatarPath"] = BasePath + '/avatarphoto/' + data["Avatar"] + '.jpg'
+			data["AvatarPath"] = AvatarPathJLY + data["Avatar"] + '.jpg'
 		}
 		console.log(data)
 		data.ContactData = JSON.parse(data["Contacts"]);
@@ -760,10 +761,10 @@
 	function loadApplication() {
 		$.ajax({
 			type: "post",
-			url: BasePath + '/getApplication',
+			url: BasePathJLY + '/getApplication',
 			data:  {idx: local.Idx},
 			dataType: "json",
-			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
 			xhrFields: {withCredentials: true},
 			success: function(data){
 
@@ -797,10 +798,10 @@
 	function loadHealth() {
 		$.ajax({
 			type: "post",
-			url: BasePath + '/getHealth',
+			url: BasePathJLY + '/getHealth',
 			data: {idx: local.Idx},
 			dataType: "json",
-			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
 			xhrFields: {withCredentials: true},
 			success: function(data){
 
@@ -835,10 +836,10 @@
 	function loadAssessment() {
 		$.ajax({
 			type: "post",
-			url: BasePath + '/getassessmentlevel',
+			url: BasePathJLY + '/getassessmentlevel',
 			data: {client_idx: local.Idx},
 			dataType: "json",
-			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
 			xhrFields: {withCredentials: true},
 			success: function(data){
 
@@ -869,10 +870,10 @@
 		// TODO
 		$.ajax({
 			type: "post",
-			url: BasePath + '/getnurselevel',
+			url: BasePathJLY + '/getnurselevel',
 			data: {client_idx: local.Idx},
 			dataType: "json",
-			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
 			xhrFields: {withCredentials: true},
 			success: function(data){
 

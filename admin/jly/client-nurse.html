@@ -14,6 +14,7 @@
     <script src="../lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="../js/index.js"></script>
 	<script type="text/javascript" src="./js/base.js"></script>
+	<script type="text/javascript" src="../../js/base.js"></script>
 </head>
 <body>
 	<br>
@@ -87,14 +88,14 @@
 			});
 
 			$.ajaxSetup({
-				headers: {'Access-Control-Allow-Origin' : BasePath,},
+				headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
 				xhrFields: {withCredentials: true},
 			});
 
 			table.render({
 				elem: '#nurse_table'
 				,height: 'full-150'
-				,url: BasePath + '/getnurselist'
+				,url: BasePathJLY + '/getnurselist'
 				,method: 'post'
 				,dataType: "json"
 				,where: { client_idx: session_data.Idx, }
@@ -220,10 +221,10 @@
 				function(index, layero) {
 					$.ajax({
 						type: "post",
-						url: BasePath + '/deletenurse',
+						url: BasePathJLY + '/deletenurse',
 						data: {idx: data.idx},
 						dataType: "json",
-						headers: {'Access-Control-Allow-Origin' : BasePath,},
+						headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
 						xhrFields: {withCredentials: true},
 						success: function(data){
 							console.log(data)
@@ -231,7 +232,7 @@
 								layui.table.reload("nurselist")
 								return false;
 							}else if(data.code==1001) {
-								window.location.href = "../../index.html";
+								window.top.location.href = "../../index.html";
 								return false;
 							}else{
 								layer.msg(data.msg,{icon:5,time:5000});

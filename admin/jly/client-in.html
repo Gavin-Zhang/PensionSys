@@ -13,6 +13,7 @@
     <script src="../lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="../js/index.js"></script>
 	<script type="text/javascript" src="./js/base.js"></script>
+	<script type="text/javascript" src="../../js/base.js"></script>
 </head>
 <body>
 
@@ -386,10 +387,10 @@
 			
             $.ajax({
                 type: "post",
-                url: BasePath + '/inclient',
+                url: BasePathJLY + '/inclient',
                 data: data.field,
                 dataType: "json",
-				headers: {'Access-Control-Allow-Origin' : BasePath,},
+				headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
 				xhrFields: {withCredentials: true},
                 success: function(data){
 					console.log(data)
@@ -402,12 +403,7 @@
                         return false;
                     }else if(data.code==1001) {
 						// cookie 失效
-						var from = document.getElementById("from").value;
-						if (from == "client-op") {
-							parent.parent.location.href = "../../index.html";
-						} else {
-							parent.location.href = "../../index.html";
-						}
+						window.top.location.href = "../../index.html"
                         return false;
 					}else{
                         layer.msg(data.msg,{icon:5,time:5000});

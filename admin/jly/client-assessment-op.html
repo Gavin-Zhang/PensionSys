@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../css/font.css">
     <link rel="stylesheet" href="../css/index.css">
     <script src="../lib/layui/layui.js" charset="utf-8"></script>
+	<script type="text/javascript" src="../../js/base.js"></script>
     <script type="text/javascript" src="../js/index.js"></script>
 	<script type="text/javascript" src="./js/base.js"></script>
 	<style>
@@ -444,10 +445,10 @@
 
 		layui.$.ajax({
 			type: "post",
-			url: BasePath + '/updateassessment',
+			url: BasePathJLY + '/updateassessment',
 			data: data,
 			dataType: "json",
-			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
 			xhrFields: {withCredentials: true},
 			success: function(backdata){
 				if(backdata.code==0){
@@ -476,7 +477,7 @@
 					});
 					return false;
 				}else if(backdata.code==1001) {
-					parent.location.href = "../../index.html";
+					window.top.location.href = "../../index.html";
 					return false;
 				}else{
 					layer.msg(backdata.msg,{icon:5,time:5000});

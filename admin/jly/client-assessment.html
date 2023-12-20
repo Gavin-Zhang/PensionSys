@@ -14,6 +14,7 @@
     <script src="../lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="../js/index.js"></script>
 	<script type="text/javascript" src="./js/base.js"></script>
+	<script type="text/javascript" src="../../js/base.js"></script>
 	<style>
 		a.disabled {
 			pointer-events: none;
@@ -140,14 +141,14 @@
 		});
 
 		$.ajaxSetup({
-			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
 			xhrFields: {withCredentials: true},
 		});
 
 		table.render({
 			elem: '#assessment_table'
 			,height: 'full-150'
-			,url: BasePath + '/getassessments'
+			,url: BasePathJLY + '/getassessments'
 			,method: 'post'
 			,dataType: "json"
 			,where: { client_idx: session_data.Idx, }
@@ -172,7 +173,7 @@
 					};
 				}
 				if (res.code == 1001) {
-					parent.location.href = "../../index.html";
+					window.top.location.href = "../../index.html";
 				}
 				return {
 				  "code": res.code, //解析接口状态
@@ -234,7 +235,7 @@
 		}
 
 		$.ajax({
-			url: BasePath + '/addassessment',
+			url: BasePathJLY + '/addassessment',
 			type: "POST",
 			data: {
 				type: type,
@@ -242,14 +243,14 @@
 				client_idx: session_data.Idx,
 			},
 			dataType: "json",
-			headers: {'Access-Control-Allow-Origin' : BasePath,},
+			headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
 			xhrFields: {withCredentials: true},
 			success: function(data){
 				if(data.code==0){
 					layui.table.reload('assessments');
 					return false;
 				}else if(data.code==1001) {
-					parent.location.href = "../../index.html";
+					window.top.location.href = "../../index.html";
 					return false;
 				}else{
 					layer.msg(data.msg,{icon:5,time:5000});
@@ -293,10 +294,10 @@
 			function(index, layero) {
 				$.ajax({
 					type: "post",
-					url: BasePath + '/deleteassessment',
+					url: BasePathJLY + '/deleteassessment',
 					data: {idx: data.idx},
 					dataType: "json",
-					headers: {'Access-Control-Allow-Origin' : BasePath,},
+					headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
 					xhrFields: {withCredentials: true},
 					success: function(data){
 						console.log(data)
@@ -304,7 +305,7 @@
 							layui.table.reload("assessments")
 							return false;
 						}else if(data.code==1001) {
-							window.location.href = "../../index.html";
+							window.top.location.href = "../../index.html";
 							return false;
 						}else{
 							layer.msg(data.msg,{icon:5,time:5000});
