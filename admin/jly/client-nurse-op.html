@@ -73,7 +73,7 @@
 							</div>
 							<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
 								<label class="layui-form-label">
-									<span class='x-red'>*</span>入住日期
+									<span class='x-red'>*</span>创建日期
 								</label>
 								<div class="layui-input-block">
 									<input type="text" lay-verify="required" name="date" id="date" autocomplete="off" value="" class="layui-input">
@@ -218,6 +218,8 @@
 			document.getElementById("name").value = session_data.Name;
 			document.getElementById("chinaid").value = session_data.ChinaId;
 			document.getElementById("sex").value = session_data.Sex;
+			document.getElementById("capability").value = session_data.Assessment.result
+
 			layui.form.render();
 		}
 

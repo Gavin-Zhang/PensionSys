@@ -194,7 +194,30 @@
             <tr height="38.33" style='height:30.00pt;'>
                 <td class="borderSet layui-font-16" height="38.33" colspan="2" style='height:30.00pt;border-right:.5pt solid #000000;border-bottom:.5pt solid #000000;' x:str>&nbsp;文化程度</td>
                 <td class="borderSet-text-left layui-font-16" x:str><span class='layui-font-16'>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    {{#
+                        let culture_list = ["文盲及半文盲", "小学", "初中", "高中/技校/中专", "大学专科及以上", "不详"];
+                        let culture_selected = false;
+                    }}
                     {{# if(typeof typeof d.Culture === 'undefined' || d.Culture === null || d.Culture === ''){ }}
+                        {{# for(var i = 0; i < culture_list.length; i++) { }}
+                            <font class='font-simsun layui-font-16'>□</font>
+                            <font class='layui-font-16'>culture_list[i]</font>
+                            <span class='layui-font-16'>&nbsp;&nbsp;</span>
+                        {{# } }}
+                    {{# } else { }}
+                        {{# for(var i = 0; i < culture_list.length; i++) { }}
+                            {{# if(!culture_selected && culture_list[i] == d.Culture) { }}
+                                <font class='font-simsun layui-font-16'><b>☑</b></font>
+                                <font class='layui-font-16'><b>{{ culture_list[i] }}</b></font>
+                                {{# culture_selected = true }}
+                            {{# } else { }}
+                                <font class='font-simsun layui-font-16'>□</font>
+                                <font class='layui-font-16'>{{ culture_list[i] }}</font>
+                            {{# } }}
+                            <span class='layui-font-16'>&nbsp;&nbsp;</span>
+                        {{# } }}
+                    {{# }}}
+                    <!-- {{# if(typeof typeof d.Culture === 'undefined' || d.Culture === null || d.Culture === ''){ }}
                         <font class='font-simsun layui-font-16'>□</font>
                         <font class='layui-font-16'>文盲及半文盲</font>
                         <span class='layui-font-16'>&nbsp;&nbsp;</span>
@@ -284,7 +307,7 @@
                         <span class='layui-font-16'>&nbsp;&nbsp;</span>
                         <font class='font-simsun layui-font-16'><b>☑</b></font>
                         <font class='layui-font-16'><b>大学专科及以上</b></font>
-                    {{# } }}
+                    {{# } }} -->
                 </td>
             </tr>
             <tr height="65.83" style='height:45.00pt;'>
