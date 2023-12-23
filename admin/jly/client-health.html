@@ -82,7 +82,7 @@
 					<legend class="layui-font-14">食物过敏史</legend>
 					<div class="layui-field-box">
 						<div class="layui-form-item">
-							<input class="layui-input" type="text" id="foot_allergy" name="foot_allergy" placeholder="说明" disabled>
+							<input class="layui-input" type="text" id="food_allergy" name="food_allergy" placeholder="说明" disabled>
 						</div>
 					</div>
 				</div>
@@ -451,7 +451,7 @@
 			"idx": data["idx"],
 			"client_idx": data["client_idx"],
 			"blood": data["blood"],
-			"foot_allergy": data["foot_allergy"],
+			"food_allergy": data["food_allergy"],
 			"drug_allergy": data["drug_allergy"],
 			"青霉素": drug_allergy.includes("青霉素"),
 			"磺胺": drug_allergy.includes("磺胺"),
@@ -511,7 +511,7 @@
 			item.disabled = disable;
 		});
 		// 食物过敏史
-		document.getElementById("foot_allergy").disabled = disable;
+		document.getElementById("food_allergy").disabled = disable;
 		// 遗传病史
 		document.getElementById("genetic").disabled = disable;
 		// 暴露史、药物过敏史、残疾情况
