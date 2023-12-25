@@ -43,6 +43,7 @@ table {
 
 .text-left {
     text-align:left;
+    padding: 10pt 0pt 0pt 0pt;
 }
 
 .borderSet-line-right {

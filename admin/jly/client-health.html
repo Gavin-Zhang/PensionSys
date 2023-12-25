@@ -578,14 +578,16 @@
 		if (ill_date == "") {
 			// layer.msg("请填写确诊日期", {icon: 5,time:2000});
 			// return false;
-			ill_data = "不详"
+			ill_date = "不详"
 		}
 
+		console.log(ill_date);
 		let ill_str = ill_date.replace("$",";");
 		var table_data = layui.table.cache["illnesslist_table"];
 		table_data.push({
 			"name": ill_name,
 			"date": ill_str});
+		console.log(table_data);
 		layui.table.reload("illnesslist_table", {data: table_data})
 	}
 
