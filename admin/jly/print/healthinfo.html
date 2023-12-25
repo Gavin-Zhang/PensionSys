@@ -460,11 +460,13 @@
             </tr>
             <tr height="41.67" style='height:40.00pt;'>
                 <td class="borderSet layui-font-20" height="41.67" style='height:40.00pt;' x:str>食物过敏史</td>
-                <span class='layui-font-20'>&nbsp;</span>
                 {{# if(typeof d.HealthInfo === 'undefined' && d.HealthInfo == null || typeof d.HealthInfo.food_allergy === 'undefined' || d.HealthInfo.food_allergy === null){ }}
                     <td class="borderSet-text-left layui-font-20" colspan="5"></td>
                 {{# } else { }}
-                    <td class="borderSet-text-left layui-font-20" colspan="5">{{= d.HealthInfo.food_allergy }}</td>
+                    <td class="borderSet-text-left layui-font-20" colspan="5">
+                        <span class='layui-font-20'>&nbsp;</span>
+                        {{= d.HealthInfo.food_allergy }}
+                    </td>
                 {{# }}} 
             </tr>
             <tr height="41.67" style='height:40.00pt;'>
