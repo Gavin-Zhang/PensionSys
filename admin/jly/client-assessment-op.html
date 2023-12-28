@@ -474,6 +474,9 @@
 						if (from === "client-assessment") {
 							parent.tableReload(data.result != "");
 						}
+
+						var index = parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
 					});
 					return false;
 				}else if(backdata.code==1001) {

@@ -581,14 +581,14 @@
 			ill_date = "不详"
 		}
 
-		console.log(ill_date);
+		document.getElementById("illness").value = "";
 		let ill_str = ill_date.replace("$",";");
 		var table_data = layui.table.cache["illnesslist_table"];
 		table_data.push({
 			"name": ill_name,
 			"date": ill_str});
-		console.log(table_data);
 		layui.table.reload("illnesslist_table", {data: table_data})
+		
 	}
 
 	function onPrint() {

@@ -384,6 +384,11 @@
 			data.field["interest"] = JSON.stringify(interest);
 			// 联系人
 			data.field["contacts"] = JSON.stringify(table.cache["contacts"]);
+
+			//Loading层
+			var loading_idx = layer.load(1, {
+				shade: [0.1,'#fff'] //0.1透明度的白色背景
+			});
 			
             $.ajax({
                 type: "post",
@@ -409,7 +414,10 @@
                         layer.msg(data.msg,{icon:5,time:5000});
 						return false;
                     }
-                }
+                },
+				end: function(){
+					layer.close(loading_idx);
+				}
             });
         });
 		
