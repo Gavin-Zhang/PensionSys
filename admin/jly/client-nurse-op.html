@@ -52,13 +52,19 @@
 						</div>
 						
 						<div class="layui-row">
-							<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
 								<label class="layui-form-label">能力等级</label>
 								<div class="layui-input-block">
 									<input type="text" id="capability" disabled="disable" autocomplete="off" value="" class="layui-input">
 								</div>
 							</div>
-							<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+								<label class="layui-form-label">评估日期</label>
+								<div class="layui-input-block">
+									<input type="text" id="capability_date" disabled="disable" autocomplete="off" value="" class="layui-input">
+								</div>
+							</div>
+							<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
 								<label class="layui-form-label"><span class='x-red'>*</span>护理等级</label>
 								<div class="layui-input-block">
 									<select name="level" id="level" lay-filter="level" lay-verify="required">
@@ -71,7 +77,7 @@
 									</select>
 								</div>
 							</div>
-							<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+							<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
 								<label class="layui-form-label">
 									<span class='x-red'>*</span>创建日期
 								</label>
@@ -219,6 +225,7 @@
 			document.getElementById("chinaid").value = session_data.ChinaId;
 			document.getElementById("sex").value = session_data.Sex;
 			document.getElementById("capability").value = session_data.Assessment.result
+			document.getElementById("capability_date").value = session_data.Assessment.date;
 
 			layui.form.render();
 		}
