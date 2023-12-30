@@ -6,7 +6,7 @@
 		<title>五龙背镇居家和社区养老管理系统</title>
 		<link rel="stylesheet" href="layui/css/layui.css" media="all"/>
 		<link rel="stylesheet" href="css/login.css" media="all"/>
-		<link rel="shortcut icon" href="ico/favicon.ico">	
+		<link rel="shortcut icon" href="ico/favicon.ico" type="image/vnd.microsoft.icon">	
 		<link rel="bookmark" href="ico/favicon.ico">
 		<style>
 			/* 覆盖原框架样式 */
@@ -123,9 +123,10 @@
 				});
 				
 				//监听提交
-				form.on('submit(demo1)', function(data){			
+				form.on('submit(demo1)', function(data){
+					console.log("---->", BasePath)			
 					$.ajax({ 
-						url: BasePath + '/login',   
+						url:  BasePath + '/login',   
 						method:'post',   
 						data:data.field,    
 						dataType:'json',    
