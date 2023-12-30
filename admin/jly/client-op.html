@@ -509,7 +509,7 @@
 			elem: '#indate'
 			,isInitValue: true
 			,type: 'date'
-			,value: local.InDate
+			,value: local.FormatInDate
 		});
 		
 		if (local.AvatarPath !== "") {
@@ -722,7 +722,6 @@
 		if (data["Avatar"] !== "") {
 			data["AvatarPath"] = AvatarPathJLY + data["Avatar"] + '.jpg'
 		}
-		console.log(data)
 		data.ContactData = JSON.parse(data["Contacts"]);
 		layui.sessionData("jly-client-list", {key:sessiondata_key, value:data})
 

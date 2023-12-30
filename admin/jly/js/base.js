@@ -125,6 +125,13 @@ function ParseClientInfo(clientdata) {
 	if (clientdata.OutDate === '1-1-1') {
 		clientdata.OutDate = ""
 	}
+
+	if (clientdata.InDate !== "") {
+		clientdata.FormatInDate = format(clientdata.InDate, "yyyy-MM-dd");
+	}
+	if (clientdata.OutDate !== "") {
+		clientdata.FormatOutDate = format(clientdata.OutDate, "yyyy-MM-dd");
+	}
 }
 
 /**
