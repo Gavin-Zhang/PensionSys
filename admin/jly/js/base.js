@@ -127,10 +127,10 @@ function ParseClientInfo(clientdata) {
 	}
 
 	if (clientdata.InDate !== "") {
-		clientdata.FormatInDate = format(clientdata.InDate, "yyyy-MM-dd");
+		clientdata.FormatInDate = clientdata.InDate.split("-").map(part => part.padStart(2, '0')).join("-");
 	}
 	if (clientdata.OutDate !== "") {
-		clientdata.FormatOutDate = format(clientdata.OutDate, "yyyy-MM-dd");
+		clientdata.FormatOutDate = clientdata.OutDate.split("-").map(part => part.padStart(2, '0')).join("-");
 	}
 }
 

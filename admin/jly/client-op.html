@@ -1069,7 +1069,8 @@
 	function init_nurse() {
 		document.getElementById("nurse_idx").value = local.Nurse.idx;
 		document.getElementById("nurse_date").value = local.Nurse.date;
-		document.getElementById("nurse_level").value = ParseNurseLevel(local.Nurse.level);
+		let nurse_level = ParseNurseLevel(local.Nurse.level);
+		document.getElementById("nurse_level").value = nurse_level == "错误" ? "" : nurse_level;
 	}
 	
 	function controlDisabled(disable) {
