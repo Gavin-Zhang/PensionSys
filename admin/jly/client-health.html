@@ -451,7 +451,7 @@
 			"idx": data["idx"],
 			"client_idx": data["client_idx"],
 			"blood": data["blood"],
-			"food_allergy": data["food_allergy"],
+			"food_allergy": data["food_allergy"] == "" ? "无" : data["food_allergy"],
 			"drug_allergy": data["drug_allergy"],
 			"青霉素": drug_allergy.includes("青霉素"),
 			"磺胺": drug_allergy.includes("磺胺"),
