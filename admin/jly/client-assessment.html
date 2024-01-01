@@ -215,6 +215,13 @@
 			}
 		});
 
+		//监听select type变化
+		form.on('select(type)', function(data){
+			if (data.value == "首次评估") {
+				document.getElementById("date").value = session_data.FormatInDate;
+			}
+		});
+
     });
 
 	function Add() {
