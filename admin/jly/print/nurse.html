@@ -63,7 +63,10 @@
                 <td class="borderSet layui-font-16" height="233.33" style='height:170.00pt;' x:str>安全保障</td>
                 <td class="borderSet-text-left layui-font-16" colspan="5" style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;'>
                     {{# if(typeof d.Row != 'undefined' && d.Row != null && typeof d.Row.safe != 'undfined' && d.Row.safe != null) { }}
-                        <b>{{ d.Row.safe }}</b>
+                        {{# var string_array = parse(d.Row.safe) }}  
+                        {{# for (var i=0; i<string_array.length; i++) { }}
+                            <b>{{ string_array[i] }}</b><br>
+                        {{# } }}
                     {{# } }}
                 </td>
             </tr>
@@ -71,7 +74,10 @@
                 <td class="borderSet layui-font-16" height="233.33" style='height:170.00pt;' x:str>饮食照护</td>
                 <td class="borderSet-text-left layui-font-16" colspan="5" style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;'>
                     {{# if(typeof d.Row != 'undefined' && d.Row != null && typeof d.Row.diet != 'undfined' && d.Row.diet != null) { }}
-                        <b>{{ d.Row.diet }}</b>
+                        {{# var string_array = parse(d.Row.diet) }}  
+                        {{# for (var i=0; i<string_array.length; i++) { }}
+                            <b>{{ string_array[i] }}</b><br>
+                        {{# } }}
                     {{# } }}
                 </td>
             </tr>
@@ -79,7 +85,10 @@
                 <td class="borderSet layui-font-16" height="233.33" style='height:170.00pt;' x:str>注意事项</td>
                 <td class="borderSet-text-left layui-font-16" colspan="5" style='border-right:.5pt solid windowtext;border-bottom:.5pt solid windowtext;'>
                     {{# if(typeof d.Row != 'undefined' && d.Row != null && typeof d.Row.heed != 'undfined' && d.Row.heed != null) { }}
-                        <b>{{ d.Row.heed }}</b>
+                        {{# var string_array = parse(d.Row.heed) }}  
+                        {{# for (var i=0; i<string_array.length; i++) { }}
+                            <b>{{ string_array[i] }}</b><br>
+                        {{# } }}
                     {{# } }}
                 </td>
             </tr>
