@@ -169,7 +169,8 @@
 				elem: '#date'
 				,isInitValue: true
 				,type: 'date'
-				,value: op == "add" ? date : session_data.date
+				//,value: op == "add" ? date : session_data.date
+				,value: session_data.Assessment.date
 			});
 
 			$.ajaxSetup({
