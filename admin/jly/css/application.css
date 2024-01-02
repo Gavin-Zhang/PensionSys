@@ -39,3 +39,10 @@ table {
     font-family:"simsun";
     color:#000000;
 }
+
+.borderSet-text-topleft {
+    border:1px solid #000000;
+    text-align: left;
+    vertical-align: top;
+    padding: 10pt 10pt 10pt 10pt;
+}

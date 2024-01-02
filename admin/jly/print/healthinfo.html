@@ -15,7 +15,7 @@
                 <td width="166.17" style='width:99.70pt;'></td>
                 <td width="46.92" style='width:28.15pt;'></td>
                 <td width="59" style='width:35.40pt;'></td>
-                <td class="indexSet layui-font-16" width="345" x:str>
+                <td class="indexSet layui-font-22" width="345" x:str>
                     {{# if(typeof d.HealthInfo === 'undefined' || d.HealthInfo == null || d.HealthInfo.idx == null) { }}
                         <b>No:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
                     {{# } else { }}
@@ -23,8 +23,8 @@
                     {{# }}}
                 </td>
             </tr>
-            <tr height="15" style='height:9.00pt'>
-                <td height="15" style='height:9.00pt;'></td>
+            <tr height="15" style='height:25.00pt'>
+                <td height="15" style='height:25.00pt;'></td>
                 <td colspan="5"></td>
             </tr>
             <tr height="50" style='height:50.00pt'>
@@ -611,7 +611,11 @@
                 <td class="borderSet layui-font-20" height="66.67" style='height:50.00pt;' x:str>签字确认</td>
                 <td class="borderSet layui-font-20" colspan="3"></td>
                 <td class="borderSet layui-font-20" x:str>日期</td>
-                <td class="borderSet layui-font-20" x:str>2023年12月4日</td>
+                {{# 
+                    const current_data = new Date();
+                    const data_str = current_data.getFullYear() + '年' + (current_data.getMonth() + 1) + '月' + current_data.getDate() + '日';
+                }}
+                <td class="borderSet layui-font-20" x:str>{{data_str}}</td>
             </tr>
         </table>
     </script>

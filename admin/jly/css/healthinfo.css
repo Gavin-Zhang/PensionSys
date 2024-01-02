@@ -1,6 +1,6 @@
 @media print {
     @page {
-        margin: 0.5in 0.25in 0.5in 0.25in;
+        margin: 0.3in 0.25in 0.3in 0.25in;
     }
 
     body {
