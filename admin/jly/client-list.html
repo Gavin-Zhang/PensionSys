@@ -43,6 +43,37 @@
 									<input type="text" id="chinaid" name="chinaid"  placeholder="身份证" autocomplete="off" class="layui-input">
 								</div>
 								<div class="layui-inline layui-show-xs-block">
+									<select name="client_type" id="client_type" lay-filter="client_type">
+										<option value="">人员类型</option>
+										<option value="社会老人">社会老人</option>
+										<option value="农村低保老人">农村低保老人</option>
+										<option value="城镇低保老人">城镇低保老人</option> 
+										<option value="五保老人">五保老人</option>
+									</select>
+								</div>
+								<div class="layui-inline layui-show-xs-block">
+									<select name="pay_type" id="pay_type" lay-filter="pay_type">
+										<option value="">缴费类型</option>
+										<option value="自费">自费</option>
+										<option value="低保">低保</option>
+										<option value="五保">五保</option>
+									</select>
+								</div>
+								<div class="layui-inline layui-show-xs-block">
+									<select name="trusteeship" id="trusteeship" lay-filter="trusteeship">
+										<option value="">政府托管</option>
+										<option value="否">否</option>
+										<option value="是">是</option>
+									</select>
+								</div>
+								<div class="layui-inline layui-show-xs-block">
+									<select name="status" id="status" lay-filter="status">
+										<option value="">入住状态</option>
+										<option value="在院">在院</option>
+										<option value="离院">离院</option>
+									</select>
+								</div>
+								<div class="layui-inline layui-show-xs-block">
 									<button class="layui-btn"  lay-submit="" type="button" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
 								</div>
 							</form>
@@ -68,7 +99,7 @@
 		</script>
 
 		<script>
-			let search_data = {name: "", phone: "", chinaid: ""};
+			let search_data = {name: "", phone: "", chinaid: "", clienttype: "", paytype: "", trusteeship: "", status: ""};
 			layui.use(['table', 'laydate','form'], function(){
 				var table = layui.table
 				var laydate = layui.laydate;
@@ -238,15 +269,30 @@
 				var chinaid = layui.$('#chinaid').val()
 				var name = layui.$('#username').val()
 				var phone = layui.$('#phone').val()
+				var clienttype =layui.$('#client_type').val()
+				var paytype = layui.$('#pay_type').val()
+				var trusteeship = layui.$('#trusteeship').val()
+				var status = layui.$('#status').val()
 				
-				if (name==search_data.name && phone==search_data.phone && chinaid==search_data.chinaid ) {
+				if (name == search_data.name && 
+					phone == search_data.phone && 
+					chinaid == search_data.chinaid &&
+					clienttype == search_data.clienttype &&
+					paytype == search_data.paytype &&
+					trusteeship == search_data.trusteeship &&
+					status == search_data.status) {
 					return;
 				}
 
 				search_data.name = name;
 				search_data.phone = phone;
 				search_data.chinaid = chinaid;
-				if (name=="" && phone=="" && chinaid=="" ) {
+				search_data.clienttype = clienttype;
+				search_data.paytype = paytype;
+				search_data.trusteeship = trusteeship;
+				search_data.status = status;
+				if (name == "" && phone == "" && chinaid == "" && clienttype == "" 
+					&& paytype == "" && trusteeship == "" && status == "") {
 					layui.table.reload('clients', {where:{}})
 					return;
 				}
@@ -260,6 +306,18 @@
 				}
 				if (chinaid != "") {
 					where.chinaid = chinaid
+				}
+				if (clienttype!= "") {
+					where.clienttype = clienttype
+				}
+				if (paytype!= "") {
+					where.paytype = paytype
+				}
+				if (trusteeship!= "") {
+					where.trusteeship = trusteeship
+				}
+				if (status!= "") {
+					where.status = status
 				}
 				layui.table.reload('clients', { where: where })
 			}
