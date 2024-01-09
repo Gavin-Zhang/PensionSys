@@ -9,9 +9,9 @@
 		<script src="../lib/layui/layui.js" charset="utf-8"></script>
         <link rel="stylesheet" href="../css/font.css">
         <link rel="stylesheet" href="../css/index.css">
-		<link rel="stylesheet" media="print" href="./css/nurse.css">
+		<link rel="stylesheet" media="print" href="./css/handover.css">
 		<script type="text/javascript" src="./js/base.js"></script>
-		<iframe src="./print/nurse.html" hidden="true"></iframe>
+		<iframe src="./print/handover.html" hidden="true"></iframe>
     </head>
 
     <body>
@@ -22,7 +22,6 @@
 		const params = new URLSearchParams(window.location.search);
 		const idx = params.get('idx');
 		const sessiondata_key = "op-" + idx;
-		const nurse_key = "nurse-" + idx;
 
 		layui.use('laytpl', function(){
 			var laytpl = layui.laytpl;
@@ -33,17 +32,13 @@
 
 				var sessiondata = session[sessiondata_key.toString()];
 				if (typeof sessiondata === 'undefined') {
-					sessiondata = {}
+					sessiondata = null;
 				}
 
-				var rowdata = session[nurse_key.toString()];
-				if (typeof rowdata === 'undefined') {
-					rowdata = {}
-				}
-				sessiondata.Row = rowdata;
+				console.log(sessiondata);
 
 				var iframeWindow = iframe.contentWindow;
-				var sprite = iframeWindow.document.getElementById('nurse-page');
+				var sprite = iframeWindow.document.getElementById('handover-page');
 
 				var div = document.createElement("div");
 				layui.laytpl(sprite.innerHTML).render(sessiondata, function(html){

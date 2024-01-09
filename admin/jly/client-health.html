@@ -16,6 +16,17 @@
 	<script type="text/javascript" src="./js/base.js"></script>
 	<script type="text/javascript" src="../../js/base.js"></script>
 	<style>
+		.layui-disabled {
+			color: #000000!important;
+		}
+		.layui-checkbox-disabled > div {
+			color: #000000!important;
+		}
+		.layui-radio-disabled > * {
+			color: #000000!important;
+		}
+	</style>
+	<style>
 		.chosen-area {
 			display: inline-block;
 			width: 400pt;
@@ -67,7 +78,7 @@
 				</div>	
 				<br>
 				<div class="layui-form-item">
-					<legend class="layui-font-14">血型</legend>
+					<legend class="layui-font-14"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><b>血型</b></legend>
 					<div class="layui-field-box">
 						<div class="layui-form-item" id="blood">
 							<input type="radio" disabled="disable" name="blood" value="A型" title="A型">
@@ -79,7 +90,7 @@
 					</div>
 				</div>
 				<div class="layui-form-item">
-					<legend class="layui-font-14">食物过敏史</legend>
+					<legend class="layui-font-14"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><b>食物过敏史</b></legend>
 					<div class="layui-field-box">
 						<div class="layui-form-item">
 							<input class="layui-input" type="text" id="food_allergy" name="food_allergy" value="无" placeholder="说明" disabled>
@@ -87,7 +98,7 @@
 					</div>
 				</div>
 				<div class="layui-form-item">
-					<legend class="layui-font-14">药物过敏史</legend>
+					<legend class="layui-font-14"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><b>药物过敏史</b></legend>
 					<div class="layui-field-box">
 						<div class="layui-form-item">
 							<div class="seach-box" id="drug_allergy">
@@ -96,12 +107,13 @@
 								<input type="checkbox" lay-skin="primary" lay-filter="drug_allergy_checkbox" name="链霉素" value="链霉素" id="链霉素"  title="链霉素" disabled>
 								<input type="checkbox" lay-skin="primary" lay-filter="drug_allergy_checkbox" name="药物过敏史其他"   value="其他"   id="药物过敏史其他"   title="其他" disabled>
 							</div>
+							<br>
 							<input class="layui-input" type="text" id="drug_allergy_other" name="drug_allergy_other" placeholder="其他说明" disabled>
 						</div>
 					</div>
 				</div>
 				<div class="layui-form-item">
-					<legend class="layui-font-14">暴露史</legend>
+					<legend class="layui-font-14"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><b>暴露史</b></legend>
 					<div class="layui-field-box">
 						<div class="layui-form-item">
 							<div class="seach-box" id="exposure_allergy">
@@ -113,13 +125,13 @@
 					</div>
 				</div>
 				<div class="layui-form-item">
-					<legend class="layui-font-14">遗传病史</legend>
+					<legend class="layui-font-14"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><b>遗传病史</b></legend>
 					<div class="layui-field-box">
 						<textarea id="genetic" name="genetic" placeholder="说明" class="layui-textarea" disabled="disabled"></textarea>
 					</div>
 				</div>
 				<div class="layui-form-item">
-					<legend class="layui-font-14">残疾情况</legend>
+					<legend class="layui-font-14"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><b>残疾情况</b></legend>
 					<div class="layui-field-box">
 						<div class="layui-form-item">
 							<div class="seach-box" id="disability">
@@ -136,7 +148,7 @@
 					</div>
 				</div>
 				<div class="layui-form-item">
-					<legend class="layui-font-14">家族史</legend>
+					<legend class="layui-font-14"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><b>家族史</b></legend>
 					<div class="layui-field-box">
 						<div class="layui-inline">
 							<select id="family_history" lay-filter="family_history" disabled>
@@ -158,7 +170,7 @@
 					</div>
 				</div>
 				<div class="layui-form-item" id="illnessdiv">
-					<legend class="layui-font-14">既往史及疾病史</legend>
+					<legend class="layui-font-14"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><b>既往史及疾病史</b></legend>
 					<div class="layui-field-box">
 						<div class="layui-inline">
 							<input type="text" id="illness" style="position:absolute;z-index:2;width:150pt;" class="layui-input" placeholder="疾病名称" disabled>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="utf-8">
+    <title>
+        敬老院服务管理-总览-操作-财务交接
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+	<link rel="stylesheet" href="../../layui/css/layui.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+	<script type="text/javascript" src="./js/base.js"></script>
+	<script type="text/javascript" src="../../js/base.js"></script>
+</head>
+<body>
+	
+<div class="layui-card">
+
+    <form class="layui-form" action="" id="handover" lay-filter="handover">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+			
+			<div class="layui-tab-item layui-show">
+				<br>
+				<div class="layui-row layui-col-space5">
+					<div class="layui-col-xs1 layui-col-sm1 layui-col-md1">
+						<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid"  type="button" id="print" lay-filter="print" onclick="onPrint();">打印</button>
+					</div>
+				</div>	
+				<br>
+
+				<div class="layui-form-item">
+					<fieldset class="layui-elem-field">
+						<legend class="layui-font-14"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><b>待支付费用明细</b></legend>
+						<div class="layui-field-box layui-row layui-col-space10" id="cost_tool">
+							<div class="layui-inline layui-col-xs3 layui-col-sm3 layui-col-md3">
+								<input type="text" class="layui-input" id="cost_project" placeholder="项目">
+							</div>
+							<div class="layui-inline layui-col-xs3 layui-col-sm3 layui-col-md3">
+								<input type="text" class="layui-input" id="cost_amount" placeholder="￥" autocomplete="off">
+							</div>
+							<div class="layui-inline layui-col-xs1 layui-col-sm1 layui-col-md1">
+								<button class="layui-btn" id="cost_add" type="button" onclick="onCostAdd();">添加</button>
+							</div>
+						</div>
+						<div class="layui-field-box">
+							<table class="layui-hide" id="cost_list" name="cost_list" lay-filter="cost_list"></table>
+						</div>
+					</fieldset>
+					<fieldset class="layui-elem-field">
+						<legend class="layui-font-14"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><b>押金</b></legend>
+						<div class="layui-field-box layui-row layui-col-space10">
+							<div class="layui-inline layui-col-xs3 layui-col-sm3 layui-col-md3">
+								<input type="text" class="layui-input" id="deposit" name="deposit" placeholder="￥ 已交押金" autocomplete="off">
+							</div>
+							<div class="layui-inline layui-col-xs3 layui-col-sm3 layui-col-md3">
+								<input type="text" class="layui-input" id="return" name="return" placeholder="￥ 应退押金" autocomplete="off">
+							</div>
+						</div>
+						<div class="layui-field-box">
+							<textarea id="deposit_des" name="deposit_des" class="layui-textarea" lay-verify="required">无</textarea>
+						</div>
+					</fieldset>
+					<fieldset class="layui-elem-field">
+						<legend class="layui-font-14"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span><b>物品</b></legend>
+						<div class="layui-field-box">
+							<textarea id="thing" name="thing" class="layui-textarea" lay-verify="required">无</textarea>
+						</div>
+					</fieldset>
+					<div class="layui-row">
+						<div class="layui-col-xs2 layui-col-sm2 layui-col-md2 layui-col-md-offset5 layui-col-sm-offset5 layui-col-xs-offset5">
+							<button class="layui-btn layui-btn-fluid" type="button" id="submit" lay-filter="add" lay-submit="">
+								提交
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
+    </form>
+</div>
+
+<script type="text/html" id="fieldtool">
+  <a class="layui-btn layui-btn-primary layui-btn-xs" id="tabledelete" lay-event="delete">删除</a>
+</script>
+
+<script>
+
+	// 通过url获取参数
+	const params = new URLSearchParams(window.location.search);
+	const idx = params.get('idx');
+	const sessiondata_key = "op-" + idx;
+	console.log(sessiondata_key)
+
+	let session_data;
+
+    layui.use(['element','layer','form', 'laydate', 'table'], function(){
+        var  $ = layui.jquery;//jquery
+        var element = layui.element;//面包导航
+        var layer = layui.layer;//弹出层
+        var form = layui.form;
+		var laydate = layui.laydate;
+		var table = layui.table;
+
+		session_data = layui.sessionData("jly-client-list")[sessiondata_key.toString()];
+		init(session_data);
+
+		table.on('tool(cost_list)', function(obj) {
+			var data = obj.data;
+			if (obj.event === 'delete') {
+				if (data.name == "") {
+					var table_data = table.cache["cost_list"];
+					table_data.splice(obj.tr.data("index"), 1);
+					table.reload("cost_list", {data: table_data})
+				} else {
+					layer.confirm('确定要删除[' + data.name + ']么?',
+						{btn:['确定', '取消']},
+						function(index, layero) {
+							var table_data = table.cache["cost_list"];
+							table_data.splice(obj.tr.data("index"), 1);
+							table.reload("cost_list", {data: table_data})
+							layer.close(index);
+						});
+				}
+			}
+		}); 
+
+
+		form.on('submit(add)', function(form_data) {
+			let info = {};
+			info.deposit = form_data.field.deposit == "" ? "0" : form_data.field.deposit;
+			info.return = form_data.field.return == "" ? "0" : form_data.field.return;
+			info.thing = form_data.field.thing;
+			info.deposit_des = form_data.field.deposit_des;
+			info.costlist = JSON.stringify(table.cache["cost_list"]);
+			info.date = new Date().Format("yyyy-MM-dd");
+
+			let data = {};
+			data.idx = session_data.Leave.idx;
+			data.info = JSON.stringify(info);
+
+			console.log(data);
+
+			$.ajax({
+                type: "post",
+                url: BasePathJLY + '/sethandover',
+                data: data,
+                dataType: "json",
+				headers: {'Access-Control-Allow-Origin' : BasePath,},
+				xhrFields: {withCredentials: true},
+                success: function(data){
+					console.log(data)
+                    if(data.code==0){
+                        layer.msg("保存成功", {icon: 6,time:2000},function () {
+							parent.loadLeave();
+							setVisibility(false);
+							setEnable(false);
+							talbeReset();
+                        });
+                        return false;
+                    }else if(data.code==1001) {
+						// cookie 失效
+						window.top.location.href = "../../index.html";
+                        return false;
+					}else{
+                        layer.msg(data.msg,{icon:5,time:5000});
+						return false;
+                    }
+                }
+            });
+
+			return false;
+        });
+
+    });
+
+	function init(basedata) {
+		if (typeof basedata.Leave === 'undefined') {
+			layui.table.render({
+				elem: '#cost_list'
+				,totalRow: true // 开启合计行
+				,data: []
+				,cols: [[
+					{field:'name', align:'center', title: '项目', width: '30%', totalRowText: '合计：'}
+					,{field:'amount', align:'center', title: '金额', width: '60%', totalRow: '{{= d.TOTAL_NUMS }}'}
+					,{field: 'op', align:'center', title: '操作',width: '10%', align:'center', toolbar: '#fieldtool', fixed: 'right'}
+				]]
+			});
+			return;
+		}
+
+		document.getElementById("deposit").value = basedata.Leave.handover_obj.deposit;
+		document.getElementById("return").value = basedata.Leave.handover_obj.return;
+		document.getElementById("deposit_des").value = basedata.Leave.handover_obj.deposit_des;
+		document.getElementById("thing").value = basedata.Leave.handover_obj.thing;
+
+		setVisibility(false);
+		setEnable(false);
+
+		layui.table.render({
+			elem: '#cost_list'
+			,totalRow: true // 开启合计行
+			,data: basedata.Leave.handover_obj.costlist_obj
+			,cols: [[
+				{field:'name', align:'center', title: '项目', width: '30%', totalRowText: '合计：'}
+				,{field:'amount', align:'center', title: '金额', width: '70%', totalRow: '{{= d.TOTAL_NUMS }}'}
+			]]
+		});
+
+	}
+
+	function onCostAdd() {
+		let project = document.getElementById("cost_project").value;
+		let amount = document.getElementById("cost_amount").value;
+
+		if (project == "") {
+			layui.layer.alert("没有填写项目名称!")
+			return;
+		}
+
+		if (amount == "") {
+			layui.layer.alert("没有填写金额!")
+			return;
+		}
+
+		if (!new RegExp(/^-?\d{1,3}(,\d{3})*(\.\d{1,2})?$/).test(amount)) {
+			layui.layer.alert("金额填写错误!")
+			return;
+		}
+
+		document.getElementById("cost_project").value = "";
+		document.getElementById("cost_amount").value = "";
+
+		var table_data = layui.table.cache["cost_list"];
+		table_data.push({
+			"name": project,
+			"amount": amount});
+			
+		layui.table.reload("cost_list", {data: table_data})
+	}
+
+	let dom = {
+		cost_tool: document.getElementById("cost_tool"),
+		submit: document.getElementById("submit"),
+
+		deposit: document.getElementById("deposit"),
+		return: document.getElementById("return"),
+		deposit_des: document.getElementById("deposit_des"),
+		thing: document.getElementById("thing"),
+	}
+	// 设置可见不可见
+	function setVisibility(visible) {
+		dom.cost_tool.style.display = visible ? "inline" : "none";
+		dom.submit.style.display = visible ? "inline" : "none";
+	}
+	// 设置可用不可用
+	function setEnable(enable) {
+		dom.deposit.disabled = !enable;
+		dom.return.disabled = !enable;
+		dom.deposit_des.disabled = !enable;
+		dom.thing.disabled = !enable;
+	}
+
+	function talbeReset() {
+		layui.table.render({
+			elem: '#cost_list'
+			,totalRow: true // 开启合计行
+			,data: layui.table.cache["cost_list"]
+			,cols: [[
+				{field:'name', align:'center', title: '项目', width: '30%', totalRowText: '合计：'}
+				,{field:'amount', align:'center', title: '金额', width: '70%', totalRow: '{{= d.TOTAL_NUMS }}'}
+			]]
+		});
+	}
+
+	function onPrint() {
+		layui.layer.open({
+			type: 2,
+			area: ['1px', '1px'],
+			offset: ['-100px', '-100px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "敬老院服务管理-总览-操作-财务交接",
+			content: 'client-handover-print.html' + window.location.search,
+			success:function(layero,index){
+				layer.full(index);
+			},
+		})
+	}
+
+</script>
+
+
+</body>
+</html>

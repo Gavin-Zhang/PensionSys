@@ -1,0 +1,192 @@
+<!doctype html>
+<html class="x-admin-sm">
+    <script id="handover-page" type="text/html">
+        <table width="1098.08" cellpadding="0" cellspacing="0" style='width:568.85pt;border-collapse:collapse;table-layout:fixed;'>
+            <col width="205.67"/>
+            <col width="247.17"/>
+            <col width="179"/>
+            <col width="306.25"/>
+            <tr height="31.67" style='height:19.00pt'>
+                <td class="indexSet layui-font-16" height="31.67" colspan="4">
+                    <b>
+                        {{# if (typeof d == 'undefined' || d == null || typeof d.Leave == 'undefined' || d.Leave == null) { }}
+                            No:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        {{# } else { }}
+                            No:{{ d.Leave.idx }}
+                        {{# }}}
+                    </b>
+                </td>
+            </tr>
+            <tr height="64.58" style='height:38.75pt'>
+                <td class="titleSet" height="64.58" width="788.08" colspan="4"><b>五龙背敬老院老年人出院财物交接单</b></td>
+            </tr>
+            <tr height="10.67" style='height:3.00pt'>
+                <td class="titleSet" height="10.67" colspan="4"></td>
+            </tr>
+            <tr height="50.83" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" height="50.83" style='height:40.00pt;' x:str>姓名</td>
+                <td class="borderSet layui-font-16">
+                    {{# if (typeof d != 'undefined' && d != null) { }}
+                        <b>{{ d.Name }}</b>
+                    {{# } }}
+                </td>
+                <td class="borderSet layui-font-16" x:str>身份证</td>
+                <td class="borderSet layui-font-16">
+                    {{# if (typeof d != 'undefined' && d != null) { }}
+                        <b>{{ d.ChinaId }}</b>
+                    {{# } }}
+                </td>
+            </tr>
+            <tr height="50.83" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" height="50.83" style='height:40.00pt;' x:str>入院日期</td>
+                <td class="borderSet layui-font-16">
+                    {{# if (typeof d != 'undefined' && d != null) { }}
+                        <b>{{ d.FormatInDate }}</b>
+                    {{# } }}
+                </td>
+                <td class="borderSet layui-font-16" x:str>出院日期</td>
+                <td class="borderSet layui-font-16">
+                    {{# if (typeof d != 'undefined' && d != null) { }}
+                        <b>{{ d.FormatOutDate }}</b>
+                    {{# } }}
+                </td>
+            </tr>
+            <tr height="64.58" style='height:38.75pt'>
+                <td class="borderSet layui-font-18" height="64.58" colspan="4" ><b>待支付费用</b></td>
+            </tr>
+            <tr height="52.08" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" colspan="2" height="52.08" style='height:40.00pt;' x:str>项目</td>
+                <td class="borderSet layui-font-16" colspan="2"  x:str>金额</td>
+            </tr>
+
+            {{# let cost_total = 0;}}
+            {{# for (var i = 0; i < 7; i++) { }}
+                {{# if (typeof d == 'undefined' || d  == null || typeof d.Leave == 'undefined' || d.Leave == null || typeof d.Leave.handover_obj == 'undefined' || d.Leave.handover_obj == null || typeof d.Leave.handover_obj.costlist_obj == 'undefined' || d.Leave.handover_obj.costlist_obj == null || i >= d.Leave.handover_obj.costlist_obj.length) { }}
+                    <tr height="52.08" style='height:40.00pt'>
+                        <td class="borderSet layui-font-16" colspan="2" height="52.08" style='height:40.00pt;'></td>
+                        <td class="borderSet layui-font-16" colspan="2"></td>
+                    </tr>
+                {{# } else { }}
+                    <tr height="52.08" style='height:40.00pt'>
+                        <td class="borderSet layui-font-16" colspan="2" height="52.08" style='height:40.00pt;'>
+                            <b>{{d.Leave.handover_obj.costlist_obj[i].name}}</b>
+                        </td>
+                        <td class="borderSet layui-font-16" colspan="2">
+                            <b>{{d.Leave.handover_obj.costlist_obj[i].amount}} 元</b>
+                        </td>
+                        {{# cost_total += parseInt(d.Leave.handover_obj.costlist_obj[i].amount); }}
+                    </tr>
+                {{# }}}
+            {{# } }}
+
+            <!-- <tr height="52.08" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" colspan="2" height="52.08" style='height:40.00pt;' x:str></td>
+                <td class="borderSet layui-font-16" colspan="2"  x:str></td>
+            </tr>
+            <tr height="52.08" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" colspan="2" height="52.08" style='height:40.00pt;' x:str></td>
+                <td class="borderSet layui-font-16" colspan="2"  x:str></td>
+            </tr>
+            <tr height="52.08" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" colspan="2" height="52.08" style='height:40.00pt;' x:str></td>
+                <td class="borderSet layui-font-16" colspan="2"  x:str></td>
+            </tr>
+            <tr height="52.08" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" colspan="2" height="52.08" style='height:40.00pt;' x:str></td>
+                <td class="borderSet layui-font-16" colspan="2"  x:str></td>
+            </tr>
+            <tr height="52.08" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" colspan="2" height="52.08" style='height:40.00pt;' x:str></td>
+                <td class="borderSet layui-font-16" colspan="2"  x:str></td>
+            </tr>
+            <tr height="52.08" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" colspan="2" height="52.08" style='height:40.00pt;' x:str></td>
+                <td class="borderSet layui-font-16" colspan="2"  x:str></td>
+            </tr>
+            <tr height="52.08" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" colspan="2" height="52.08" style='height:40.00pt;' x:str></td>
+                <td class="borderSet layui-font-16" colspan="2"  x:str></td>
+            </tr> -->
+            <tr height="50.83" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" colspan="2" height="50.83" style='height:40.00pt;'><b>总计</b></td>
+                <td class="borderSet layui-font-16" colspan="2">
+                    {{# if (cost_total != 0) { }}
+                        <b>{{cost_total}} 元</b>
+                    {{# } }}
+                </td>
+            </tr>
+            <tr height="64.58" style='height:38.75pt'>
+                <td class="borderSet layui-font-16" height="64.58" colspan="4" ><b>押金</b></td>
+            </tr>
+            <tr height="50.83" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" height="50.83" style='height:40.00pt;' x:str>已交押金</td>
+                {{# if (typeof d == 'undefined' || d == null || typeof d.Leave == 'undefined' || d.Leave == null || typeof d.Leave.handover_obj == 'undefined' || d.Leave.handover_obj == null) { }}
+                    <td class="borderSet layui-font-16"></td>
+                {{# } else {  }}
+                    <td class="borderSet layui-font-16">
+                        <b>{{d.Leave.handover_obj.deposit}} 元</b>
+                    </td>
+                {{# } }}
+                <td class="borderSet layui-font-16" x:str>退还押金</td>
+                {{# if (typeof d == 'undefined' || d == null || typeof d.Leave == 'undefined' || d.Leave == null || typeof d.Leave.handover_obj == 'undefined' || d.Leave.handover_obj == null) { }}
+                    <td class="borderSet layui-font-16"></td>
+                {{# } else {  }}
+                    <td class="borderSet layui-font-16">
+                        <b>{{d.Leave.handover_obj.return}} 元</b>
+                    </td>
+                {{# } }}
+            </tr>
+
+            {{#
+                var parse = function(str) {
+                    return str.split('\n');
+                }
+            }}
+            
+            <tr height="316.67" style='height:100.00pt'>
+                <td class="borderSet layui-font-16" height="316.67" style='height:100.00pt;' x:str>情况说明</td>
+                {{# if (typeof d == 'undefined' || d == null || typeof d.Leave == 'undefined' || d.Leave == null || typeof d.Leave.handover_obj == 'undefined' || d.Leave.handover_obj == null) { }}
+                    <td class="borderSet layui-font-16" colspan="3"></td>
+                {{# } else { }}
+                    <td class="borderSet-text-topleft layui-font-16" colspan="3">
+                        {{# var string_array = parse(d.Leave.handover_obj.deposit_des) }}
+                        {{# for (var i=0; i<string_array.length; i++) { }}
+                            <b>{{ string_array[i] }}</b><br>
+                        {{# } }}
+                    </td>
+                {{# } }}
+            </tr>
+            <tr height="64.58" style='height:38.75pt'>
+                <td class="borderSet layui-font-16" height="64.58" colspan="4" ><b>物品交接</b></td>
+            </tr>
+            <tr height="316.67" style='height:140.00pt'>
+                {{# if (typeof d == 'undefined' || d == null || typeof d.Leave == 'undefined' || d.Leave == null || typeof d.Leave.handover_obj == 'undefined' || d.Leave.handover_obj == null) { }}
+                    <td class="borderSet layui-font-16" colspan="4" ></td>
+                {{# } else { }}
+                    <td class="borderSet-text-topleft layui-font-16" colspan="4">
+                        {{# var string_array = parse(d.Leave.handover_obj.thing) }}
+                        {{# for (var i=0; i<string_array.length; i++) { }}
+                            <b>{{ string_array[i] }}</b><br>
+                        {{# } }}
+                    </td>
+                {{# } }}
+            </tr>
+            <tr height="50.83" style='height:50.00pt'>
+                <td class="borderSet layui-font-16" height="50.83" style='height:40.00pt;' x:str>本人/监护人</td>
+                <td class="borderSet layui-font-16" colspan="3" ></td>
+            </tr>
+            <tr height="50.83" style='height:50.00pt'>
+                <td class="borderSet layui-font-16" height="50.83" style='height:40.00pt;' x:str>工作人员</td>
+                <td class="borderSet layui-font-16" colspan="3" ></td>
+            </tr>
+            <tr height="50.83" style='height:40.00pt'>
+                <td class="borderSet layui-font-16" height="50.83" style='height:40.00pt;' x:str>日期</td>
+                {{# if (typeof d == 'undefined' || d == null || typeof d.Leave == 'undefined' || d.Leave == null || typeof d.Leave.handover_obj == 'undefined' || d.Leave.handover_obj == null) { }}
+                    <td class="borderSet layui-font-16" colspan="3" ></td>
+                {{# } else { }}
+                    <td class="borderSet layui-font-16" colspan="3" ><b>{{ d.Leave.handover_obj.date }}</b></td>
+                {{# } }}
+            </tr>
+        </table>
+    </script>
+</html>

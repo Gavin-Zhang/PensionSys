@@ -26,6 +26,15 @@
 			pointer-events: none;
 			color: #ccc;
 		}
+		.layui-disabled {
+			color: #000000!important;
+		}
+		.layui-checkbox-disabled > div {
+			color: #000000!important;
+		}
+		.layui-radio-disabled > * {
+			color: #000000!important;
+		}
 	</style>
 	<style>
 		.chosen-area {
@@ -79,6 +88,8 @@
 				<button class="layui-btn layui-btn-radius layui-btn-normal" type="button" lay-filter="health_info" onclick="onHealthInfo();">健康信息</button>
 				<button class="layui-btn layui-btn-radius layui-btn-normal" type="button" lay-filter="assessment" onclick="onAssessment();">能力评估</button>
 				<button class="layui-btn layui-btn-radius layui-btn-normal" type="button" lay-filter="nurse" onclick="onNurse();">照护计划</button>
+				<button class="layui-btn layui-btn-radius layui-btn-normal layui-hide" type="button" id="handover" lay-filter="handover" onclick="onHandover();">财务交接</button>
+				<button class="layui-btn layui-btn-radius layui-btn-normal layui-hide" type="button" id="summary" lay-filter="summary" onclick="onSummary();">离院总结</button>
 			</div>
 
 			<div class="layui-btn-container">
@@ -255,21 +266,11 @@
 					<tr>
 						<td class="layui-form-item">
 							<div class="layui-row">
-								<div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
-									<label class="layui-form-label">
-										<span class='x-red'>*</span>住址
-									</label>
-									<div class="layui-input-block">
-										<input type="text" name="addr" id="addr" autocomplete="off" value="" class="layui-input" disabled="disable">
-									</div>
-								</div>
-								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-									<label class="layui-form-label">
-										<span class='x-red'>*</span>入住日期
-									</label>
-									<div class="layui-input-block">
-										<input type="text" lay-verify="required" name="indate" id="indate" autocomplete="off" value="" class="layui-input" disabled="disable">
-									</div>
+								<label class="layui-form-label">
+									<span class='x-red'>*</span>住址
+								</label>
+								<div class="layui-input-block">
+									<input type="text" name="addr" id="addr" autocomplete="off" value="" class="layui-input" disabled="disable">
 								</div>
 							</div>
 						</td>
@@ -277,7 +278,41 @@
 				</table>
 			</div>
 			<fieldset class="layui-elem-field">
-				<legend class="layui-font-14">档案编号</legend>
+				<legend class="layui-font-14"><b>入住状态</b></legend>
+				<div class="layui-field-box">
+					<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+						<label class="layui-form-label">
+							状态
+						</label>
+						<div class="layui-input-block">
+							<input type="text" lay-verify="required" id="status" name="status" value="" class="layui-input" disabled="disable">
+						</div>
+					</div>
+					<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+						<label class="layui-form-label">
+							<span class='x-red'>*</span>入住日期
+						</label>
+						<div class="layui-input-block">
+							<input type="text" lay-verify="required" name="indate" id="indate" autocomplete="off" value="" class="layui-input" disabled="disable">
+						</div>
+					</div>
+					<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+						<label class="layui-form-label">
+							离院日期
+						</label>
+						<div class="layui-input-block">
+							<input type="text" name="outdate" id="outdate" autocomplete="off" value="" class="layui-input" disabled="disable">
+						</div>
+					</div>
+					<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+						<button class="layui-btn layui-btn-sm" type="button" id="leave" onclick="onLeave();" disabled>
+							<i class="layui-icon">&#xe609;</i>离院
+						</button>
+					</div>
+				</div>
+			</fieldset>
+			<fieldset class="layui-elem-field">
+				<legend class="layui-font-14"><b>档案编号</b></legend>
 				<div class="layui-field-box">
 					<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
 						<label class="layui-form-label">
@@ -295,10 +330,18 @@
 							<input type="text" lay-verify="required" id="health_num" autocomplete="off" value="" class="layui-input" disabled="disable">
 						</div>
 					</div>
+					<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+						<label class="layui-form-label">
+							离院档案编号
+						</label>
+						<div class="layui-input-block">
+							<input type="text" lay-verify="required" id="out_num" autocomplete="off" value="" class="layui-input" disabled="disable">
+						</div>
+					</div>
 				</div>
 			</fieldset>
 			<fieldset class="layui-elem-field">
-				<legend class="layui-font-14">能力等级及护理等级</legend>
+				<legend class="layui-font-14"><b>能力及护理</b></legend>
 				<div class="layui-field-box">
 					<div class="layui-row">
 						<div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
@@ -355,7 +398,7 @@
 				</div>
 			</fieldset>
 			<fieldset class="layui-elem-field">
-				<legend class="layui-font-14">联系人</legend>
+				<legend class="layui-font-14"><b>联系人</b></legend>
 				<div class="layui-field-box layui-row layui-col-space10">
 					<div class="layui-inline layui-col-xs1 layui-col-sm1 layui-col-md1">
 						<input type="text" class="layui-input" id="contact_name" placeholder="姓名">
@@ -378,7 +421,7 @@
 				</div>
 			</fieldset>
 			<fieldset class="layui-elem-field">
-				<legend class="layui-font-14">兴趣爱好</legend>
+				<legend class="layui-font-14"><b>兴趣爱好</b></legend>
 				<div class="layui-field-box">
 					<div class="seach-box">
 						<input type="checkbox" name="棋牌" lay-skin="primary" id="棋牌" title="棋牌" disabled="disable">
@@ -394,7 +437,7 @@
 				</div>
 			</fieldset>
 			<fieldset class="layui-elem-field">
-				<legend class="layui-font-14">宗教信仰</legend>
+				<legend class="layui-font-14"><b>宗教信仰</b></legend>
 				<div class="layui-field-box">
 					<div class="layui-form-item" id="religion">
 						<input type="radio" disabled="disable" lay-filter="religion_radio" name="religion" value="无神论" title="无神论" checked="">
@@ -406,7 +449,7 @@
 				</div>
 			</fieldset>
 			<fieldset class="layui-elem-field">
-				<legend class="layui-font-14">医疗保险</legend>
+				<legend class="layui-font-14"><b>医疗保险</b></legend>
 				<div class="layui-field-box">
 					<div class="layui-form-item" id="treat">
 						<input type="radio" name="treat" lay-filter="treat_radio" disabled="disable" value="城镇职工医疗保险" title="城镇职工医疗保险" checked="">
@@ -473,13 +516,23 @@
 		inputs : document.querySelectorAll('input[type="text"]'),
 		selects : document.querySelectorAll('select'),
 		radios : document.querySelectorAll('input[type="radio"]'),
-		checkboxs : document.querySelectorAll('input[type="checkbox"]')
+		checkboxs : document.querySelectorAll('input[type="checkbox"]'),
+		leave : document.getElementById('leave'),
 	}
 	
-	let load_application_over = false;
-	let load_healthrecord_over = false;
-	let load_assessment_over = false;
-	let load_nurse_over = false;
+	// let load_application_over = false;
+	// let load_healthrecord_over = false;
+	// let load_assessment_over = false;
+	// let load_nurse_over = false;
+
+	let load_checks = {
+		load_application_over: false,
+		load_healthrecord_over: false,
+		load_assessment_over: false,
+		load_nurse_over: false,
+		load_leave_over: false,
+	}
+
 	let local;
 	let loading_idx = 0;
     layui.use(['element','layer','form','upload', 'table', 'laydate', 'laytpl', 'layer', 'dropdownTable'], function(){
@@ -496,12 +549,12 @@
 
 		local = layui.sessionData("jly-client-list")[sessiondata_key.toString()]
 		loading_idx = layer.load(0, {shade: [0.1,'#fff']});
-		console.log(local)
 		init(local);
 		loadApplication();
 		loadHealth();
 		loadAssessment();
 		loadNurse();
+		loadLeave();
 
 		// 入住日期
 		var date= new Date();
@@ -510,6 +563,12 @@
 			,isInitValue: true
 			,type: 'date'
 			,value: local.FormatInDate
+		});
+		laydate.render({
+			elem: '#outdate'
+			,isInitValue: true
+			,type: 'date'
+			,value: local.FormatOutDate
 		});
 		
 		if (local.AvatarPath !== "") {
@@ -755,6 +814,7 @@
 			"religion_other": data["ReligionOther"],
 			"treat": data["Treat"],
 			"treat_other": data["TreatOther"],
+			"status": data["Status"],
 		});
 	}
 
@@ -768,10 +828,8 @@
 			xhrFields: {withCredentials: true},
 			success: function(data){
 
-				load_application_over = true;
-				if (load_healthrecord_over && load_application_over && load_assessment_over && load_nurse_over) {
-					layui.layer.close(loading_idx);
-				}
+				load_checks.load_application_over = true;
+				checkLoadingClose();
 
 				if(data.code==0){
 					local["Application"] = data.data[0];
@@ -805,10 +863,8 @@
 			xhrFields: {withCredentials: true},
 			success: function(data){
 
-				load_healthrecord_over = true;
-				if (load_healthrecord_over && load_application_over && load_assessment_over && load_nurse_over) {
-					layui.layer.close(loading_idx);
-				}
+				load_checks.load_healthrecord_over = true;
+				checkLoadingClose();
 
 				if(data.code==0){
 					local["HealthInfo"] = data.data[0];
@@ -843,10 +899,8 @@
 			xhrFields: {withCredentials: true},
 			success: function(data){
 
-				load_assessment_over = true;
-				if (load_healthrecord_over && load_application_over && load_assessment_over && load_nurse_over) {
-					layui.layer.close(loading_idx);
-				}
+				load_checks.load_assessment_over = true;
+				checkLoadingClose();
 
 				if(data.code==0){
 					local["Assessment"] = data.data[0];
@@ -867,7 +921,6 @@
 
 	// 加载照护计划
 	function loadNurse() {
-		// TODO
 		$.ajax({
 			type: "post",
 			url: BasePathJLY + '/getnurselevel',
@@ -877,15 +930,60 @@
 			xhrFields: {withCredentials: true},
 			success: function(data){
 
-				load_nurse_over = true;
-				if (load_healthrecord_over && load_application_over && load_assessment_over && load_nurse_over) {
-					layui.layer.close(loading_idx);
-				}
+				load_checks.load_nurse_over = true;
+				checkLoadingClose();
 
 				if(data.code==0){
 					local["Nurse"] = data.data[0];
 					layui.sessionData("jly-client-list", {key:sessiondata_key, value:local})
 					init_nurse()
+					return false;
+				}else if(data.code==1001) {
+					// cookie 失效
+					window.top.location = "../../index.html";
+					return false;
+				}else{
+					layer.msg(data.msg,{icon:5,time:5000});
+					return false;
+				}
+			}
+		});
+	}
+
+	// 加载离院信息
+	function loadLeave() {
+		console.log("loadLeave", local.Status);
+		if (local.Status !== "离院") {
+			return;
+		}
+
+		layui.$("#handover").removeClass("layui-hide");
+		layui.$("#summary").removeClass("layui-hide");
+		//layui.form.render();
+
+		$.ajax({
+			type: "post",
+			url: BasePathJLY + '/getleaveinfo',
+			data: {client_idx: local.Idx},
+			dataType: "json",
+			headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
+			xhrFields: {withCredentials: true},
+			success: function(data){
+
+				load_checks.load_leave_over = true;
+				checkLoadingClose();
+
+				if(data.code==0){
+					local.Leave = data.data[0];
+					if (local.Leave.handover != "") {
+						local.Leave.handover_obj = JSON.parse(local.Leave.handover);
+						local.Leave.handover_obj.costlist_obj = JSON.parse(local.Leave.handover_obj.costlist);
+					}
+					if (local.Leave.summarize != "") {
+						local.Leave.summary_obj = JSON.parse(local.Leave.summarize);
+					}
+					layui.sessionData("jly-client-list", {key:sessiondata_key, value:local})
+					init_leave();
 					return false;
 				}else if(data.code==1001) {
 					// cookie 失效
@@ -962,6 +1060,34 @@
 				var body = layer.getChildFrame('body', index);
 				console.log(body.contents().find("#from"));
 				body.contents().find("#from").val("client-op");
+				layer.full(index);
+			}
+		});
+	}
+
+	function onHandover() {
+		layer.open({
+			type: 2,
+			area: ['900px', '600px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "财物交接",
+			content: 'client-handover.html' + window.location.search,
+			success:function(layero,index){
+				layer.full(index);
+			}
+		});
+	}
+
+	function onSummary() {
+		layer.open({
+			type: 2,
+			area: ['900px', '600px'],
+			fixed: false, //不固定
+			maxmin: true,
+			title: "离院总结",
+			content: 'client-summary.html' + window.location.search,
+			success:function(layero,index){
 				layer.full(index);
 			}
 		});
@@ -1072,6 +1198,69 @@
 		let nurse_level = ParseNurseLevel(local.Nurse.level);
 		document.getElementById("nurse_level").value = nurse_level == "错误" ? "" : nurse_level;
 	}
+
+	function init_leave() {
+		document.getElementById("out_num").value = local.Leave.idx;
+	}
+
+	function onLeave() {
+		let outdate = document.getElementById("outdate").value;
+
+		$.ajax({
+			type: "post",
+			url: BasePathJLY + '/leaveclient',
+			data: {client_idx: local.Idx, out_date: outdate},
+			dataType: "json",
+			headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
+			xhrFields: {withCredentials: true},
+			success: function(data){
+
+				load_checks.load_leave_over = true;
+				checkLoadingClose();
+
+				if(data.code==0){
+					local.Status = "离院";
+					local.FormatOutDate = outdate;
+					local.Leave = {};
+					layui.sessionData("jly-client-list", {key:sessiondata_key, value:local})
+					loadLeave();
+					onCancel();
+					return false;
+				}else if(data.code==1001) {
+					// cookie 失效
+					window.top.location = "../../index.html";
+					return false;
+				}else{
+					layer.msg(data.msg,{icon:5,time:5000});
+					return false;
+				}
+			}
+		});
+	}
+
+	function checkLoadingClose() {
+		if (!load_checks.load_healthrecord_over) {
+			return;
+		}
+
+		if (!load_checks.load_application_over) {
+			return;
+		}
+
+		if (!load_checks.load_assessment_over) {
+			return;
+		}
+
+		if (!load_checks.load_nurse_over) {
+			return;
+		}
+
+		if (local.Status === "离院" && !load_checks.load_leave_over) {
+			return;
+		}
+
+		layui.layer.close(loading_idx);
+	}
 	
 	function controlDisabled(disable) {
 		doms.inputs.forEach(function(item) {
@@ -1097,6 +1286,9 @@
 		document.querySelectorAll('a[id="contact_delete"]').forEach(function(item){
 			disable ? item.classList.add("disabled") : item.classList.remove("disabled");
 		})
+
+		disable ? doms.leave.classList.add("layui-btn-disabled") : doms.leave.classList.remove("layui-btn-disabled");
+		doms.leave.disabled = disable;
 		// document.querySelectorAll('a[id="capability_level_select"]').forEach(function(item){
 		// 	disable ? item.classList.add("disabled") : item.classList.remove("disabled");
 		// })
