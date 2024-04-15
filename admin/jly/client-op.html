@@ -641,6 +641,7 @@
 		laydate.render({
 			elem: '#registrant_time'
 			,value: new Date()
+			,value: new Date()
 			,isInitValue: true
 		 });
 		 
@@ -1004,7 +1005,7 @@
 			fixed: false, //不固定
 			maxmin: true,
 			title: "入住申请",
-			content: 'client-application.html' + window.location.search,
+			content: 'client-application.html' + window.location.search + '&from=client-op',
 			success:function(layero,index){
 				var body = layer.getChildFrame('body', index);
 				console.log(body.contents().find("#from"));
@@ -1021,7 +1022,7 @@
 			fixed: false, //不固定
 			maxmin: true,
 			title: "健康信息",
-			content: 'client-health.html' + window.location.search,
+			content: 'client-health.html' + window.location.search + '&from=client-op',
 			success:function(layero,index){
 				var body = layer.getChildFrame('body', index);
 				console.log(body.contents().find("#from"));
@@ -1038,7 +1039,7 @@
 			fixed: false, //不固定
 			maxmin: true,
 			title: "能力评估",
-			content: 'client-assessment.html' + window.location.search,
+			content: 'client-assessment.html' + window.location.search + '&from=client-op',
 			success:function(layero,index){
 				var body = layer.getChildFrame('body', index);
 				console.log(body.contents().find("#from"));
@@ -1055,7 +1056,7 @@
 			fixed: false, //不固定
 			maxmin: true,
 			title: "照护计划",
-			content: 'client-nurse.html' + window.location.search,
+			content: 'client-nurse.html' + window.location.search + '&from=client-op',
 			success:function(layero,index){
 				var body = layer.getChildFrame('body', index);
 				console.log(body.contents().find("#from"));
@@ -1072,7 +1073,7 @@
 			fixed: false, //不固定
 			maxmin: true,
 			title: "财物交接",
-			content: 'client-handover.html' + window.location.search,
+			content: 'client-handover.html' + window.location.search + '&from=client-op',
 			success:function(layero,index){
 				layer.full(index);
 			}
@@ -1086,7 +1087,7 @@
 			fixed: false, //不固定
 			maxmin: true,
 			title: "离院总结",
-			content: 'client-summary.html' + window.location.search,
+			content: 'client-summary.html' + window.location.search + '&from=client-op',
 			success:function(layero,index){
 				layer.full(index);
 			}

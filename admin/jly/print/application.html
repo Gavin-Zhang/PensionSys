@@ -522,16 +522,16 @@
             </tr>
             <tr height="50" style='height:41.00pt;'>
                 {{# if(typeof d.ContactData === 'undefined' || d.ContactData == null || typeof d.ContactData[2]==='undefined'){ }}
-                    <td class="borderSet layui-font-26" x:str></td>
-                    <td class="borderSet layui-font-26" colspan="2" x:str></td>
-                    <td class="borderSet layui-font-26" x:str></td>
-                    <td class="borderSet layui-font-26" colspan="5" x:str></td>
+                    <td class="borderSet layui-font-20" x:str></td>
+                    <td class="borderSet layui-font-20" colspan="2" x:str></td>
+                    <td class="borderSet layui-font-20" x:str></td>
+                    <td class="borderSet layui-font-20" colspan="5" x:str></td>
                     <td></td>
                 {{#  } else { }}
-                    <td class="borderSet layui-font-26" x:str>{{= d.ContactData[2].name}}</td>
-                    <td class="borderSet layui-font-26" colspan="2" x:str>{{= d.ContactData[2].phone}}</td>
-                    <td class="borderSet layui-font-26" x:str>{{= d.ContactData[2].relationship}}</td>
-                    <td class="borderSet layui-font-26" colspan="5" x:str>{{= d.ContactData[2].address}}</td>
+                    <td class="borderSet layui-font-20" x:str>{{= d.ContactData[2].name}}</td>
+                    <td class="borderSet layui-font-20" colspan="2" x:str>{{= d.ContactData[2].phone}}</td>
+                    <td class="borderSet layui-font-20" x:str>{{= d.ContactData[2].relationship}}</td>
+                    <td class="borderSet layui-font-20" colspan="5" x:str>{{= d.ContactData[2].address}}</td>
                     <td></td>
                 {{#  } }}
             </tr>

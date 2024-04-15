@@ -36,9 +36,9 @@
 	<!--工具栏模板-->
 	<script type="text/html" id="tabletools">
 		<div class="layui-btn-group">
-		<button class="layui-btn layui-btn-sm" onclick="onAdd();" lay-event="add">
-			<i class="layui-icon">&#xe61f;</i>创建
-		</button>
+			<button class="layui-btn layui-btn-sm" onclick="onAdd();" lay-event="add">
+				<i class="layui-icon">&#xe61f;</i>创建
+			</button>
 		</div>
 	</script>
 
@@ -66,7 +66,13 @@
 		// 通过url获取参数
 		const params = new URLSearchParams(window.location.search);
 		const idx = params.get('idx');
-		const sessiondata_key = "op-" + idx;
+		const from = params.get('from');
+		sessiondata_key = ""
+		if (from == "client-op") {
+			sessiondata_key = "op-" + idx;
+		} else if (from == "client-out-info") {
+			sessiondata_key = "out-info-" + idx;
+		}
 
 		let session_data;
 		let search_data = {serach_idx: "", sreach_type: ""};
@@ -78,7 +84,12 @@
 			var form = layui.form;
 			var laydate = layui.laydate;
 			var table = layui.table;
-			session_data = layui.sessionData("jly-client-list")[sessiondata_key.toString()];
+			if (from == "client-op") {
+				session_data = layui.sessionData("jly-client-list")[sessiondata_key.toString()]
+			}
+			else if (from == "client-out-info") {
+				session_data = layui.sessionData("jly-client-out-list")[sessiondata_key.toString()]
+			}
 
 			var cur_date = new Date();
 			laydate.render({
@@ -102,7 +113,7 @@
 				,page: true //开启分页
 				,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
 				,id:"nurselist"
-				,toolbar: '#tabletools'
+				,toolbar: from == "client-op" ? '#tabletools' : ''
 				,limits:[10,20,30,50,100,150,200,300,400,500,1000]
 				,cols: [[
 					{field:'idx', align:'center', title: '编号', width: '12%'}

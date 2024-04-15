@@ -87,7 +87,10 @@
 
 		<!--工具栏模板-->
 		<script type="text/html" id="clientlisttools">
-			<div class="layui-btn-group">
+			<div class="layui-btn-container">
+				<!-- <button class="layui-btn layui-btn-sm" onclick="onAddClient();" lay-event="add">
+					<i class="layui-icon">&#xe61f;</i>试住
+				</button> -->
 				<button class="layui-btn layui-btn-sm" onclick="onAddClient();" lay-event="add">
 					<i class="layui-icon">&#xe61f;</i>入住
 				</button>
@@ -136,7 +139,6 @@
 							headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
 							xhrFields: {withCredentials: true},
 							success: function(data){
-								console.log(data)
 								if(data.code==0){
 									
 									ParseClientInfo(data.data[0]);

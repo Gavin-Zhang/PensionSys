@@ -38,7 +38,7 @@
 			
 			<div class="layui-tab-item layui-show">
 				<br>
-				<div class="layui-row layui-col-space5">
+				<div class="layui-row layui-col-space5" id="buttions">
 					<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
 						<button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid"  type="button" id="print" lay-filter="print" onclick="onPrint();">打印申请表</button>
 					</div>
@@ -121,9 +121,17 @@
 <script>
 
 	// 通过url获取参数
+	console.log(window.location.search)
 	const params = new URLSearchParams(window.location.search);
 	const idx = params.get('idx');
-	const sessiondata_key = "op-" + idx;
+	const from = params.get('from');
+	sessiondata_key = ""
+	if (from == "client-op") {
+		sessiondata_key = "op-" + idx;
+	} else if (from == "client-out-info") {
+		sessiondata_key = "out-info-" + idx;
+	}
+	
 
 	let session_data;
 	let doms = {
@@ -139,7 +147,14 @@
         var layer = layui.layer;//弹出层
         var form = layui.form;
 
-		session_data = layui.sessionData("jly-client-list")[sessiondata_key.toString()].Application;
+		if (from == "client-op") {
+			session_data = layui.sessionData("jly-client-list")[sessiondata_key.toString()].Application;
+		}
+		else if (from == "client-out-info") {
+			session_data = layui.sessionData("jly-client-out-list")[sessiondata_key.toString()].Application;
+
+			layui.$('#buttions').addClass('layui-hide');
+		}
 		init(session_data);
 		
 		form.on('radio', function(data) {   
