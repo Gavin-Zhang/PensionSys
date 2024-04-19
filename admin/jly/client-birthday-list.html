@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+	<head>
+		<meta charset="UTF-8">
+		<title>总览</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" />
+		<link rel="stylesheet" href="../css/font.css">
+		<link rel="stylesheet" href="../css/index.css">
+		<script src="../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../js/index.js"></script>
+		<script type="text/javascript" src="./js/base.js"></script>
+		<script type="text/javascript" src="../../js/base.js"></script>
+		<script type="text/javascript" src="../../js/printtpl.js"></script>
+	</head>
+
+	<body>
+		<div class="x-nav">
+			<span class="layui-breadcrumb">
+				<a href="">首页</a>
+				<a href="">敬老院服务管理</a>
+				<a>
+				<cite>每月生日</cite></a>
+			</span>
+			<a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+				<i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+			</a>
+		</div>
+		<div class="layui-fluid">
+			<div class="layui-row layui-col-space15">
+				<div class="layui-col-md12">
+					<div class="layui-card">
+						<div class="layui-card-body ">
+							<form class="layui-form layui-col-space5" lay-filter="birthday">
+								<div class="layui-inline layui-show-xs-block">
+									<select name="months" id="months" lay-filter="months">
+										<option value="">月份</option>
+										<option value="01">一月</option>
+										<option value="02">二月</option>
+										<option value="03">三月</option>
+										<option value="04">四月</option>
+										<option value="05">五月</option>
+										<option value="06">六月</option>
+										<option value="07">七月</option>
+										<option value="08">八月</option>
+										<option value="09">九月</option>
+										<option value="10">十月</option>
+										<option value="11">十一月</option>
+										<option value="12">十二月</option>
+									</select>
+								</div>
+								<div class="layui-inline layui-show-xs-block">
+									<button class="layui-btn"  lay-submit="" type="button" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	
+
+		<table class="layui-hide" id="demo" lay-filter="test"></table>
+
+		<!--工具栏模板-->
+		<!-- <script type="text/html" id="clientlisttools">
+			<div class="layui-btn-container">
+				<button class="layui-btn layui-btn-sm" onclick="onAddClient();" lay-event="add">
+					<i class="layui-icon">&#xe61f;</i>试住
+				</button>
+				<button class="layui-btn layui-btn-sm" onclick="onAddClient();" lay-event="add">
+					<i class="layui-icon">&#xe61f;</i>入住
+				</button>
+			</div>
+		</script> -->
+
+		<!-- <script type="text/html" id="fieldtool">
+			<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="op">操作</a>
+		</script> -->
+
+		<script>
+			let search_data = {month:""};
+			layui.use(['table', 'laydate','form'], function(){
+				var table = layui.table
+				var laydate = layui.laydate;
+				var form = layui.form;
+
+				const now = new Date();  
+				const currentMonth = now.getMonth() + 1; 
+				const formattedMonth = currentMonth < 10 ? `0${currentMonth}` : String(currentMonth);
+				search_data.month = formattedMonth;
+				form.val("birthday", {months:formattedMonth});
+			
+				$.ajaxSetup({
+					headers: {'Access-Control-Allow-Origin' : Domain,},
+					xhrFields: {withCredentials: true},
+				});
+			
+				table.render({
+					elem: '#demo'
+					,height: 'full-150'//,height: 420
+					,url: BasePathJLY + '/getbirthdaylist'
+					,where: {month: formattedMonth}	
+					,method: 'post'
+					,page: true //开启分页
+					,toolbar: '#clientlisttools'//'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+					,defaultToolbar: ['filter', 'exports', 'print']
+					,even: true //开启隔行背景
+					//,totalRow: true //开启合计行
+					,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+					,id:"clients"
+					,title:"列表"
+					,limits:[10,20,30,50,100,150,200,300,400,500,1000]
+					,limit: 20
+					,cols: [[
+						,{field:'Name', title: '姓名', align:'center', minWidth: 100, width: '10%', fixed: 'left'}
+						,{field:'LeaveIdx', title: '档案编号', align:'center', minWidth: 180, width: '5%'}
+						,{field:'Sex', title: '性别', align:'center', width: '5%'}
+						,{field:'Age', title: '年龄', align:'center', width: '5%'} 
+						,{field:'ChinaId', title: '证件号码', align:'center', minWidth: 200, width: '10%' }
+						,{field:'Phone', title: '联系方式', align:'center', width: '10%'}
+						,{field:'FormatInDate', title: '入住时间', align:'center', width: '10%'}
+						,{field:'FormatOutDate', title: '离院时间', align:'center', width: '10%'}
+						,{field:'ClientType', title: '人员类型', align:'center', width: '10%'}
+						,{field:'PayType', title: '缴费类型', align:'center', width: '5%'}
+						,{field:'Trusteeship', title: '政府托管', align:'center', width: '5%'}
+						//,{field:'Status', title: '状态', align:'center', width: '5%'}
+						//,{title: '操作', align:'center', toolbar: '#fieldtool', minWidth: 150, width: '10%', fixed: 'right'}
+					]]
+					,parseData: function(res){ //res 即为原始返回的数据
+						if (res.code == 0 && res.count > 0) {
+							for(var tableitem of res.data[0]) {
+								ParseClientInfo(tableitem);
+							}
+
+							return {
+							"code": res.code, //解析接口状态
+							"msg": res.message, //解析提示文本
+							"count": res.count, //解析数据长度
+							"data": res.data[0] //解析数据列表
+							};
+						}
+						if (res.code == 1001) {
+							window.top.location.href = "../../index.html";
+						}
+						return {
+						"code": res.code, //解析接口状态
+						"msg": res.message, //解析提示文本
+						"count": res.count, //解析数据长度
+						"data": [] //解析数据列表
+						};
+					}
+					,done: function(res, curr, count){
+
+					}
+				});
+			
+			
+				//监听提交
+				form.on('submit(sreach)', function(data){
+					sreachClient();
+				});
+
+			});
+		
+
+			function sreachClient() {
+				var month = layui.$('#months').val()
+				
+				if (month == search_data.month) {
+					return;
+				}
+
+				search_data.month = month;
+
+				let where = {}
+				where.month = month;
+				layui.table.reload('clients', { where: where })
+			}
+
+		</script>
+	</body>
+</html>
