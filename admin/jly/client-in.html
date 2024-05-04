@@ -35,11 +35,18 @@
 							</div>
 						</div>
 						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-							<label class="layui-form-label">
-								<span class='x-red'>*</span>身份证号
-							</label>
-							<div class="layui-input-block">
-								<input type="text" name="chinaid" id="chinaid" lay-verify="required|identity" autocomplete="off" value="" class="layui-input">
+							<div class="layui-row layui-col-space1">
+								<div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>身份证号
+									</label>
+									<div class="layui-input-block">
+										<input type="text" name="chinaid" id="chinaid" lay-verify="required|identity" autocomplete="off" value="" class="layui-input">
+									</div>
+								</div>
+								<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+									<button class="layui-btn" id="getidcard" type="button" onclick="onQueryInfo();">查询</button>
+								</div>
 							</div>
 						</div>
 						<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
@@ -444,6 +451,95 @@
 			}
 		})
     })
+</script>
+
+<script>
+	function onQueryInfo() {
+		const req = /^[1-9]\d{5}(?:18|19|20)\d{2}(?:0[1-9]|10|11|12)(?:0[1-9]|[1-2]\d|30|31)\d{3}[\dXx]$/
+
+		// 获取chinaid的值
+		var chinaid = document.getElementById("chinaid").value;
+		// 进行正则验证
+		if (!req.test(chinaid)) {
+			layer.msg("身份证号码格式错误", { icon: 5, time: 3000 });
+			// 激活输入框
+			document.getElementById("chinaid").focus();
+			return false;
+		}
+
+		var params = {}
+		params["chinaid"] = chinaid
+
+		//Loading层
+		var loading_idx = layer.load(2, {
+			shade: [0.1,'#fff'] //0.1透明度的白色背景
+		});
+
+		$.ajax({
+			type: "post",
+			url: BasePathJLY + '/get_info_by_chinaid',
+			data: params,
+			dataType: "json",
+			headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
+			xhrFields: {withCredentials: true},
+			success: function(data){
+				if(data.code==0){
+					if (data.count == 0) {
+						layer.msg("未查询到信息", {icon:5,time:2000});
+						return false;
+					} else{
+						layer.msg("查询到以往信息", {icon:6,time:2000});
+					}
+
+					// 填充数据
+					fillInData(data.data[0])
+
+					return false;
+				}else if(data.code==1001) {
+					// cookie 失效
+					window.top.location.href = "../../index.html"
+					return false;
+				}else{
+					layer.msg(data.msg, {icon:5,time:5000});
+					return false;
+				}
+			},
+			complete : function(){
+				layer.close(loading_idx);
+			}
+		});
+	}
+
+	function fillInData(data){
+		// 填充数据
+		var interest = JSON.parse(data["Interest"])
+		layui.form.val("register", {
+			"name": data["Name"],
+			"phone": data["Phone"],
+			"marriage": data["Marriage"],
+			"nation": data["Nation"],
+			"culture": data["Culture"],
+			"politics": data["Politics"],
+			"client_type": data["ClientType"],
+			"pay_type": data["PayType"],
+			"trusteeship": data["Trusteeship"],
+			"address": data["Address"],
+			"addr": data["Addr"],
+			"棋牌": interest.includes("棋牌"),			
+			"戏曲": interest.includes("戏曲"),
+			"唱歌": interest.includes("唱歌"),
+			"乐器": interest.includes("乐器"),
+			"阅读": interest.includes("阅读"), 
+			"聊天": interest.includes("聊天"),
+			"其他": interest.includes("其他"),
+			"interest_other": data["InterestOther"],
+			"religion": data["Religion"],
+			"religion_other": data["ReligionOther"],
+			"treat": data["Treat"],
+			"treat_other": data["TreatOther"],
+		});
+		layui.table.reload("contacts", {data: JSON.parse(data["Contacts"])})
+	}
 </script>
 
 
