@@ -124,6 +124,7 @@
 				
 				//监听提交
 				form.on('submit(demo1)', function(data){
+					console.log("--->:" + BasePath)
 					$.ajax({ 
 						url:  BasePath + '/login',   
 						method:'post',   
