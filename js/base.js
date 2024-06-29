@@ -1,22 +1,25 @@
 ﻿
-;var Domain = 'http://192.168.0.110'//'http://localhost';
+;var Domain = 'http://localhost';
+;var Url = window.location.protocol + "//" + window.location.host
 ;var CookieName = "bm-cookie";
 ;var AvatarSubPath = "/avatarphoto/";
 ;var PhotoSubPath = "/imagephoto/";
 
 // hcc
-;var BasePath = Domain + ":8001";
+;var BasePath = Url + ":8001";
 ;var AvatarPath = BasePath + "/avatarphoto/";
 ;var PhotoPath =  BasePath + "/imagephoto/";
 
 // ees
-;var BasePathEES = Domain + ":8002";
+;var BasePathEES = Url + ":8002";
 
 // jly
-;var BasePathJLY = Domain + ":8003";
+;var BasePathJLY = Url + ":8003";
 ;var AvatarPathJLY = BasePathJLY + AvatarSubPath;
 ;var PhotoPathJLY =  BasePathJLY + PhotoSubPath;
 
+// store
+;var BasePathStore = Url + ":8004";
 
 function GetCookie(name) {
 　　if (document.cookie.length > 0) {
