@@ -1,6 +1,6 @@
 ﻿
 ;var Domain = 'http://localhost';
-;var Url = window.location.protocol + "//" + window.location.host
+;var Url = window.location.protocol + "//" + window.location.hostname
 ;var CookieName = "bm-cookie";
 ;var AvatarSubPath = "/avatarphoto/";
 ;var PhotoSubPath = "/imagephoto/";
