@@ -1,5 +1,7 @@
 ﻿;var Domain = 'http://localhost';
-;var BasePath = Domain + ":8002";
+;var Url = window.location.protocol + "//" + window.location.hostname
+
+;var BasePath = Url + ":8002";
 ;var AvatarPath = BasePath + "/avatarphoto/";
 ;var PhotoPath =  BasePath + "/imagephoto/";
 ;var CookieName = "bm-cookie";
