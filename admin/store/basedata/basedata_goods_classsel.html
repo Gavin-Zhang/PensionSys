@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="utf-8">
+        <title>
+            品类选择
+        </title>
+        <!-- 设置浏览器渲染引擎为Webkit，以确保页面在各种浏览器中的一致性 -->
+        <meta name="renderer" content="webkit">
+        <!-- 指定IE浏览器使用最新的渲染模式，支持HTML5和CSS3等特性 -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <!-- 控制移动设备的视口大小和缩放，优化移动浏览体验 -->
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <!-- 引入自定义字体文件，用于页面中的特殊字体展示 -->
+        <link rel="stylesheet" href="../../css/font.css">
+        <!-- 引入页面的主样式表，定义页面的布局和样式 -->
+        <link rel="stylesheet" href="../../css/index.css">
+        <!-- 引入dtree的样式文件，用于展示目录树结构 -->
+        <link rel="stylesheet" href="../../lib/dtree/dtree.css">
+        <!-- 引入dtree的字体文件，用于dtree中的图标显示 -->
+        <link rel="stylesheet" href="../../lib/dtree/font/dtreefont.css">
+        <!-- 引入layui库的JavaScript文件，用于页面的组件和功能支持 -->
+        <script src="../../lib/layui/layui.js" charset="utf-8"></script>
+        <!-- 引入页面的JavaScript文件，包含页面交互逻辑和功能实现 -->
+        <script type="text/javascript" src="../../js/index.js"></script>
+        <!-- 引入基础的JavaScript文件，可能包含一些全局的工具函数和配置 -->
+        <script type="text/javascript" src="../../../js/base.js"></script>
+    </head>
+
+    <body>
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <ul id="good_class" class="dtree" data-id="0"></ul>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        layui.extend({
+            dtree: '{/}../../lib/dtree/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+        }).use(['dtree'], function() {
+            var dtree = layui.dtree;
+
+            var DTree = dtree.render({
+                elem: "#good_class",
+                //data: data, // 使用data加载
+                url: BasePathStore + "/getgoodclass",
+                withCredentials: true,
+                line: true,
+                height: "full",
+                width: "180",
+                dataFormat: "list",
+                dataStyle: "layuiStyle",
+                toolbar: false, 
+                toolbarWay:"fixed",
+                toolbarFun: {}
+            });
+
+            // 点击节点名称获取选中节点值
+            dtree.on("nodedblclick('good_class')" ,function(obj){
+                if (!obj.param.leaf) {
+                    return;
+                }
+                layer.msg(JSON.stringify(obj.param));
+                parent.SetClass(obj.param.nodeId, obj.param.context);
+                
+                // 关闭弹窗
+                parent.layer.close(parent.layer.getFrameIndex(window.name));
+            });
+        });
+    </script>
+</html>

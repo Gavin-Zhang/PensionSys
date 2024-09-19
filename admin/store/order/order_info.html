@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="utf-8">
+    <title>
+        订单信息
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../css/font.css">
+    <link rel="stylesheet" href="../../css/index.css">
+    <link rel="stylesheet" href="../../lib/dtree/dtree.css">
+    <link rel="stylesheet" href="../../lib/dtree/font/dtreefont.css">
+    <link rel="stylesheet" href="../css/table.css">
+    <script src="../../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../../js/index.js"></script>
+    <script type="text/javascript" src="../../../js/base.js"></script>
+    <style>
+		html,
+		body {
+		  width: 100%;
+		  height: 100%;
+		}
+
+        .layui-fluid {
+            padding: 5px;
+        }
+	
+		.chosen-area {
+		  display: inline-block;
+		  width: 200px;
+		  min-height: 30px;
+		  border: 1px solid #cccccc;
+		  line-height: 30px;
+		  box-sizing: border-box;
+		  padding: 0px 10px;
+		}
+	
+		.chosen-area span {
+		  font-size: 13px;
+		  color: #000;
+		}
+	
+		.chosen-area:hover {
+		  border: 1px solid #16baaa;
+		  cursor: pointer;
+		}
+
+        .chosen-area1 {
+		  display: inline-block;
+		  width: 100%;
+          height: 100%;
+		  /* min-height: 10px; */
+		  border: 1px solid #cccccc;
+		  line-height: 26px;
+		  box-sizing: border-box;
+		  padding: 0px 0px;
+		}
+	
+		.chosen-area1 span {
+		  font-size: 12px;
+		  color: #000;
+		}
+	
+		.chosen-area1:hover {
+		  border: 1px solid #16baaa;
+		  cursor: pointer;
+		}
+
+        .layui-input {
+            width: 200px;
+        }
+	  </style>
+</head>
+<body>
+
+    <!-- <div class="x-nav">
+        <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">库房管理</a>
+            <a href="">订单管理</a>
+            <a>
+            <cite>入库单</cite></a>
+        </span>
+        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+            <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+        </a>
+    </div> -->
+
+    <script id="orderTypeScript" type="text/html">
+        <label class="layui-form-label layui-font-24" style="padding: 15px 15px 0px 15px">
+            {{# if(d.orderType == "ORDER_IN") { }}
+                <b>入库单</b>
+            {{# } else if(d.orderType == "ORDER_OUT") { }}
+                <b>出库单</b>
+            {{# } else if(d.orderType == "ORDER_SETTLEMENT") { }}
+                <b>结算单</b>
+            {{# } else { }}
+                <b>未知</b>
+            {{# } }}
+        </label>
+    </script>
+    <script id="settlementScript" type="text/html">
+        {{# if(d.orderType == "ORDER_IN") { }}
+            <button class="layui-btn" type="button" onclick="settlement()" lay-filter="settlement">结算</button>
+        {{# } }}
+    </script>
+
+    
+    <div class="layui-card" id="root">
+        <form class="layui-form" id="orderInfo" lay-filter="orderInfo">
+            <!-- <div class="layui-field-box layui-row" id="base_div"> -->
+            <div class="layui-row" id="base_div" style="padding: 15px 15px 0px 15px"></div>
+                <div class="layui-form-item" id="orderTypeDiv"> </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="color: blue;">订单编号</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="order_id" name="order_id" autocomplete="off" class="layui-input" lay-verify="required" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-inline" id="supplierDiv">
+                        <label class="layui-form-label" style="color: blue;">供货单位</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="supplier" name="supplier" autocomplete="off" class="layui-input" lay-verify="required" disabled>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="color: blue;">仓库</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="store" name="store" autocomplete="off" class="layui-input" lay-verify="required" disabled>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><span class='x-red'>*</span>单据日期</label>
+                        <div class="layui-input-inline layui-input-wrap">
+                            <div class="layui-input-prefix">
+                                <i class="layui-icon layui-icon-date"></i>
+                            </div>
+                            <input type="text" id="indate" name="indate" autocomplete="off" class="layui-input" disabled>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">经手人</label>
+                        <div class="layui-input-inline layui-input-wrap">
+                            <input type="text" id="handler" name="handler" autocomplete="off" class="layui-input" lay-verify="required" disabled>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline" id="settlementDiv"></div>
+                    <br>
+                    
+                </div>
+            </div> 
+
+            <div class="layui-card">
+                <div class="layui-field-box">
+                    <table class="layui-hide" id="order_table" lay-filter="test"></table>
+                </div>
+            </div>
+
+            <!-- <div class="layui-form-item" id="other_div">
+                <button class="layui-btn" type="button" style="width: 150px; float: right; margin-right: 20px;" lay-filter="application" onclick="onSubmit();">立即提交</button>
+            </div> -->
+        </form>
+    </div>
+
+    <script type="text/html" id="goods_table_tool">
+        <a class="layui-btn layui-btn-primary layui-btn-xs layui-disable" lay-event="modify">修改</a>
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
+    </script>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const orderId = params.get('orderId')
+        const orderType = params.get('orderType')
+
+        var order_data = {}
+        layui.use(['table', 'jquery', 'layer', 'form', 'laydate', 'laytpl'], function()  {
+            var table = layui.table
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var laytpl = layui.laytpl;
+            var $ = layui.jquery;  //jquery
+
+            laydate.render({
+                elem: '#indate',
+                value: new Date(),
+            });
+
+            var gloab = layui.data('yl-user');
+            form.val("orderadd", {
+                "handler": gloab.user["UserName"],
+            });
+
+            $.ajaxSetup({
+                headers: {'Access-Control-Allow-Origin' : Domain,},
+                xhrFields: {withCredentials: true},
+            });
+
+            table.render({
+                elem: '#order_table'
+                ,height: function() {
+                    return $(window).height() - $('#base_div').outerHeight() - 170;
+                }
+                ,data: []
+                ,method: 'post'
+                //,page: true //开启分页
+                //,toolbar: '#goods_tools'
+                ,defaultToolbar: []
+                ,even: true //开启隔行背景
+                ,totalRow: true //开启合计行
+                ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,id:"order_list"
+                ,title:"列表"
+                //,limits:[10,20,30,50,100,150,200,300,400,500,1000]
+                ,cols: [[
+                    ,{field:'LAY_NUM', title: '序号', align:'center', minWidth: 80, width: '5%', totalRow: '合计：', fixed: 'left'}
+                    ,{field:'goodsName', title: '商品名称', align:'center', width: '15%', templet:'#TPL-dropdpwn-demo', fixed: 'left'}
+                    ,{field:'unit', title: '单位', align:'center', width: '5%'}
+                    ,{field:'count', title: '数量', align:'center', width: '11%', totalRow: '{{= d.TOTAL_NUMS }}'}
+                    ,{field:'price_show', title: '单价', align:'center', width: '11%'}
+                    ,{field:'amount_bd_show', title: '折前总价', align:'center', width: '11%', totalRowText: ''}
+                    ,{field:'discount_show', title: '优惠', align:'center', width: '11%'}
+                    ,{field:'amount_show', title: '实际总价', align:'center', width: '11%', totalRowText: ''}
+                    ,{field:'settlement_show', title: '结算金额', align:'center', width: '11%', totalRowText: ''}
+                    ,{field:'remark', title: '备注', align:'center', width: '20%'}
+                    //,{title: '操作', align:'center', toolbar: '#goods_table_tool', minWidth: 150, width: '20%', fixed: 'right'}
+                ]],
+                done: function(res, cur, count) {
+                    let total_amount = 0;
+                    let total_amount_bd = 0;
+                    let total_discount = 0;
+                    let total_settlement = 0;
+                    $.each(res.data, function(index, obj){
+                        total_amount += obj.amount;
+                        total_amount_bd += obj.amount_bd;
+                        total_discount += obj.discount;
+                        total_settlement += obj.settlement;
+                    });
+                    this.elem.next().find('.layui-table-total td[data-field="amount_bd_show"] .layui-table-cell').text("¥ " + total_amount_bd.toFixed(2));
+                    this.elem.next().find('.layui-table-total td[data-field="discount_show"] .layui-table-cell').text("¥ " + total_discount.toFixed(2));
+                    this.elem.next().find('.layui-table-total td[data-field="amount_show"] .layui-table-cell').text("¥ " + total_amount.toFixed(2));
+                    this.elem.next().find('.layui-table-total td[data-field="settlement_show"] .layui-table-cell').text("¥ " + total_settlement.toFixed(2));
+                }
+            });
+
+            initPage();
+        });
+
+        function initPage() {
+            loadOrderInfo();
+            loadOrderGoods();
+        }
+
+        function loadOrderInfo() {
+            var data = {orderId: orderId}
+            console.log(data)
+            $.ajax({
+                url: BasePathStore + '/getorderinfo',
+                headers: {'Access-Control-Allow-Origin' : Domain, "Content-Type": "application/json"},
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(data),
+                success: function (res) {
+                    if (res.code == 0) {
+                        initOrderTypeTitle(res.data[0])
+                        initOrderInfo(res.data[0])
+                    } else if(res.code==1001) {
+                        window.top.location.href = "../../index.html";
+                        return false;
+                    } else {
+                        layer.msg(res.msg,{icon:5,time:5000});
+                        return false;
+                    }
+                }
+            })
+        }
+
+        function loadOrderGoods() {
+            var data = {orderId: orderId}
+            console.log(data)
+            $.ajax({
+                url: BasePathStore + '/getordergoods',
+                headers: {'Access-Control-Allow-Origin' : Domain, "Content-Type": "application/json"},
+                type: 'POST',
+                dataType: 'json',
+                data: JSON.stringify(data),
+                success: function (res) {
+                    if (res.code == 0) {
+                        var table_cache = layui.table.cache['order_list'];
+                        // 清空table_cache
+                        table_cache.splice(0,table_cache.length);
+
+                        $.each(res.data, function(idx, item){
+                            item.LAY_NUM = item.sourceOrder == "" ? item.idx : item.scoureIdx;
+
+                            if (orderType == "ORDER_OUT") {
+                                item.settlement = item.amount
+                            }
+
+                            item.price_show = ("¥ " + item.price.toFixed(2));
+                            item.amount_bd_show = item.amount_bd == 0 ? "" : ("¥ " + item.amount_bd.toFixed(2));
+                            item.discount_show = item.discount == 0 ? "" : ("¥ " + item.discount.toFixed(2));
+                            item.amount_show = ("¥ " + item.amount.toFixed(2));
+                            item.settlement_show = item.settlement == 0 ? "" : ("¥ " + item.settlement.toFixed(2));
+
+                            table_cache.push(item)
+                        })
+
+                        order_data.goods = table_cache
+                        layui.table.reload('order_list', {data:table_cache})
+                        
+
+                    } else if(res.code==1001) {
+                        window.top.location.href = "../../index.html";
+                        return false;
+                    } else {
+                        layer.msg(res.msg,{icon:5,time:5000});
+                        return false;
+                    }
+                }
+            })
+        }
+
+        function initOrderTypeTitle(data) {
+            var getTpl = orderTypeScript.innerHTML;
+            var view = document.getElementById('orderTypeDiv');
+            layui.laytpl(getTpl).render(data, function(html){
+                view.innerHTML = html;
+            })
+
+            var getTpl_s = settlementScript.innerHTML
+            var view_s = document.getElementById('settlementDiv');
+            layui.laytpl(getTpl_s).render(data, function(html){
+                view_s.innerHTML = html;
+            })
+        }
+
+        function initOrderInfo(data) {
+            if (data.orderType == "ORDER_OUT") {
+                document.getElementById("supplierDiv").classList.add("layui-hide")
+            }
+
+            layui.$("#order_id").val(data.orderIdx)
+            layui.$("#supplier").val(data.supplier_name)
+            layui.$("#store").val(data.store_name)
+            layui.$("#indate").val(data.buildDate.substr(0, 10))
+            layui.$("#handler").val(data.handler)
+
+            order_data.order = data;
+        }
+
+        function settlement() {
+            console.log("settlement", order_data)
+            console.log(layui.data("store_settlement", {key:"order", value: order_data}))
+            
+            parent.xadmin.add_tab('库房管理-订单信息', "store/order/order_settlement.html");
+        }
+        
+    </script>
+</body>
+</html>

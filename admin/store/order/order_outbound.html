@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="utf-8">
+    <title>
+        出库单
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../css/font.css">
+    <link rel="stylesheet" href="../../css/index.css">
+    <link rel="stylesheet" href="../../lib/dtree/dtree.css">
+    <link rel="stylesheet" href="../../lib/dtree/font/dtreefont.css">
+    <link rel="stylesheet" href="../css/table.css">
+    <script src="../../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../../js/index.js"></script>
+    <script type="text/javascript" src="../../../js/base.js"></script>
+    <style>
+		html,
+		body {
+		  width: 100%;
+		  height: 100%;
+		}
+
+        .layui-fluid {
+            padding: 5px;
+        }
+	
+		.chosen-area {
+		  display: inline-block;
+		  width: 200px;
+		  min-height: 30px;
+		  border: 1px solid #cccccc;
+		  line-height: 30px;
+		  box-sizing: border-box;
+		  padding: 0px 10px;
+		}
+	
+		.chosen-area span {
+		  font-size: 13px;
+		  color: #000;
+		}
+	
+		.chosen-area:hover {
+		  border: 1px solid #16baaa;
+		  cursor: pointer;
+		}
+
+        .chosen-area1 {
+		  display: inline-block;
+		  width: 100%;
+          height: 100%;
+		  /* min-height: 10px; */
+		  border: 1px solid #cccccc;
+		  line-height: 26px;
+		  box-sizing: border-box;
+		  padding: 0px 0px;
+		}
+	
+		.chosen-area1 span {
+		  font-size: 12px;
+		  color: #000;
+		}
+	
+		.chosen-area1:hover {
+		  border: 1px solid #16baaa;
+		  cursor: pointer;
+		}
+
+        .layui-input {
+            width: 200px;
+        }
+	  </style>
+</head>
+<body>
+
+    <div class="x-nav">
+        <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">库房管理</a>
+            <a href="">订单管理</a>
+            <a>
+            <cite>出库单</cite></a>
+        </span>
+        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+            <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+        </a>
+    </div>
+
+    <div class="layui-card">
+        <form class="layui-form" id="orderadd" lay-filter="orderadd">
+            <!-- <div class="layui-field-box layui-row" id="base_div"> -->
+            <div class="layui-row" id="base_div" style="padding: 15px 15px 0px 15px"></div>
+                <div class="layui-form-item">
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="color: blue;">出货仓库</label>
+                        <div class="layui-input-block">
+                            <input type="hidden" id="store" name="store" autocomplete="off" lay-verify="required">
+                            <a class="chosen-area" id="storeSelect"></a>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><span class='x-red'>*</span>出库日期</label>
+                        <div class="layui-input-inline layui-input-wrap">
+                            <div class="layui-input-prefix">
+                                <i class="layui-icon layui-icon-date"></i>
+                            </div>
+                            <input type="text" id="indate" name="indate" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">经手人</label>
+                        <div class="layui-input-inline layui-input-wrap">
+                            <input type="text" id="handler" name="handler" autocomplete="off" class="layui-input" lay-verify="required">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-inline">
+                        <label class="layui-form-label">连续开单</label>
+                        <div class="layui-input-inline layui-input-wrap">
+                            <input type="checkbox" id="continue" lay-skin="switch" lay-filter="switchTest" title="开|关" checked>
+                        </div>
+                    </div> 
+                </div>
+            </div> 
+
+            <div class="layui-card">
+                <div class="layui-field-box">
+                    <table class="layui-hide" id="order_table" lay-filter="test"></table>
+                </div>
+            </div>
+
+            <!-- <div class="layui-form-item" id="other_div">
+                <button class="layui-btn" type="button" style="width: 150px; float: right; margin-right: 20px;" lay-filter="application" onclick="onSubmit();">立即提交</button>
+            </div> -->
+        </form>
+    </div>
+
+    <script type="text/html" id="goods_table_tool">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
+    </script>
+
+    <script type="text/html" id="ID-table-demo-page-pagebar">
+        <div class="layui-btn-container">
+          <button class="layui-btn layui-btn-sm" lay-event="footerDemoBtn1" style="width: 150px;" onclick="onSubmit();">立即提交</button>
+        </div>
+      </script>
+
+    <!--工具栏模板-->
+    <script type="text/html" id="goods_tools">
+        <div class="layui-btn-group">
+            <button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" type="button" onclick="onAddGoods();" lay-event="add">
+                <i class="layui-icon" style="font-size: 20px">&#xe61f;</i>
+            </button>
+        </div>
+    </script>
+
+    <script>
+
+        layui.config({
+            base: '../../../layui-exts'
+        }).extend({
+            'dropdownTable': '/dropdownTable/dropdownTable'
+        });
+
+        layui.use(['table', 'jquery', 'layer', 'form', 'dropdownTable', 'laydate', "element"], function()  {
+            var table = layui.table
+            var layer = layui.layer;
+            var form = layui.form;
+            var dropdownTable = layui.dropdownTable;
+            var laydate = layui.laydate;
+            var element = layui.element;
+            var  $ = layui.jquery;  //jquery
+
+            laydate.render({
+                elem: '#indate',
+                isInitValue: true,
+                value: new Date(),
+            });
+
+            var gloab = layui.data('yl-user');
+            form.val("orderadd", {
+                "handler": gloab.user["UserName"],
+            });
+
+            $.ajaxSetup({
+                headers: {'Access-Control-Allow-Origin' : Domain,},
+                xhrFields: {withCredentials: true},
+            });
+
+            var dropdown_table_store_select = { 
+                style:'padding:10px;width:80%;height:400px',
+                emptyMsg: ' ',  
+                id: "store_select",
+                elem: "#storeSelect",
+                bindInput: "#store",
+                auxiliaryType: "search",
+                searchName: "custom",
+                selectType: 'radio',
+                selectTable: {
+                    id:"store_select_table",
+                    uniqueId: 'id',
+                    displayField: 'name',
+                    cols: [[
+                        { field: 'name', title: '名称' },
+                        { field: 'admin', title: '管理员', align:'center' },
+                        { field: 'remark', title: '备注' },
+                    ]],
+                    url: BasePathStore + '/getstores',
+                    method: 'post',
+                    limits:[10,20,30,50,100],
+                    limit: 20,
+                    page: true,
+                    even: true,
+                    className: "layui-table-testcss",
+                }
+            }
+            dropdownTable.render(dropdown_table_store_select);
+
+            t = table.render({
+                elem: '#order_table'
+                ,height: function() {
+                    return $(window).height() - $('#base_div').outerHeight() - 170;
+                }
+                ,data: []
+                ,method: 'post'
+                //,page: true //开启分页
+                ,toolbar: '#goods_tools'
+                ,defaultToolbar: []
+                ,even: true //开启隔行背景
+                ,totalRow: true //开启合计行
+                ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,id:"order_list"
+                ,title:"列表"
+                ,pagebar: '#ID-table-demo-page-pagebar' // 分页栏模板
+                ,className: "layui-table-testcss"
+                //,limits:[10,20,30,50,100,150,200,300,400,500,1000]
+                ,cols: [[
+                    ,{field:'LAY_NUM', title: '序号', align:'center', minWidth: 80, width: '5%', totalRowText: '合计：', fixed: 'left'}
+                    ,{field:'name', title: '商品名称', align:'center', width: '25%', templet:'#TPL-dropdpwn-demo', fixed: 'left'}
+                    ,{field:'supplierName', title: '供货商', align:'center', width: '11%'}
+                    ,{field:'unit', title: '单位', align:'center', width: '11%'}
+                    ,{field:'count', title: '数量', align:'center', width: '13%', totalRow: '{{= d.TOTAL_NUMS }}'}
+                    ,{field:'priceShow', title: '单价', align:'center', width: '13%'}
+                    ,{field:'amountShow', title: '金额', align:'center', width: '13%', totalRowText: '¥ 0.00'}
+                    // ,{field:'remark', title: '备注', align:'center', width: '20%'}
+                    ,{title: '操作', align:'center', toolbar: '#goods_table_tool', width: '10%', fixed: 'right'}
+                ]],
+                done: function(res, cur, count) {
+                    let total_amount = 0;
+                    $.each(res.data, function(index, obj){
+                        total_amount += obj.amount;
+                    });
+                    console.log("total_amount:", total_amount)
+                    this.elem.next().find('.layui-table-total td[data-field="amountShow"] .layui-table-cell').text("¥ " + total_amount.toFixed(2));
+                }
+            });
+
+            table.on('rowDouble(test)', function(obj) {
+                var data = obj.data; // 获取当前行数据
+
+                console.log(data)
+
+            });
+
+        });
+
+
+        function onAddGoods() {
+            var store = document.getElementById('store').value;
+            if (store == '') {
+                layui.layer.tips('请选择出货仓库', document.getElementById('storeSelect'), {
+                    tips: [1, '#16b777']
+                });
+                return;
+            }
+
+
+            var goods = layui.table.cache['order_list']
+            goodsStr = encodeURI(JSON.stringify(goods));
+            layer.open({
+                type: 2,
+                area: ['80%', '720px'],
+                fixed: false, //不固定
+                maxmin: true,
+                title: "出库单-添加商品",
+                content: 'order_outbound_goods_add.html?store=' + store + '&selected=' + goodsStr,
+                shadeClose: true,
+                scrollbar: false,
+                btn: ['添加', '取消'],
+                yes:function(index, layero, that){
+                    var iframeWin = window[layero.find('iframe')[0]['name']];
+
+                    if (!VerifyAddForm(iframeWin)) {
+                        return;
+                    }
+
+                    var elemMark = iframeWin.$('#goods_info'); // 获得 iframe 中某个输入框元素
+                    var value = elemMark.val();
+                    
+                    var obj = JSON.parse(value);
+                    let cache = layui.table.cache['order_list'];
+
+                    console.log("obj:", obj)
+
+
+                    if (obj.count <= 0) {
+                        layer.msg("数量不能为0", {icon: 5});
+                    }
+
+                    let goods_list = splitGoods(obj);
+                    console.log("good_list:", goods_list)
+                    $.each(goods_list, function(index, obj){
+                        let add = false
+                        $.each(cache, function(index, info){
+                            console.log(info, obj)
+                            if(!add && info.goodId === obj.id && info.price === obj.price && info.supplier == obj.supplier){
+                                info.count += obj.count;
+                                info.amount += obj.amount
+                                info.amountShow = "¥ " + info.amount.toFixed(2)
+
+                                let list_add = false
+                                $.each(info.list, function(index, data){
+                                    if (!list_add && data.orderIdx === obj.outData.OrderIdx && data.idx === obj.outData.Idx && data.store === obj.outData.StoreId) {
+                                        data.count = Number(data.count) + Number(obj.count)
+                                        data.amount = Number(data.amount) + Number(obj.amount)
+                                        data.amountShow = "¥ " +  data.amount.toFixed(2)
+                                        list_add = true;
+                                    }
+                                })
+
+                                if (!list_add) {
+                                    let listData = {}
+                                    listData.orderIdx = obj.outData.OrderIdx
+                                    listData.goodId = obj.outData.GoodId
+                                    listData.idx = obj.outData.Idx
+                                    listData.count = obj.count
+                                    listData.amount = obj.amount
+                                    listData.store = obj.outData.StoreId
+                                    listData.supplier = obj.supplier
+                                    info.list.push(listData)
+                                }
+                                
+                                add = true
+                            }
+                        })
+
+                        if (!add) {
+                            let inData = {}
+                            inData.name = obj.name
+                            inData.goodId = obj.id
+                            inData.price = obj.price
+                            inData.priceShow = "¥ " + obj.price.toFixed(2)
+                            inData.unit = obj.unit
+                            inData.count = obj.count
+                            inData.amount = obj.amount
+                            inData.amountShow = "¥ " + obj.amount.toFixed(2)
+                            inData.supplier = obj.outData.Supplier
+                            inData.supplierName = obj.outData.SupplierName
+                            inData.list = []
+                            let listData = {}
+                            listData.orderIdx = obj.outData.OrderIdx
+                            listData.goodId = obj.outData.GoodId
+                            listData.idx = obj.outData.Idx
+                            listData.count = obj.count
+                            listData.amount = obj.amount
+                            listData.store = obj.outData.StoreId
+                            listData.supplier = obj.supplier
+                            inData.list.push(listData)
+                            cache.push(inData);
+                        }
+                    })
+                    
+
+
+                    console.log("table:", cache)
+                    layui.table.reload('order_list', {data:cache})
+
+                    iframeWin.$("#class").val("") ;
+                    iframeWin.$("#unit").val("") ;
+                    iframeWin.$("#count").val("") ;
+                    iframeWin.$("#count").attr("placeholder",""); 
+                    iframeWin.$("#count").attr("disabled", "disabled")
+                    iframeWin.$("#price").val("") ;
+                    iframeWin.$("#amount").val("") ;
+                    iframeWin.$("#amount").attr("placeholder","￥"); 
+                    iframeWin.$("#goods_name").val("") ;
+                    iframeWin.layui.dropdownTable.clearSelected("goodsSelect")
+                    iframeWin.ResetSelected(JSON.stringify(cache));
+
+                    if (!iframeWin.$("#open").prop("checked")) {
+                        layui.layer.close(index)
+                    }
+                }
+            });
+        }
+
+        function VerifyAddForm(frame_win) {
+            var name = frame_win.document.getElementById('goods_name').value;
+            if (name == '') {
+                frame_win.layui.layer.tips('请输入商品名称', frame_win.document.getElementById('goods_select'), {
+                    tips: [1, '#16b777']
+                });
+                return false;
+            }
+
+            var count = frame_win.document.getElementById('count').value;
+            if (count == '') {
+                frame_win.layui.layer.tips('请输入商品数量', frame_win.document.getElementById('count'), {
+                    tips: [1, '#16b777']
+                });
+                return false;
+            }
+
+            return true;
+        }
+
+        function onSubmit() {
+            if (!VerifyForm()) {
+                return;
+            }
+
+            var obj = {};
+            obj.store = document.getElementById('store').value;
+            obj.indate = document.getElementById('indate').value;
+            obj.handler = document.getElementById('handler').value;
+            obj.goods = layui.table.cache['order_list'];
+            obj.amount = 0;
+            obj.info = ""
+
+            obj.goods.forEach((item, idx) => {
+                item.count = parseInt(item.count);
+                item.price = parseFloat(item.price);
+                item.amount = parseFloat(item.amount);
+                obj.amount = obj.amount + item.amount;
+                obj.info += (item.name + item.count + item.unit + ';');
+
+                $.each(item.list, function(idx, sub) {
+                    sub.idx = parseInt(sub.idx);
+                })
+            });
+
+            console.log(obj)
+
+            $.ajax({
+                type: "post",
+                data: JSON.stringify(obj),
+                dataType: "json",
+                headers: {'Access-Control-Allow-Origin' : Domain, "Content-Type": "application/json"},
+                xhrFields: {withCredentials: true},
+                url: BasePathStore + "/orderout",
+                success: function(result) {
+                    if (result.code == 0) {
+                        layer.msg("添加成功");
+
+                        var continueFlag = $("#continue").prop("checked");
+                        if (continueFlag) {
+                            layui.table.reload('order_list', {data:[]})
+                        } else {
+                            xadmin.add_tab('订单管理-总览','store/order/order_base.html', true)
+                            xadmin.del_tab();
+                        } 
+                    } else {
+                        layer.msg(result.msg);
+                    }
+                },
+                error: function(result) {
+                    layer.msg(result.msg);
+                },
+                
+            });
+        }
+
+        function VerifyForm() {
+            var indate = document.getElementById('indate').value;
+            if (indate == '') {
+                layui.layer.tips('请选择入库日期', document.getElementById('indate'), {
+                    tips: [1, '#16b777']
+                });
+                return false;
+            }
+
+            var handler = document.getElementById('handler').value;
+            if (handler == '') {
+                layui.layer.tips('请选择经手人', document.getElementById('handler'), {
+                    tips: [1, '#16b777']
+                });
+                return false;
+            }
+
+            var data = layui.table.cache['order_list'];
+            if (data.length == 0) {
+                layer.msg('请添加商品', {icon: 2});
+                return false;
+            }
+
+            return true;
+        }
+
+        function splitGoods(good) {
+            let goods_list = []
+
+            if (good.count * good.price != good.amount) {
+                let obj1 = JSON.parse(JSON.stringify(good));
+                obj1.count = good.count - 1;
+                obj1.amount = obj1.count * obj1.price;
+                goods_list.push(obj1)
+
+                let obj2 = JSON.parse(JSON.stringify(good));
+                obj2.count = 1;
+                obj2.price = obj2.outData.Amount - obj1.amount;
+                obj2.amount = obj2.price;
+                goods_list.push(obj2)
+            } else {
+                goods_list.push(good);
+            }
+
+            return goods_list;
+        }
+        
+    </script>
+</body>
+</html>

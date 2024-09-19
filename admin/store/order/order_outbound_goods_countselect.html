@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="utf-8">
+        <title>
+            出库单-添加商品
+        </title>
+        <!-- 设置浏览器渲染引擎为Webkit，以确保页面在各种浏览器中的一致性 -->
+        <meta name="renderer" content="webkit">
+        <!-- 指定IE浏览器使用最新的渲染模式，支持HTML5和CSS3等特性 -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <!-- 控制移动设备的视口大小和缩放，优化移动浏览体验 -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- 引入自定义字体文件，用于页面中的特殊字体展示 -->
+        <link rel="stylesheet" href="../../css/font.css">
+        <!-- 引入页面的主样式表，定义页面的布局和样式 -->
+        <link rel="stylesheet" href="../../css/index.css">
+        <!-- 引入dtree的样式文件，用于展示目录树结构 -->
+        <link rel="stylesheet" href="../../lib/dtree/dtree.css">
+        <!-- 引入dtree的字体文件，用于dtree中的图标显示 -->
+        <link rel="stylesheet" href="../../lib/dtree/font/dtreefont.css">
+        <!-- 引入layui库的JavaScript文件，用于页面的组件和功能支持 -->
+        <script src="../../lib/layui/layui.js" charset="utf-8"></script>
+        <!-- 引入页面的JavaScript文件，包含页面交互逻辑和功能实现 -->
+        <script type="text/javascript" src="../../js/index.js"></script>
+        <!-- 引入基础的JavaScript文件，可能包含一些全局的工具函数和配置 -->
+        <script type="text/javascript" src="../../../js/base.js"></script>
+        <!-- 引入外部CSS文件，用于定制表格的样式 -->
+        <link rel="stylesheet" href="../css/table.css">
+        <style>
+            html,
+             body {
+                width: 100%;
+                height: 90%;
+            } 
+        
+            .chosen-area {
+                display: inline-block;
+                width: 100%;
+                min-height: 30px;
+                border: 1px solid #cccccc;
+                line-height: 100%;
+                box-sizing: border-box;
+                padding: 0px 1px;
+                background-color: rgb(255, 255, 255);
+            }
+        
+            .chosen-area span {
+                font-size: 13px;
+                color: #000;
+            }
+        
+            .chosen-area:hover {
+                border: 1px solid #16baaa;
+                cursor: pointer;
+            }
+        </style>
+        <style>
+            body{padding:10px; font-size:14px; background:#fff; width:95%; margin:0 auto; font-size:14px; line-height:20px; overflow:hidden;}
+            /* p{margin-bottom:10px;} */
+            input{border:1px solid #999; padding:5px 10px; }
+        </style>
+
+    </head>
+
+    <body>
+        <div class="layui-form layui-form-pane" lay-filter="filter-test-layer">
+            <div class="demo-login-container">
+                <table class="layui-hide" id="goods_table" lay-filter="goods_table"></table>
+                <input type="hidden" id="goods_info" name="goods_info" autocomplete="off" value="" class="layui-input" disabled>
+            </div>
+        </div>
+    </body>
+
+    <script>
+
+
+        // 通过url获取参数
+        const params = new URLSearchParams(window.location.search);
+        const dataStr = params.get('data');
+        const selectedStr = params.get('selected')
+        var selected_goods = JSON.parse(decodeURI(selectedStr))
+
+        var select_goods;
+        let goods_info = {}
+        layui.use(['form', 'layer', 'table', 'jquery'], function(){
+            var form = layui.form
+            ,layer = layui.layer
+            ,table = layui.table
+            ,$ = layui.jquery;
+
+            let data = JSON.parse(decodeURI(dataStr))
+            let list = []
+            $.each(data, function(index, item){
+                console.log(item)
+                let info = {}
+                info.OrderIdx = item.orderIdx
+                info.GoodId = item.goodId
+                info.Idx = item.goodIdx
+                info.GoodName = item.goodName
+                info.Unit = item.unit
+                info.Inventory = item.inventory
+                info.Price = item.price
+                info.Amount = item.amount
+                info.StoreId = item.storeId
+                info.StoreName = item.storeName
+                info.Supplier = item.supplier
+                info.SupplierName = item.supplierName
+                info.Date = item.buildDate.substring(0, 10)
+                info.RealityInventory = item[5]
+                info.RealityAmount = item[7]
+
+                $.each(selected_goods, function(index, item){
+                    $.each(item.list, function(index, good){
+                        if(good.orderIdx == info.OrderIdx && good.goodId == info.GoodId && good.idx == info.Idx){
+                            info.Inventory -= good.count
+                            info.Amount -= good.amount
+                        }
+                    })
+                })
+                list.push(info)
+            })
+
+            table.render({
+                elem: '#goods_table'
+                ,height: "full-10"
+                ,data: list
+                ,toolbar: '#goods_tools'
+                ,defaultToolbar: []
+                ,even: true //开启隔行背景
+                ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,id:"goods_list"
+                ,title:"列表"
+                ,pagebar: '#ID-table-demo-page-pagebar' // 分页栏模板
+                //,limits:[10,20,30,50,100,150,200,300,400,500,1000]
+                ,cols: [[
+                    {type: 'radio', align:'center', fixed: 'left', width: '5%'}
+                    ,{field:'LAY_NUM', title: '序号', align:'center', minWidth: 80, width: '5%'}
+                    ,{field:'GoodName', title: '商品名称', align:'center', width: '8%'}
+                    ,{field:'SupplierName', title: '供货商', align:'center', width: '15%'}
+                    ,{field:'Date', title: '入库日期', align:'center', width: '15%'}
+                    ,{field:'StoreName', title: '仓库', align:'center', width: '8%'}
+                    ,{field:'Unit', title: '单位', align:'center', width: '8%'}
+                    ,{field:'Price', title: '单价', align:'center', width: '8%'}
+                    ,{field:'Inventory', title: '数量', align:'center', width: '8%',}
+                    ,{field:'Amount', title: '库存金额', align:'center', width: '8%',}
+                ]]
+            });
+
+            table.on('radio(goods_table)', function(obj){
+                document.getElementById("goods_info").value = JSON.stringify(obj.data)
+            });
+
+        });
+
+    </script>
+</html>

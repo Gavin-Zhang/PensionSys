@@ -5,16 +5,23 @@
         <title>五龙背镇敬老院管理系统</title>
         <meta name="renderer" content="webkit|ie-comp|ie-stand">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Cache-Control" content="no-siteapp" />
         <link rel="stylesheet" href="./css/font.css">
         <link rel="stylesheet" href="./css/index.css">
         <link rel="stylesheet" href="./css/iconfont.css"> 
 		<link rel="stylesheet" href="../css/myiconfont/iconfont.css">
+		<link rel="stylesheet" href="./lib/layui/css/layui.css">
         <script src="./lib/layui/layui.js" charset="utf-8"></script>
         <script type="text/javascript" src="./js/index.js"></script>
 		<link rel="shortcut icon" href="../ico/favicon.ico" type="image/vnd.microsoft.icon">	
 		<link rel="bookmark" href="../ico/favicon.ico">
+		<style>
+			.layui-tab .layui-tab-title li {
+				font-size: 12px;
+				line-height: 35px;
+			}
+		</style>
 
     </head>
     <body class="index">
@@ -123,7 +130,7 @@
 			<li class="layui-nav-item">
 				<a href="javascript:;">
 					<i class="layui-icon left-nav-li" lay-tips="敬老院服务管理">&#xe62a;</i>
-					<cite>敬老院服务管理</cite>
+					<cite>服务管理</cite>
 					<i class="iconfont nav_right">&#xe697;</i>
 				</a>
 				<ul class="sub-menu">
@@ -173,6 +180,92 @@
 						</ul>
 					</li>
 				</ul> -->
+			</li>
+			<li class="layui-nav-item">
+				<a href="javascript:;">
+					<i class="layui-icon left-nav-li" lay-tips="库房管理">&#xe653;</i>
+					<cite>库房管理</cite>
+					<i class="iconfont nav_right">&#xe697;</i>
+				</a>
+				<ul class="sub-menu">
+					<li class="layui-nav-item">
+						<a href="javascript:;">
+							<i class="iconfont left-nav-li" lay-tips="基本资料">&#xe6b2;</i>
+							<cite>基本资料</cite>
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a onclick="xadmin.add_tab('库房管理-商品信息','store/basedata/basedata_goods.html')">
+									<i class="layui-icon left-nav-li">&#xe63c;</i>
+									<cite>商品信息</cite></a>
+							</li>
+							<li>
+								<a onclick="xadmin.add_tab('库房管理-库房信息','store/basedata/basedata_store.html')">
+									<i class="layui-icon left-nav-li">&#xe63c;</i>
+									<cite>库房信息</cite></a>
+							</li>
+							<li>
+								<a onclick="xadmin.add_tab('库房管理-供货商信息','store/basedata/basedata_supplier.html')">
+									<i class="layui-icon left-nav-li">&#xe63c;</i>
+									<cite>供货商信息</cite></a>
+							</li>
+							<li>
+								<a onclick="xadmin.add_tab('库房管理-期初','store/basedata/basedata_initial.html')">
+									<i class="layui-icon left-nav-li">&#xe63c;</i>
+									<cite>期初</cite></a>
+							</li>
+						</ul>
+					</li>
+					<li class="layui-nav-item">
+						<a href="javascript:;">
+							<i class="iconfont left-nav-li" lay-tips="订单管理">&#xe6b2;</i>
+							<cite>订单管理</cite>
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a onclick="xadmin.add_tab('订单管理-总览','store/order/order_base.html')">
+									<i class="layui-icon left-nav-li">&#xe698;</i>
+									<cite>总览</cite></a>
+							</li>
+							<li>
+								<a onclick="xadmin.add_tab('订单管理-入库单','store/order/order_purchase.html')">
+									<i class="layui-icon left-nav-li">&#xe698;</i>
+									<cite>入库单</cite></a>
+							</li>
+							<li>
+								<a onclick="xadmin.add_tab('库房管理-出库单','store/order/order_outbound.html')">
+									<i class="layui-icon left-nav-li">&#xe698;</i>
+									<cite>出库单</cite></a>
+							</li>
+						</ul>
+					</li>
+					<li class="layui-nav-item">
+						<a href="javascript:;">
+							<i class="iconfont left-nav-li" lay-tips="报表查询">&#xe6a2;</i>
+							<cite>报表查询</cite>
+							<i class="iconfont nav_right">&#xe697;</i>
+						</a>
+						<ul class="sub-menu">
+							<li>
+								<a onclick="xadmin.add_tab('库房管理-库存状况','store/query/query_inventory.html')">
+									<i class="layui-icon left-nav-li">&#xe6b2;</i>
+									<cite>库存状况</cite></a>
+							</li>
+							<li>
+								<a onclick="xadmin.add_tab('库房管理-库存明细','store/query/query_inventory_detailed.html')">
+									<i class="layui-icon left-nav-li">&#xe6b2;</i>
+									<cite>库存明细</cite></a>
+							</li>
+							<li>
+								<a onclick="xadmin.add_tab('库房管理-每日出入库','store/query/query_daily_inout.html')">
+									<i class="layui-icon left-nav-li">&#xe6b2;</i>
+									<cite>每日出入库</cite></a>
+							</li>
+						</ul>
+					</li>
+				</ul>
 			</li>
 			{{#  } else if(d.Power === 1){ }}
 				<li class="layui-nav-item">
@@ -298,7 +391,7 @@
         <!-- 左侧菜单结束 -->
         <!-- 右侧主体开始 -->
         <div class="page-content">
-            <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
+            <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="true">
                 <ul class="layui-tab-title">
                     <li class="home">
                         <i class="layui-icon">&#xe68e;</i>我的桌面</li></ul>

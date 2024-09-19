@@ -63,6 +63,7 @@ layui.define(['jquery', 'dropdown', 'table', 'form'], function (exports) {
                     }
                 });
             }
+            this.customRowCheckBack = config.selectTable.rowBack ?? null;
             this.render();
         };
 
@@ -70,7 +71,8 @@ layui.define(['jquery', 'dropdown', 'table', 'form'], function (exports) {
     Class.prototype.reloadSelectTable = function (selectTableConfig) {
         let config = this.config;
         layui.each(selectTableConfig, function (key, item) {
-            if (layui.type(item) === 'array') delete config.selectTable[key];
+            // if (layui.type(item) === 'array') delete config.selectTable[key];
+            if (config.selectTable[key] !== undefined) delete config.selectTable[key];
         });
         $.extend(true, config.selectTable, selectTableConfig);
         this.clearSelected();
@@ -134,7 +136,7 @@ layui.define(['jquery', 'dropdown', 'table', 'form'], function (exports) {
             selectTablesAddButtionId: selectTablesAddButtionId});
         
         let base = [
-            '<div class="chosen-window">',
+            '<div class="chosen-window" id="chosen-window" style="height:100%;">',
             '<script type="text/html" id="' + selectTableSearchFormId + '">',
             '<form class="layui-form layui-row">',
         ].join('');
@@ -187,6 +189,7 @@ layui.define(['jquery', 'dropdown', 'table', 'form'], function (exports) {
                 elem: '#' + tableId,
                 toolbar: '#' + config.selectTableSearchFormId,
                 defaultToolbar: ['filter'],
+                height: '#chosen-window-1',
                 done: function (res) {
                     that.iniDefaultSelected(res.data)
                 }
@@ -293,6 +296,9 @@ layui.define(['jquery', 'dropdown', 'table', 'form'], function (exports) {
 
     }
 
+    //自定义行点击事件后数据返回
+    Class.prototype.customRowCheckBack = null;
+
     //绑定行点击事件到选择表中
     Class.prototype.bindRowCheckToSelectTable = function () {
         let that = this,
@@ -325,6 +331,15 @@ layui.define(['jquery', 'dropdown', 'table', 'form'], function (exports) {
                 checked: checked
             });
             that.setSelectedDisplayAndValue();
+
+            if (checked && selectType === 'radio') {
+                dropdown.close(that.config.id)
+            }
+
+            if (that.customRowCheckBack != null) {
+                that.customRowCheckBack(obj.data)
+            }
+            
         });
     };
 
@@ -381,7 +396,7 @@ layui.define(['jquery', 'dropdown', 'table', 'form'], function (exports) {
                     displayObject = $(displayHtml).append(closeObject);
 
                 displayObject.attr({
-                    "style": "margin-left:5px;font-size:14px;padding:4px 6px"
+                    "style": options?.badgeStyle ?? "margin-left:5px;font-size:14px;padding:4px 6px"
                 });
 
                 //绑定鼠标事件

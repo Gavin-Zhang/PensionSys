@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="utf-8">
+        <title>
+            新增商品
+        </title>
+        <!-- 设置浏览器渲染引擎为Webkit，以确保页面在各种浏览器中的一致性 -->
+        <meta name="renderer" content="webkit">
+        <!-- 指定IE浏览器使用最新的渲染模式，支持HTML5和CSS3等特性 -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <!-- 控制移动设备的视口大小和缩放，优化移动浏览体验 -->
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <!-- 引入自定义字体文件，用于页面中的特殊字体展示 -->
+        <link rel="stylesheet" href="../../css/font.css">
+        <!-- 引入页面的主样式表，定义页面的布局和样式 -->
+        <link rel="stylesheet" href="../../css/index.css">
+        <!-- 引入dtree的样式文件，用于展示目录树结构 -->
+        <link rel="stylesheet" href="../../lib/dtree/dtree.css">
+        <!-- 引入dtree的字体文件，用于dtree中的图标显示 -->
+        <link rel="stylesheet" href="../../lib/dtree/font/dtreefont.css">
+        <!-- 引入layui库的JavaScript文件，用于页面的组件和功能支持 -->
+        <script src="../../lib/layui/layui.js" charset="utf-8"></script>
+        <!-- 引入页面的JavaScript文件，包含页面交互逻辑和功能实现 -->
+        <script type="text/javascript" src="../../js/index.js"></script>
+        <!-- 引入基础的JavaScript文件，可能包含一些全局的工具函数和配置 -->
+        <script type="text/javascript" src="../../../js/base.js"></script>
+    </head>
+
+    <body>
+        <div class="layui-form layui-form-pane" lay-filter="filter-test-layer" style="margin: 16px;">
+            <div class="demo-login-container">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">	
+                        <!-- 必填项提示 -->
+                        <span class='x-red'>*</span>仓库名称
+                    </div>
+                    <div class="layui-input-block">
+                        <!-- 商品名称输入字段，必填 -->
+                        <input type="text" id="name" name="name" lay-verify="required" autocomplete="off" value="" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-form-label">	
+                        仓库备注
+                    </div>
+                    <div class="layui-input-block">
+                        <!-- 商品名称输入字段，必填 -->
+                        <input type="text" id="remark" name="remark" autocomplete="off" value="" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">连续新增</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" checked id="open" lay-skin="switch" lay-filter="switchTest" title="开|关">
+                    </div>
+                </div>
+
+                <!-- 隐藏字段区域，用于存储类ID、拼音和首字母 -->
+                <div class="layui-form-item">
+                    <!-- 类名称的拼音字段，隐藏输入框，用于后续的拼音检索或排序 -->
+                    <input type="text" id="pinyin" name="pinyin" value="" class="layui-input" style="display:none;">
+                    <!-- 类名称的首字母字段，隐藏输入框，用于首字母快速检索 -->
+                    <input type="text" id="pinyinFirst" name="pinyinFirst" value="" class="layui-input" style="display:none;">
+                </div>
+                <div class="layui-form-item"></div>
+                <div class="layui-form-item"></div>
+                <div class="layui-form-item"></div>
+                <div class="layui-form-item"></div>
+                <div class="layui-form-item"></div>
+
+                <!-- 表单提交区域 -->
+                <div class="layui-form-item">
+                    <!-- 使用Flex布局，确保表单在不同屏幕尺寸下都有良好的展示效果 -->
+                    <div class="layui-row layui-col-space10">
+                        <!-- 主要内容区域，预留占位，后续可根据需求添加表单元素 -->
+                        <div class="layui-col-xs9 layui-col-sm9 layui-col-md9"></div>
+                        <!-- 提交按钮区域 -->
+                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                            <!-- 提交按钮，使用layui-btn-radius和layui-btn-normal样式定义按钮形状和颜色，通过lay-submit和lay-filter属性启用表单提交功能 -->
+                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid" lay-submit lay-filter="add"">保存</button>
+                        </div>
+                        <!-- 取消按钮区域 -->
+                        <div class="layui-col-xs1 layui-col-sm1 layui-col-md1">
+                            <!-- 取消按钮，通过onclick事件绑定到函数onExit，用于取消操作 -->
+                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid" type="button" onclick="onExit();">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        layui.extend({
+            pinyin: '{/}../../lib/pinyin/pinyin'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+        }).use(['form', 'layer', 'pinyin'], function(){
+            var form = layui.form
+            ,layer = layui.layer
+            ,pinyin = layui.pinyin;
+
+            $(document).ready(function () {
+                $("#name").blur(function () {
+                    var name = $(this).val();
+                    
+                    var pinyinstr = pinyin.ConvertPinyin(name);
+                    document.getElementById("pinyin").value = pinyinstr;
+
+                    var pinyinFirst = pinyin.makePy(name)[0];
+                    document.getElementById("pinyinFirst").value = pinyinFirst;
+                })
+            });
+
+            form.on('submit(add)', function(data){
+                // layer.alert(JSON.stringify(data.field), {
+                //     title: '最终的提交信息'
+                // });
+                // return;  
+                console.log(JSON.stringify(data.field));
+
+                var loading_idx = layer.load(2);
+
+                $.ajax({
+                    type: "post",
+                    data: JSON.stringify(data.field),
+                    dataType: "json",
+                    headers: {'Access-Control-Allow-Origin' : Domain, "Content-Type": "application/json"},
+                    xhrFields: {withCredentials: true},
+                    url: BasePathStore + "/addstore",
+                    success: function(result) {
+
+                        layer.close(loading_idx);
+
+                        if (result.code == 0) {
+                            // 获取open checked状态
+                            parent.ReloadTable();
+                            var open = $("#open").prop("checked");
+                            if (open) {
+                                // 清空name
+                                $("#name").val("");
+                                layer.msg("添加成功");
+                            } else {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            }
+                        } else {
+                            layer.msg(result.msg);
+                        }
+                    },
+                    error: function(result) {
+                        layer.close(loading_idx);
+                        layer.msg(result.msg);
+                    },
+                    
+                });
+                return false; // 阻止表单跳转
+            });
+        });
+
+
+
+        /**
+         * 当前窗口关闭函数
+         * 该函数用于在父窗口中关闭当前iframe窗口。它通过获取当前窗口的索引来实现关闭操作。
+         * 使用了layer.js库提供的方法来获取窗口索引并关闭窗口。
+         */
+        function onExit() {
+            // 获取当前iframe窗口在父窗口中的索引
+            var index = parent.layer.getFrameIndex(window.name);
+            // 关闭当前iframe窗口
+            parent.layer.close(index);
+        }
+
+    </script>
+</html>

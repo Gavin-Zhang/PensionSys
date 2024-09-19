@@ -1,0 +1,112 @@
+<!doctype html>
+<html class="x-admin-sm">
+    <head>
+      
+        <meta charset="UTF-8">
+        <meta name="renderer" content="webkit|ie-comp|ie-stand">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta http-equiv="Cache-Control" content="no-siteapp" />
+		    <script src="../../lib/layui/layui.js" charset="utf-8"></script>
+		    
+        <iframe src="../print_template/daily_inout.html" hidden="true"></iframe>
+    </head>
+
+    <style>
+      /* 通用样式 */
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+      }
+      
+      table {
+        border-collapse: collapse;
+        width: 100%; /* 调整宽度 */
+        margin: 5px;
+      }
+      
+      th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+      }
+      
+      .th_title {
+          border: 1px;
+          padding: 8px;
+          text-align: center;
+          font-size: 14px;
+      }
+      
+      .th_sub_title {
+          border: 1px;
+          padding: 8px;
+          text-align: left;
+      }
+      
+      
+      /* 打印样式 */
+      @media print {
+        body {
+          margin: 10;
+        }
+      
+        .container {
+          display: flex;
+          justify-content: space-between; 
+          align-items: center;
+        }
+      
+        .no-print {
+          display: none !important;
+        }
+
+         /* 确保表格宽度适应页面 */
+         table {
+            width: 100%;
+        }
+                
+        /* 确保表格内的内容不会溢出 */
+        td, th {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+      }
+    </style>
+
+    <body>
+      <div id="parent-container"></div>
+    </body>
+    
+    <script>
+      // 通过url获取参数
+      const params = new URLSearchParams(window.location.search);
+      const data = JSON.parse(params.get('data'));
+      console.log(data);
+
+      layui.use('laytpl', function(){
+        var laytpl = layui.laytpl;
+
+        var iframe = document.querySelector('iframe');
+
+        iframe.addEventListener('load', function(){
+          var iframeWindow = iframe.contentWindow;
+          var sprite = iframeWindow.document.getElementById('daily-page');
+
+          var container = document.getElementById('parent-container')
+          layui.laytpl(sprite.innerHTML).render(data, function(html){
+            container.innerHTML = html
+          })
+          // container.innerHTML = sprite.innerHTML
+          // console.log(document.body.innerHTML)
+
+          window.print();
+          setTimeout(() => {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+          }, 500)
+        })
+        
+      })
+    </script>
+</html>

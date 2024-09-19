@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="utf-8">
+    <title>
+        库存状况
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../css/font.css">
+    <link rel="stylesheet" href="../../css/index.css">
+    <link rel="stylesheet" href="../../lib/dtree/dtree.css">
+    <link rel="stylesheet" href="../../lib/dtree/font/dtreefont.css">
+    <link rel="stylesheet" href="../css/table.css">
+    <script src="../../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../../js/index.js"></script>
+    <script type="text/javascript" src="../../../js/base.js"></script>
+    <style>
+        .layui-fluid {
+            padding: 5px;
+        }
+        .layui-progress-big .layui-progress-text  {
+            color: #0800f1;
+        }
+
+        .chosen-area {
+		  display: inline-block;
+		  width:150px;
+		  min-height: 30px;
+		  border: 1px solid #cccccc;
+		  line-height: 30px;
+		  box-sizing: border-box;
+		  padding: 0px 10px;
+		}
+	
+		.chosen-area span {
+		  font-size: 13px;
+		  color: #000;
+		}
+	
+		.chosen-area:hover {
+		  border: 1px solid #16baaa;
+		  cursor: pointer;
+		}
+
+        .layui-form-label {
+            width: 60px;
+        }
+
+        .layui-input-block {
+            margin-left: 60px;
+            min-height: 36px
+        }
+    </style>
+</head>
+<body>
+
+    <div class="x-nav">
+        <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">库房管理</a>
+            <a href="">报表查询</a>
+            <a>
+            <cite>库存状况</cite></a>
+        </span>
+        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+            <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+        </a>
+    </div>
+
+    <div class="layui-fluid">
+        
+        <div class="layui-row layui-col-space5">
+            <div class="layui-row layui-col-space5">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body ">
+                            <form class="layui-form">
+                                <div class="layui-inline" id="daterange">
+                                    <label class="layui-form-label">日期</label>
+                                    <div class="layui-inline layui-show-xs-block layui-input-wrap">
+                                        <div class="layui-input-prefix">
+                                            <i class="layui-icon layui-icon-date"></i>
+                                          </div>
+                                        <input type="text" id="date" name="date"  placeholder="日期" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">供货商</label>
+                                    <div class="layui-inline layui-show-xs-block">
+                                        <select name="supplier" id="supplier" lay-filter="supplier">
+                                            <option value="">全部</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline">
+                                    <label class="layui-form-label">类别</label>
+                                    <div class="layui-inline layui-show-xs-block">
+                                        <select name="goods_class" id="goods_class" lay-filter="goods_class">
+                                            <option value="">全部</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-inline" style="margin-left: 30px; height: 33px;">
+                                    <button class="layui-btn"  lay-submit="" type="button" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                                </div>
+                                <div class="layui-inline"> 
+                                    <button class="layui-btn layui-btn-normal layui-btn-fluid" type="button" id="print" onclick="onPrint()">打印</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-col-md12">
+                            <div class="layui-card-header">入库单</div>
+                        </div>
+                        <table class="layui-hide" id="in_goods_table" lay-filter="in_goods_filter"></table>
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-card">
+                        <div class="layui-col-md12">
+                            <div class="layui-card-header">出库单</div>
+                        </div>
+                        <table class="layui-hide" id="out_goods_table" lay-filter="out_goods_filter"></table>
+                    </div>
+                </div>
+            </div>
+            
+        </div> 
+    </div>
+
+    <script type="text/html" id="fieldtool">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view">查看</a>
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
+    </script>
+
+    <script>
+
+        let loading_idx = null;
+        let load_flag = 0;
+        let class_map = new Map();
+        let supplier_map = new Map();
+        let last_where = {};
+        const load_in = 1;
+        const load_out = 2;
+        const load_finish = 3;
+
+        layui.use(['table', 'jquery', 'layer', 'form', "element", "laydate"], function()  {
+            var table = layui.table
+            var layer = layui.layer;
+            var form = layui.form;
+            var element = layui.element
+            var laydate = layui.laydate;
+            var  $ = layui.jquery;
+
+            laydate.render({
+                elem: '#date',
+                value: new Date(),
+            });
+
+            form.on('submit(sreach)', function(data){
+                reloadTable();
+            });
+
+            $.ajaxSetup({
+                headers: {'Access-Control-Allow-Origin' : Domain,},
+                xhrFields: {withCredentials: true},
+            });
+
+            table.render({
+                elem: '#in_goods_table'
+                ,height: 'full-160'//,height: 420
+                ,method: 'post'
+                ,even: true //开启隔行背景
+                ,totalRow: true //开启合计行
+                //,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,id:"in_table"
+                ,title:"列表"
+                ,className:"layui-table-testcss"
+                //,editTrigger: 'dblclick'
+                ,cols: [[
+                    {type: 'checkbox', fixed: 'left', LAY_CHECKED: "true"}
+                    ,{title: '序号', type:"numbers", align:'center',  width: '5%'}
+                    ,{field:'goodName', title: '商品名称', align:'center', width: '12%'}
+                    ,{field:'unit', title: '单位', align:'center',width: '8%'} 
+                    ,{field:'count', title: '数量', align:'center', width: '8%'}
+                    ,{field:'priceStr', title: '单价', align:'center', width: '12%', totalRowText: '合计'}
+                    ,{field:'amountStr', title: '金额', align:'center',  width: '12%', totalRowText: '合计金额'}
+                ]]
+                ,parseData: function(res){ //res 即为原始返回的数据
+                    if (res.code == 0) {
+                        //返回数据存在，进行数据处理
+                        $.each(res.data, function(index, item){
+                            item.priceStr = "¥ " + item.price.toFixed(2)
+                            item.amountStr = "¥ " + item.amount.toFixed(2)
+                        })
+
+                        return {
+                            "code": res.code, //解析接口状态
+                            "msg": res.message, //解析提示文本
+                            "count": res.count, //解析数据长度
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    if (res.code == 1001) {
+                        window.top.location.href = "../../../index.html";
+                    }
+
+                    return {
+                        "code": res.code, //解析接口状态
+                        "msg": res.message, //解析提示文本
+                        "count": res.count, //解析数据长度
+                        "data": [] //解析数据列表
+                    };
+                }
+                ,done: function(res, curr, count){
+                    let total_amount = 0;
+                    $.each(res.data, function(index, obj){
+                        total_amount += obj.amount;
+                    });
+                    this.elem.next().find('.layui-table-total td[data-field="amountStr"] .layui-table-cell').text("¥ " + total_amount.toFixed(2));
+                }
+            });
+
+            table.render({
+                elem: '#out_goods_table'
+                ,height: 'full-160'//,height: 420
+                // ,url: BasePathStore + '/getdailyinout?type=ORDER_OUT'
+                // ,where: {date: $("#date").val()}
+                ,method: 'post'
+                ,even: true //开启隔行背景
+                ,totalRow: true //开启合计行
+                ,id: "out_table"
+                ,title: "列表"
+                ,className: "layui-table-testcss"
+                //,editTrigger: 'dblclick'
+                ,cols: [[
+                    {type: 'checkbox', fixed: 'left', LAY_CHECKED: "true"}
+                    ,{title: '序号', type:"numbers", align:'center',  width: '5%'}
+                    ,{field:'goodName', title: '商品名称', align:'center', width: '12%'}
+                    ,{field:'unit', title: '单位', align:'center',width: '8%'} 
+                    ,{field:'count', title: '数量', align:'center', width: '8%'}
+                    ,{field:'priceStr', title: '单价', align:'center', width: '12%', totalRowText: '合计'}
+                    ,{field:'amountStr', title: '金额', align:'center',  width: '12%', totalRowText: '合计金额'}
+                ]]
+                ,parseData: function(res){ //res 即为原始返回的数据
+                    if (res.code == 0) {
+                        //返回数据存在，进行数据处理
+                        $.each(res.data, function(index, item){
+                            item.priceStr = "¥ " + item.price.toFixed(2)
+                            item.amountStr = "¥ " + item.amount.toFixed(2)
+                        })
+
+                        return {
+                            "code": res.code, //解析接口状态
+                            "msg": res.message, //解析提示文本
+                            "count": res.count, //解析数据长度
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    if (res.code == 1001) {
+                        window.top.location.href = "../../../index.html";
+                    }
+
+                    return {
+                        "code": res.code, //解析接口状态
+                        "msg": res.message, //解析提示文本
+                        "count": res.count, //解析数据长度
+                        "data": [] //解析数据列表
+                    };
+                }
+                ,done: function(res, curr, count){
+                    let total_amount = 0;
+                    $.each(res.data, function(index, obj){
+                        total_amount += obj.amount;
+                    });
+                    this.elem.next().find('.layui-table-total td[data-field="amountStr"] .layui-table-cell').text("¥ " + total_amount.toFixed(2));
+                }
+            });
+            reloadTable();
+
+            table.on('rowDouble(in_goods_filter)', function(obj) {
+                var data = obj.data; // 获取当前行数据
+                console.log(data);
+                var to = "store/order/order_info.html"
+                parent.xadmin.add_tab('订单信息【'+data.goodName+'-'+data.orderIdx+'】', to+"?orderId="+data.orderIdx);
+            });
+        });
+    </script>
+
+    <script>
+        function resetCondition() {
+            // $("#bgdate").val("");
+            // $("#eddate").val("");
+            // $("#order_type").val("");
+        }
+
+        function reloadTable() {
+            if (last_where.date != $("#date").val()) {
+                last_where.date = $("#date").val();
+            }
+            if (last_where.class != layui.$('#goods_class').val()) {
+                last_where.class = layui.$('#goods_class').val();
+            }
+            sreachDailyInOut(last_where);
+        }
+
+        function sreachDailyInOut(where) {
+            loading_idx = layer.msg('加载中', {
+                icon: 16,
+                shade: 0.01
+            });
+
+            Promise.all([
+                sreachDailyIn(where),
+                sreachDailyOut(where)
+            ]).then(resetSelect);
+        }
+
+        function sreachDailyIn(where) {
+            return new Promise((resolve) => {
+                layui.table.reload("in_table", {
+                    url: BasePathStore + '/getdailyinout?type=ORDER_IN',
+                    where: where,
+                    complete : function(xhr, ts) {
+                        resolve();
+                    }
+                })
+            })
+        }
+
+        function sreachDailyOut(where) {
+            return new Promise((resolve) => {
+                layui.table.reload("out_table", {
+                    url: BasePathStore + '/getdailyinout?type=ORDER_OUT',
+                    where: where,
+                    complete : function(xhr, ts) {
+                        resolve();
+                    }
+                })
+            })
+        }
+
+        function closeLoadingLayer() {
+            if (loading_idx != null) {
+                layui.layer.close(loading_idx);
+            }
+        }
+
+        function resetSelect() {
+            Promise.all([
+                resetSelectHandler()
+            ]).then(closeLoadingLayer);
+        }
+
+        function resetSelectHandler() {
+            return new Promise((resolve) => {
+                var class_select = document.getElementById("goods_class");
+                while (class_select.firstChild) {
+                    class_select.removeChild(class_select.firstChild);
+                }
+
+                var supplier_select = document.getElementById("supplier")
+                while (supplier_select.firstChild) {
+                    supplier_select.removeChild(supplier_select.firstChild);
+                }
+
+                var option = document.createElement("option");
+                option.text = "全部";
+                option.value = "";
+                class_select.appendChild(option);
+
+                var supplier_option = document.createElement("option");
+                supplier_option.text = "全部";
+                supplier_option.value = "";
+                supplier_select.appendChild(supplier_option)
+
+                class_map.clear()
+                supplier_map.clear()
+                layui.$.each(layui.table.cache['in_table'], function (index, item) {
+                    if (!class_map.has(item.class)) {
+                        class_map.set(item.class, item.className);
+                    }
+                    if (!supplier_map.has(item.supplier)) {
+                        supplier_map.set(item.supplier, item.supplierName);
+                    }
+                })
+
+                layui.$.each(layui.table.cache['out_table'], function (index, item) {
+                    if (!class_map.has(item.class)) {
+                        class_map.set(item.class, item.className);
+                    }
+                    if (!supplier_map.has(item.supplier)) {
+                        supplier_map.set(item.supplier, item.supplierName);
+                    }
+                })
+
+                class_map.forEach(function (value, key) {
+                    var option = document.createElement("option");
+                    option.text = value;
+                    option.value = key;
+                    class_select.appendChild(option);
+
+                    if (key == last_where.class) {
+                        class_select.value = key
+                    }
+                })
+                supplier_map.forEach(function(value, key) {
+                    var option = document.createElement("option");
+                    option.text = value;
+                    option.value = key;
+                    supplier_select.appendChild(option);
+
+                    if (key == last_where.supplier) {
+                        supplier_select.value = key
+                    }
+                })
+
+                layui.form.render();
+                resolve()
+            })
+        }
+
+        
+        function numberToChineseCapitalized(num) {
+            // 定义数字到大写汉字的映射
+            const cnNums = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
+            const cnUnits = ['', '拾', '佰', '仟'];
+            const cnBigUnit = ['', '万', '亿', '兆'];
+
+            let result = '';
+            let strNum = num.toString().split('.')[0]; // 只处理整数部分
+            let decimalPart = num.toString().includes('.') ? num.toString().split('.')[1] : ''; // 处理小数部分
+
+            // 将整数部分转换为大写
+            for (let i = 0; i < strNum.length; i++) {
+                let digit = strNum[i];
+                let unitIndex = strNum.length - i - 1;
+                let bigUnitIndex = Math.floor(unitIndex / 4);
+                let currentUnit = cnUnits[unitIndex % 4];
+                let currentBigUnit = cnBigUnit[bigUnitIndex];
+
+                // 如果当前位是0，并且前面不是0，则忽略
+                if (digit === '0' && result.match(/[^零]$/)) {
+                    continue;
+                }
+
+                // 如果连续出现多个0，则只保留一个“零”
+                if (digit === '0' && result.endsWith('零')) {
+                    continue;
+                }
+
+                result += cnNums[parseInt(digit)] + currentUnit;
+
+                // 如果当前位是0，则下一个单位前不需要加单位
+                if (digit !== '0') {
+                    result += currentBigUnit;
+                }
+            }
+
+            // 处理小数部分
+            if (decimalPart) {
+                result += '元';
+                result += '零' + decimalPart.split('').map(d => cnNums[d]).join('') + '分';
+            } else {
+                result += '元整';
+            }
+
+            return result;
+        }
+
+        function onPrint() {
+
+            var in_cache = []
+            layui.$.each(layui.table.cache['in_table'], function(idx, item){
+                if (item.LAY_CHECKED) {
+                    in_cache.push(item)
+                }
+            })
+
+            var daily_in = {
+                cache: in_cache,
+                total_amount: 0,
+                cache_count: 0,
+                page_count: 0
+            }
+
+            layui.$.each(daily_in.cache, function(idx, item){
+                daily_in.total_amount += item.amount;
+            })
+            daily_in.total_amount = Math.floor(daily_in.total_amount * 100) / 100
+            daily_in.amountStr = numberToChineseCapitalized(daily_in.total_amount)
+            daily_in.cache_count = daily_in.cache.length
+            daily_in.page_count = (Math.floor(daily_in.cache_count / 10) + 1)*10;
+
+            var out_cache = []
+            layui.$.each(layui.table.cache['out_table'], function(idx, item){
+                if (item.LAY_CHECKED) {
+                    out_cache.push(item)
+                }
+            })
+
+            var daily_out = {
+                cache: out_cache,
+                total_amount: 0,
+                cache_count: 0,
+                page_count: 0
+            }
+            layui.$.each(daily_out.cache, function(idx, item){
+                daily_out.total_amount += item.amount;
+            })
+            daily_out.total_amount =  Math.floor(daily_out.total_amount * 100) / 100
+            daily_out.amountStr = numberToChineseCapitalized(daily_out.total_amount)
+            daily_out.cache_count = daily_out.cache.length
+            daily_out.page_count = (Math.floor(daily_out.cache_count / 10) + 1)*10;
+
+            var goods_class = layui.$('#goods_class').find('option:selected').text();
+            goods_class = goods_class == "全部" ? "" : goods_class;
+
+            var print_data = {
+                date: layui.$('#date').val(),
+                class: goods_class,
+                in: daily_in,
+                out: daily_out,
+            }
+
+            layui.layer.open({
+                type: 2,
+                area: ['1px', '1px'],
+                offset: ['-100px', '-100px'],
+                fixed: false, //不固定
+                maxmin: true,
+                title: "-",
+                content: '../print/print_daily_inout.html?data=' + encodeURI(JSON.stringify(print_data)),
+                success:function(layero,index){
+                    layer.full(index);
+                }
+            })
+        }
+     </script>
+</body>
+</html>

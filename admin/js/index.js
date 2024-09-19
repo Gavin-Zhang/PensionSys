@@ -28,15 +28,23 @@
     }
   };
 
-	Xadmin.prototype.add_tab = function (title,url,is_refresh) {
-		var id = md5(url);//md5每个url
+	Xadmin.prototype.add_tab = function (title,url,is_refresh,idurl) {
 
+    var id = md5(url);//md5每个url
+    if(typeof idurl != "undefined"){
+      id = md5(idurl);
+    }
+	
 		//重复点击
 		for (var i = 0; i <$('.x-iframe').length; i++) {
             if($('.x-iframe').eq(i).attr('tab-id')==id){
                 element.tabChange('xbs_tab', id);
-                if(is_refresh)
-                    $('.x-iframe').eq(i).attr("src",$('.x-iframe').eq(i).attr('src'));
+                if(is_refresh) {
+                    var src = $('.x-iframe').eq(i).attr('src');
+                    if (src == url)
+                      return;
+                    $('.x-iframe').eq(i).attr("src", url);
+                }
                 return;
             }
         };
@@ -44,7 +52,6 @@
 		this.add_lay_tab(title,url,id);
 	    this.set_data(title,url,id);
 	    element.tabChange('xbs_tab', id);
-
 	}
 
   Xadmin.prototype.del_tab = function (id) {
@@ -54,6 +61,7 @@
     }else{
       var id = $(window.frameElement).attr('tab-id');
       parent.element.tabDelete('xbs_tab', id);
+      xadmin.del_data(id);
     }
   }
 
@@ -211,7 +219,7 @@ layui.use(['layer','element','jquery'],function() {
     //关闭tab清除记忆
     element.on('tabDelete(xbs_tab)', function(data){
         var id  = $(this).parent().attr('lay-id');
-        xadmin.del_data(id);
+        xadmin.del_data(data.id);
     });
     //左侧菜单
     $('.left-nav #nav').on('click', 'li', function(event) {

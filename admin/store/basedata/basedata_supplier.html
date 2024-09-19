@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="utf-8">
+    <title>
+        供货商信息
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../css/font.css">
+    <link rel="stylesheet" href="../../css/index.css">
+    <link rel="stylesheet" href="../../lib/dtree/dtree.css">
+    <link rel="stylesheet" href="../../lib/dtree/font/dtreefont.css">
+    <link rel="stylesheet" href="../css/table.css">
+    <script src="../../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../../js/index.js"></script>
+    <script type="text/javascript" src="../../../js/base.js"></script>
+</head>
+<body>
+
+    <div class="x-nav">
+        <span class="layui-breadcrumb">
+            <a href="">首页</a>
+            <a href="">库房管理</a>
+            <a href="">基本资料</a>
+            <a>
+            <cite>供货商信息</cite></a>
+        </span>
+        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+            <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+        </a>
+    </div>
+
+    <div class="layui-card">
+        <table class="layui-hide" id="supplier_table" lay-filter="supplier_table_filter"></table>
+    </div>
+
+    <div class="layui-card">
+        <div class="layui-form layui-form-pane layui-hide layui-anim" id="form_add" lay-filter="filter-test-layer" style="margin: 16px;">
+            <div class="demo-login-container">
+                <div style="padding: 32px;">新增供货商信息</div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">	
+                        <!-- 必填项提示 -->
+                        <span class='x-red'>*</span>供货单位
+                    </div>
+                    <div class="layui-input-block">
+                        <!-- 商品名称输入字段，必填 -->
+                        <input type="text" id="name" name="name" lay-verify="required" autocomplete="off" value="" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-form-label">	
+                        联系人
+                    </div>
+                    <div class="layui-input-block">
+                        <!--  联系人输入字段，非必填 -->
+                        <input type="text" id="contact" name="contact" autocomplete="off" value="" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-form-label">	
+                        联系电话
+                    </div>
+                    <div class="layui-input-block">
+                        <!-- 联系电话输入字段，非必填 -->
+                        <input type="text" id="phone" name="phone" autocomplete="off" value="" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-form-label">	
+                        备注
+                    </div>
+                    <div class="layui-input-block">
+                        <!-- 备注输入字段，非必填 -->
+                        <input type="text" id="remark" name="remark" autocomplete="off" value="" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">连续新增</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" checked id="open" lay-skin="switch" lay-filter="switchTest" title="开|关">
+                    </div>
+                </div>
+
+                <!-- 隐藏字段区域，用于存储类ID、拼音和首字母 -->
+                <div class="layui-form-item">
+                    <!-- 类名称的拼音字段，隐藏输入框，用于后续的拼音检索或排序 -->
+                    <input type="text" id="pinyin" name="pinyin" value="" class="layui-input" style="display:none;">
+                    <!-- 类名称的首字母字段，隐藏输入框，用于首字母快速检索 -->
+                    <input type="text" id="pinyinFirst" name="pinyinFirst" value="" class="layui-input" style="display:none;">
+                </div>
+
+                <div class="layui-form-item"></div>
+                <div class="layui-form-item"></div>
+
+                <!-- 表单提交区域 -->
+                <div class="layui-form-item">
+                    <!-- 使用Flex布局，确保表单在不同屏幕尺寸下都有良好的展示效果 -->
+                    <div class="layui-row layui-col-space10">
+                        <!-- 主要内容区域，预留占位，后续可根据需求添加表单元素 -->
+                        <div class="layui-col-xs9 layui-col-sm9 layui-col-md9"></div>
+                        <!-- 提交按钮区域 -->
+                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                            <!-- 提交按钮，使用layui-btn-radius和layui-btn-normal样式定义按钮形状和颜色，通过lay-submit和lay-filter属性启用表单提交功能 -->
+                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid" lay-submit lay-filter="add"">保存</button>
+                        </div>
+                        <!-- 取消按钮区域 -->
+                        <div class="layui-col-xs1 layui-col-sm1 layui-col-md1">
+                            <!-- 取消按钮，通过onclick事件绑定到函数onExit，用于取消操作 -->
+                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn-fluid" type="button" onclick="onExit();">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--工具栏模板-->
+    <script type="text/html" id="storelisttools">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" onclick="onAddStore();" lay-event="add">
+                <i class="layui-icon">&#xe61f;</i>新增
+            </button>
+        </div>
+    </script>
+
+    <script type="text/html" id="fieldtool">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
+    </script>
+
+    <script>
+
+        var supplier_table;
+        layui.extend({
+            pinyin: '{/}../../lib/pinyin/pinyin'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+        }).use(['table', 'jquery', 'layer', 'form', 'pinyin'], function()  {
+            var table = layui.table
+            var layer = layui.layer;
+            var form = layui.form;
+            var pinyin = layui.pinyin;
+            var $ = layui.jquery;
+
+            $.ajaxSetup({
+                headers: {'Access-Control-Allow-Origin' : Domain,},
+                xhrFields: {withCredentials: true},
+            });
+
+            supplier_table = table.render({
+                elem: '#supplier_table'
+                ,height: function() {
+                    var oh = $('#form_add').outerHeight();
+                    oh = $('#form_add').hasClass('layui-hide') ? 0 : (oh+20);
+                    return $(window).height() - oh - 60;
+                }
+                ,url: BasePathStore + '/getsuppliers'	
+                ,data: []
+                ,method: 'post'
+                ,page: true //开启分页
+                ,toolbar: '#storelisttools'//'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                ,defaultToolbar: ['filter', 'exports', 'print']
+                ,even: true //开启隔行背景
+                //,totalRow: true //开启合计行
+                ,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                ,id:"supplier_table"
+                ,title:"列表"
+                ,className:"layui-table-testcss"
+                ,limits:[10,20,30,50,100,150,200,300,400,500,1000]
+                ,limit: 20
+                ,cols: [[
+                    {field:'name', title: '名称', align:'center', minWidth: 100, width: '20%', fixed: 'left'}
+                    ,{field:'id', title: '编号', align:'center', minWidth: 180, width: '20%', hide: true}
+                    ,{field:'contact', title: '联系人', align:'center', width: '20%'}
+                    ,{field:'phone', title: '电话', align:'center', width: '20%'}
+                    ,{field:'remark', title: '备注', align:'center', width: '40%'}
+                    //,{title: '操作', align:'center', toolbar: '#fieldtool', minWidth: 150, width: '10%', fixed: 'right'}
+                ]]
+                ,parseData: function(res){ //res 即为原始返回的数据
+                    if (res.code == 0) {
+                        //返回数据存在，进行数据处理
+                        return {
+                            "code": res.code, //解析接口状态
+                            "msg": res.message, //解析提示文本
+                            "count": res.count, //解析数据长度
+                            "data": res.data //解析数据列表
+                        };
+                    }
+                    if (res.code == 1001) {
+                        window.top.location.href = "../../../index.html";
+                    }
+
+                    return {
+                        "code": res.code, //解析接口状态
+                        "msg": res.message, //解析提示文本
+                        "count": res.count, //解析数据长度
+                        "data": [] //解析数据列表
+                    };
+                }
+                ,done: function(res, curr, count){
+
+                }
+            });
+
+            $(document).ready(function () {
+                $("#name").blur(function () {
+                    var name = $(this).val();
+                    
+                    var pinyinstr = pinyin.ConvertPinyin(name);
+                    document.getElementById("pinyin").value = pinyinstr;
+
+                    var pinyinFirst = pinyin.makePy(name)[0];
+                    document.getElementById("pinyinFirst").value = pinyinFirst;
+                })
+            });
+
+            form.on('submit(add)', function(data){
+                    // layer.alert(JSON.stringify(data.field), {
+                    //     title: '最终的提交信息'
+                    // });
+                    // return;  
+                    console.log(JSON.stringify(data.field));
+
+                    var loading_idx = layer.load(2);
+
+                    $.ajax({
+                        type: "post",
+                        data: JSON.stringify(data.field),
+                        dataType: "json",
+                        headers: {'Access-Control-Allow-Origin' : Domain, "Content-Type": "application/json"},
+                        xhrFields: {withCredentials: true},
+                        url: BasePathStore + "/addsupplier",
+                        success: function(result) {
+
+                            layer.close(loading_idx);
+
+                            if (result.code == 0) {
+                                var open = $("#open").prop("checked");
+                                if (open) {
+                                    // 清空
+                                    $("#name").val("");
+                                    $("#contact").val("");
+                                    $("#phone").val("");
+                                    $("#remark").val("");
+                                    $("#pinyin").val("");
+                                    $("#pinyinFirst").val("");
+                                    supplier_table.reload();
+                                } else {
+                                    onExit();
+                                }
+                                layer.msg("添加成功");
+                            } else {
+                                layer.msg(result.msg);
+                            }
+                        },
+                        error: function(result) {
+                            layer.msg(result.msg);
+                        },
+                        
+                    });
+                    return false; // 阻止表单跳转
+                });
+        });
+
+
+        /**
+         * 添加店铺按钮的点击事件处理函数
+         * 
+         * 此函数在点击添加店铺按钮时被调用，负责显示添加店铺的表单，
+         * 调整表格高度，重新加载表格数据，并通过动画效果增强用户交互体验。
+         */
+        function onAddStore() {
+            // 显示添加店铺的表单
+            document.getElementById("form_add").classList.remove("layui-hide");
+
+            // 移除添加店铺表单的向上动画类
+            layui.$('#form_add').removeClass('layui-anim-up')
+            // 延迟执行，添加向上滑入的动画类
+            setTimeout(function(){
+                layui.$('#form_add').addClass('layui-anim-up'); // 给目标元素追加「往下滑入」的动画
+            });
+        }
+
+        /**
+         * 重新加载表格数据。
+         * 
+         * 该函数用于触发Layui表格的重新加载操作，目标是刷新具有指定ID的表格数据。
+         * 它在某些情况下非常有用，比如当需要根据新的查询条件或数据源更新表格内容时。
+         */
+        function reloadTable() {
+            supplier_table = layui.table.reload('store_table');
+        }
+    
+        /**
+         * 当前页面退出时执行的函数
+         * 该函数主要负责隐藏添加信息的表单，调整表格高度，并重新加载表格数据。
+         * 这样做的目的是为了在用户离开当前操作界面时，恢复界面到一个默认或初始的状态，
+         * 以便于下一个用户或操作能够看到一个干净的、准备好的界面。
+         */
+        function onExit() {
+            // 隐藏添加信息的表单
+            document.getElementById("form_add").classList.add("layui-hide");
+            // 重新加载表格数据，确保数据是最新的
+            supplier_table.reload();
+        }
+
+    </script>
+
+
+</body>
+</html>

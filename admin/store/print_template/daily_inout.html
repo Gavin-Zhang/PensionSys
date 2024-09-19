@@ -1,0 +1,107 @@
+<!doctype html>
+<html class="x-admin-sm">
+  <script id="daily-page" type="text/html">
+    <div class="container">
+      <table>
+        <thead>
+          <tr>
+            <th colspan="6" class="th_title">入库单</th>
+          </tr>
+          <tr>
+            <th colspan="5" class="th_sub_title">入库日期：{{= d.date }} </th>
+            <th class="th_sub_title">{{= d.class }}</th>
+          </tr>
+          <tr>
+            <th style="width: 12%;">序号</th>
+            <th>商品全名</th>
+            <th style="width: 12%;">单位</th>
+            <th style="width: 12%;">数量</th>
+            <th>单价</th>
+            <th>金额</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{# for(var i = 0; i < d.in.page_count; i++){ }}
+          <tr>
+            <td>{{= i+1 }}</td>
+              {{# if (i < d.in.cache_count) { }}
+                  <td>{{= d.in.cache[i].goodName }}</td>
+                  <td>{{= d.in.cache[i].unit }}</td>
+                  <td>{{= d.in.cache[i].count }}</td>
+                  <td>{{= d.in.cache[i].priceStr }}</td>
+                  <td>{{= d.in.cache[i].amountStr }}</td>
+              {{# } else { }}
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+              {{# } }}
+            </tr>
+          {{# }}}
+          
+          <tr>
+            <td>大写</td>
+            <td colspan="3" >{{= d.in.amountStr }}</td>
+            <td>小计</td>
+            <td>¥ {{= d.in.total_amount.toFixed(2) }}</td>
+          </tr>
+          <tr>
+            <td colspan="6" class="th_sub_title">验收人:</td>
+          </tr>
+        </tbody>
+      </table>
+
+    <!--<h2>表格1标题</h2>-->
+      <table>
+        <thead>
+          <tr>
+            <th colspan="6" class="th_title">出库单</th>
+          </tr>
+          <tr>
+            <th colspan="5" class="th_sub_title">出库日期：{{= d.date }} </th>
+            <th class="th_sub_title">{{= d.class }}</th>
+          </tr>
+          <tr>
+            <th style="width: 12%;">序号</th>
+            <th>商品全名</th>
+            <th style="width: 12%;">单位</th>
+            <th style="width: 12%;">数量</th>
+            <th>单价</th>
+            <th>金额</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{# for(var i = 0; i < d.out.page_count; i++){ }}
+          <tr>
+            <td>{{= i+1 }}</td>
+              {{# if (i < d.out.cache_count) { }}
+                  <td>{{= d.out.cache[i].goodName }}</td>
+                  <td>{{= d.out.cache[i].unit }}</td>
+                  <td>{{= d.out.cache[i].count }}</td>
+                  <td>{{= d.out.cache[i].priceStr }}</td>
+                  <td>{{= d.out.cache[i].amountStr }}</td>
+              {{# } else { }}
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+              {{# } }}
+            </tr>
+          {{# }}}
+          <tr>
+            <td>大写</td>
+            <td colspan="3" >{{= d.out.amountStr }}</td>
+            <td>小计</td>
+            <td>¥ {{= d.out.total_amount.toFixed(2) }}</td>
+          </tr>
+          <tr>
+            <td colspan="4" class="th_sub_title">验收人:</td>
+            <td colspan="2" class="th_sub_title">交物人:</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </script>
+</html>

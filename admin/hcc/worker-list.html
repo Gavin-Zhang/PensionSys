@@ -117,10 +117,14 @@
 				]]
 				,parseData: function(res){ //res 即为原始返回的数据
 					if (res.code == 0) {
+						const reg_id = /^(.{6})(?:\d+)(.{4})$/
+						const reg_phone = /^(.{3})(?:\d+)(.{4})$/
 						for(var tableitem of res.data[0]) {
 							console.log(tableitem)
 							tableitem["Sex"] = GetSex(tableitem.ChinaId)
 							tableitem["Age"] = GetAge(tableitem.ChinaId)
+							tableitem["ChinaId"] = tableitem.ChinaId.replace(reg_id, '\$1******\$2')
+							tableitem["Phone"] = tableitem.Phone.replace(reg_phone, '\$1****\$2')
 						}
 						return {
 						  "code": res.code, //解析接口状态
