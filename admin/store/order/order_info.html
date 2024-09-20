@@ -96,6 +96,8 @@
                 <b>出库单</b>
             {{# } else if(d.orderType == "ORDER_SETTLEMENT") { }}
                 <b>结算单</b>
+            {{# } else if(d.orderType == "ORDER_INIT") { }}
+                <b>期初单</b>
             {{# } else { }}
                 <b>未知</b>
             {{# } }}

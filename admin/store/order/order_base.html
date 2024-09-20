@@ -255,23 +255,32 @@
                             data.orderType = res.data[i].orderType
                             data.settlement = res.data[i].settlement
                             data.amount = res.data[i].amount
+                            data.store = res.data[i].storeName
+                            data.amountShow = data.amount == 0 ? "" :"¥ " + Number(data.amount).toFixed(2)
+                            data.settlementShow = data.settlement == 0 ? "" : "¥ " + Number(data.settlement).toFixed(2)
+                            data.info = res.data[i].info
+
                             switch (res.data[i].orderType) {
+                                case "ORDER_INIT": {
+                                    data.orderTypeShow = "期初单"
+                                    data.settlementShow = "——"
+                                } break;
                                 case "ORDER_IN": {
                                     data.orderTypeShow = "入库单"
                                 } break;
                                 case "ORDER_OUT": {
                                     data.orderTypeShow = "出库单"
+                                    data.supplier = "——"
+                                    data.settlementShow = "——"
                                 } break;
                                 case "ORDER_SETTLEMENT": {
                                     data.orderTypeShow = "结算单"
+                                    data.amountShow = "——"
                                     data.settlement = data.amount
                                     data.amount = 0
                                 } break;
                             }
-                            data.store = res.data[i].storeName
-                            data.amountShow = data.amount == 0 ? "" :"¥ " + Number(data.amount).toFixed(2)
-                            data.settlementShow = data.settlement == 0 ? "" : "¥ " + Number(data.settlement).toFixed(2)
-                            data.info = res.data[i].info
+                            
                             tabledata.push(data)
                         }
 

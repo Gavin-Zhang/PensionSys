@@ -530,6 +530,8 @@
                 out: daily_out,
             }
 
+            layui.data("store", {key: "daily_inout_print", value: print_data})
+
             layui.layer.open({
                 type: 2,
                 area: ['1px', '1px'],
@@ -537,7 +539,7 @@
                 fixed: false, //不固定
                 maxmin: true,
                 title: "-",
-                content: '../print/print_daily_inout.html?data=' + encodeURI(JSON.stringify(print_data)),
+                content: '../print/print_daily_inout.html',
                 success:function(layero,index){
                     layer.full(index);
                 }

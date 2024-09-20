@@ -33,22 +33,44 @@
     </div>
 
     <div class="layui-card">
-        <div class="layui-btn-container">
-            <button type="button" class="layui-btn layui-btn-normal" id="ID-upload-demo-choose">选择文件</button>
-            <button type="button" class="layui-btn" id="ID-upload-demo-action">开始上传</button>
+        <hr class="ws-space-16">
+        <div class="layui-inline">
+            <label class="layui-form-label"><span class='x-red'>*</span>单据日期</label>
+            <div class="layui-input-inline layui-input-wrap">
+                <div class="layui-input-prefix">
+                    <i class="layui-icon layui-icon-date"></i>
+                </div>
+                <input type="text" id="date" name="date" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-btn-container">
+                <button type="button" class="layui-btn layui-btn-normal" id="ID-upload-demo-choose">选择xmlx文件</button>
+                <button type="button" class="layui-btn" id="ID-upload-demo-action">开始上传</button>
+            </div>
         </div>
     </div>
     
     
 
     <script>
-        layui.use(['table', 'jquery', 'layer', 'form'], function()  {
+        layui.use(['table', 'jquery', 'layer', 'form', 'laydate'], function()  {
             var upload = layui.upload;
+            var $ = layui.jquery;
+            var layer = layui.layer;
+            var laydate = layui.laydate;
+            var gloab = layui.data('yl-user');
 
             $.ajaxSetup({
                 headers: {'Access-Control-Allow-Origin' : Domain,},
                 xhrFields: {withCredentials: true},
             });
+
+            laydate.render({
+                elem: '#date',
+                value: new Date(),
+            });
+
             // 渲染
             upload.render({
                 elem: '#ID-upload-demo-choose',
@@ -57,6 +79,12 @@
                 accept: "file",
                 acceptMime: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 bindAction: '#ID-upload-demo-action',
+                data: {
+                    handler: gloab.user["UserName"],
+                    handleDate: function(){
+                        return $('#date').val();
+                    },
+                },
                 done: function(res){
                     
                     if (res.code == 0) {

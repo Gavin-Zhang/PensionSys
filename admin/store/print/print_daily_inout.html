@@ -80,14 +80,18 @@
     
     <script>
       // 通过url获取参数
-      const params = new URLSearchParams(window.location.search);
-      const data = JSON.parse(params.get('data'));
-      console.log(data);
+      // const params = new URLSearchParams(window.location.search);
+      // const data = JSON.parse(params.get('data'));
+      // console.log(data);
 
       layui.use('laytpl', function(){
         var laytpl = layui.laytpl;
 
         var iframe = document.querySelector('iframe');
+
+        var local = layui.data("store");
+        var data = local.daily_inout_print;
+        layui.data("store", {key: 'daily_inout_print', remove: true})
 
         iframe.addEventListener('load', function(){
           var iframeWindow = iframe.contentWindow;
