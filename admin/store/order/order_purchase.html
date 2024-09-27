@@ -71,6 +71,10 @@
         .layui-input {
             width: 200px;
         }
+
+        .layui-input-50 {
+            width: 150%;
+        }
 	  </style>
 </head>
 <body>
@@ -126,6 +130,16 @@
                         </div>
                     </div>
                     <br>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline" style="width: 610px;">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-inline layui-input-wrap">
+                            <input type="text" id="remark" name="remark" lay-verify="required" autocomplete="off" lay-affix="clear" class="layui-input" style="width: 518px;">
+                        </div>
+                    </div> 
+
                     <div class="layui-inline">
                         <label class="layui-form-label">同入同出</label>
                         <div class="layui-input-inline layui-input-wrap">
@@ -136,11 +150,13 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">连续开单</label>
                         <div class="layui-input-inline layui-input-wrap">
-                            <input type="checkbox" id="continue" lay-skin="switch" lay-filter="switchTest" title="开|关" checked>
+                            <input type="checkbox" id="continue" lay-skin="switch" lay-filter="switchTest" title="开|关">
                         </div>
                     </div> 
                 </div>
             </div> 
+
+            
 
             <div class="layui-card">
                 <div class="layui-field-box">
@@ -208,7 +224,7 @@
             t = table.render({
                 elem: '#order_table'
                 ,height: function() {
-                    return $(window).height() - $('#base_div').outerHeight() - 170;
+                    return $(window).height() - $('#orderadd').outerHeight() - 90;
                 }
                 ,data: []
                 ,method: 'post'
@@ -228,7 +244,7 @@
                     ,{field:'name', title: '商品名称', align:'center', width: '18%', templet:'#TPL-dropdpwn-demo', fixed: 'left'}
                     ,{field:'unit', title: '单位', align:'center', width: '11%'}
                     ,{field:'price', title: '单价', align:'center', width: '8%'}
-                    ,{field:'count', title: '数量', align:'center', width: '8%', totalRow: '{{= d.TOTAL_NUMS }}'}
+                    ,{field:'count', title: '数量', align:'center', width: '8%', totalRowText: '{{= d.TOTAL_NUMS }}'}
                     ,{field:'amount_bd_show', title: '折前总价', align:'center', width: '8%', totalRowText: '{{= d.TOTAL_NUMS }}'}
                     ,{field:'discountShow', title: '优惠', align:'center', width: '8%', totalRowText: '{{= d.TOTAL_NUMS }}'}
                     ,{field:'amountShow', title: '实际总价', align:'center', width: '8%', totalRowText: '{{= d.TOTAL_NUMS }}'}
@@ -239,14 +255,17 @@
                     let total_amount = 0;
                     let total_amount_bd = 0;
                     let total_discount = 0;
+                    let total_count = 0;
                     $.each(res.data, function(index, obj){
                         total_amount += obj.amount;
                         total_amount_bd += obj.amount_bd;
                         total_discount += obj.discount;
+                        total_count += (obj.count * 100)
                     });
                     this.elem.next().find('.layui-table-total td[data-field="amountShow"] .layui-table-cell').text("¥ " + total_amount.toFixed(2));
                     this.elem.next().find('.layui-table-total td[data-field="discountShow"] .layui-table-cell').text("¥ " + total_discount.toFixed(2));
                     this.elem.next().find('.layui-table-total td[data-field="amount_bd_show"] .layui-table-cell').text("¥ " + total_amount_bd.toFixed(2));
+                    this.elem.next().find('.layui-table-total td[data-field="count"] .layui-table-cell').text(total_count / 100);
                 }
             });
 
@@ -272,10 +291,9 @@
                         var value = elemMark.val();
 
                         var obj = JSON.parse(value);
-                        console.log("--->", obj)
                         obj.amountShow = "¥ " + obj.amount.toFixed(2);
                         obj.amount_bd_show = "¥ " + obj.amount_bd.toFixed(2)
-                        obj.discountShow = "¥ " + obj.discount.toFixed(2);
+                        obj.discountShow = obj.discount == 0 ? "——" : "¥ " + obj.discount.toFixed(2);
 
                         let cache = layui.table.cache['order_list'];
                         $.each(cache, function(index, item){
@@ -397,7 +415,7 @@
         function onAddGoods() {
             layer.open({
                 type: 2,
-                area: ['80%', '80%'],
+                area: ['75%', '85%'],
                 fixed: false, //不固定
                 maxmin: true,
                 title: "入库单-添加商品",
@@ -418,7 +436,7 @@
                     var obj = JSON.parse(value);
                     obj.amountShow = "¥ " + obj.amount.toFixed(2);
                     obj.amount_bd_show = "¥ " + obj.amount_bd.toFixed(2)
-                    obj.discountShow = "¥ " + obj.discount.toFixed(2);
+                    obj.discountShow = obj.discount == 0 ? "——" : "¥ " + obj.discount.toFixed(2);
                     let cache = layui.table.cache['order_list'];
                     cache.push(obj);
                     layui.table.reloadData('order_list', {data:cache})
@@ -438,6 +456,7 @@
                     iframeWin.$("#remark").val("") ;
                     iframeWin.$("#goods_info").val("") ;
                     iframeWin.layui.dropdownTable.clearSelected("goodsSelect")
+                    iframeWin.resetGoodInfo();
                 }
             });
         }
@@ -492,11 +511,12 @@
             obj.handler = document.getElementById('handler').value;
             obj.goods = layui.table.cache['order_list'];
             obj.AutoOut = $("#autoout").prop("checked");
+            obj.remark = document.getElementById('remark').value;
             obj.amount = 0;
             obj.info = ""
 
             obj.goods.forEach((item, idx) => {
-                item.count = parseInt(item.count);
+                item.count = parseFloat(item.count);
                 item.price = parseFloat(item.price);
                 item.amount = parseFloat(item.amount);
                 obj.amount = obj.amount + item.amount;

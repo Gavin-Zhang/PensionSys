@@ -21,7 +21,7 @@
       table {
         border-collapse: collapse;
         width: 100%; /* 调整宽度 */
-        margin: 5px;
+        margin: 10px;
       }
       
       th, td {
@@ -46,8 +46,15 @@
       
       /* 打印样式 */
       @media print {
+        @page {
+          margin-top: 10mm;
+          margin-right: 5mm;
+          margin-bottom: 10mm;
+          margin-left: 5mm;
+        }
+
         body {
-          margin: 10;
+          margin: 2mm;
         }
       
         .container {

@@ -183,7 +183,6 @@
             var year = now.getFullYear();
             var month = (now.getMonth() + 1).toString().padStart(2, '0');
             var day = (now.getDate()).toString().padStart(2, '0');
-
             // 计算2个月前的日期
             var twoMonthsAgoMonth = now.getMonth() - 2   
             var twoMonthsAgoYear = year
@@ -192,11 +191,9 @@
                 twoMonthsAgoMonth += 12
             }
             var tmaMonth = (twoMonthsAgoMonth+1).toString().padStart(2, '0');
-
             //获得当前月的最后一天
             var lastDay = new Date(year, month, 0);
             var lastDay = lastDay.getDate();
-
             var value = `${twoMonthsAgoYear}-${tmaMonth}-01 - ${year}-${month}-${lastDay}`;
             laydate.render({
                 elem: '#daterange'
@@ -273,11 +270,11 @@
                     ,{title: '出库', align:'center', minWidth: 80, width: '6%', colspan: 2}
                     ,{title: '库存', align:'center', minWidth: 80, width: '6%', colspan: 2}
                 ],[
-                    {field:"inCount", title: '入库数量', align:'center', minWidth: 80, width: '7%', totalRow: '{{= d.TOTAL_NUMS}}'}
+                    {field:"inCount", title: '入库数量', align:'center', minWidth: 80, width: '7%', totalRowText: '{{= d.TOTAL_NUMS}}'}
                     ,{field:'inAmountShow', title: '入库金额', align:'center', minWidth: 100, width: '9%'}
-                    ,{field:"outCount", title: '出库数量', align:'center', minWidth: 80, width: '7%', totalRow: '{{= d.TOTAL_NUMS}}'}
+                    ,{field:"outCount", title: '出库数量', align:'center', minWidth: 80, width: '7%', totalRowText: '{{= d.TOTAL_NUMS}}'}
                     ,{field:'outAmountShow', title: '出库金额', align:'center', minWidth: 100, width: '9%'}
-                    ,{field:'inventory', title: '库存余量', align:'center', minWidth: 80, width: '7%', totalRow: '{{= d.TOTAL_NUMS}}'}
+                    ,{field:'inventory', title: '库存余量', align:'center', minWidth: 80, width: '7%', totalRowText: '{{= d.TOTAL_NUMS}}'}
                     ,{field:'amountShow', title: '库存余额', align:'center', minWidth: 100, width: '9%'}
                 ]]
                 ,parseData: function(res){ //res 即为原始返回的数据
@@ -292,7 +289,23 @@
                             res.data[i].outAmountShow = res.data[i].outAmount == 0 ? "" : "¥ " +  res.data[i].outAmount.toFixed(2);
                             res.data[i].amountShow = "¥ " +  res.data[i].amount.toFixed(2)
 
-                            res.data[i].orderTypeStr = res.data[i].orderType == "ORDER_IN" ? "入库单" : "出库单";
+                            switch (res.data[i].orderType) {
+                                case "ORDER_INIT": {
+                                    res.data[i].orderTypeStr = "期初单";
+                                } break;
+                                case "ORDER_IN": {
+                                    res.data[i].orderTypeStr = "入库单";
+                                } break;
+                                case "ORDER_OUT": {
+                                    res.data[i].orderTypeStr = "出库单";
+                                } break;
+                                case "ORDER_SETTLEMENT": {
+                                    res.data[i].orderTypeStr = "结算单";
+                                } break;
+                                default: {
+                                    res.data[i].orderTypeStr = "未知单据类型";
+                                }
+                            }
                         }
 
                         return {
@@ -316,16 +329,26 @@
                 done: function(res, cur, count) {
                     let total_in_amount = 0;
                     let total_out_amount = 0;
-                    let total_inventory_amount = 0;
+                    //let total_inventory_amount = 0;
+
+                    let total_in_count = 0;
+                    let total_out_count = 0;
                     $.each(res.data, function(index, obj){
-                        total_in_amount += obj.inAmount;
-                        total_out_amount += obj.outAmount;
-                        total_inventory_amount += obj.amount
+                        total_in_amount += (obj.inAmount*100);
+                        total_out_amount += (obj.outAmount*100);
+                        //total_inventory_amount += obj.amount
+
+                        total_in_count += (obj.inCount*100)
+                        total_out_count += (obj.outCount*100)
                     });
 
-                    this.elem.next().find('.layui-table-total td[data-field="inAmountShow"] .layui-table-cell').text("¥ " + total_in_amount.toFixed(2));
-                    this.elem.next().find('.layui-table-total td[data-field="outAmountShow"] .layui-table-cell').text("¥ " + total_out_amount.toFixed(2));
-                    this.elem.next().find('.layui-table-total td[data-field="amountShow"] .layui-table-cell').text("¥ " + total_inventory_amount.toFixed(2));
+                    this.elem.next().find('.layui-table-total td[data-field="inAmountShow"] .layui-table-cell').text("¥ " + (total_in_amount/100).toFixed(2));
+                    this.elem.next().find('.layui-table-total td[data-field="outAmountShow"] .layui-table-cell').text("¥ " + (total_out_amount/100).toFixed(2));
+                    this.elem.next().find('.layui-table-total td[data-field="amountShow"] .layui-table-cell').text("¥ " + ((total_in_amount-total_out_amount)/100).toFixed(2));
+                
+                    this.elem.next().find('.layui-table-total td[data-field="inCount"] .layui-table-cell').text(total_in_count / 100);
+                    this.elem.next().find('.layui-table-total td[data-field="outCount"] .layui-table-cell').text(total_out_count / 100);
+                    this.elem.next().find('.layui-table-total td[data-field="inventory"] .layui-table-cell').text((total_in_count - total_out_count) / 100);
                 }
             });
 

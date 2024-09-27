@@ -122,7 +122,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">连续开单</label>
                         <div class="layui-input-inline layui-input-wrap">
-                            <input type="checkbox" id="continue" lay-skin="switch" lay-filter="switchTest" title="开|关" checked>
+                            <input type="checkbox" id="continue" lay-skin="switch" lay-filter="switchTest" title="开|关">
                         </div>
                     </div> 
                 </div>
@@ -146,15 +146,21 @@
 
     <script type="text/html" id="ID-table-demo-page-pagebar">
         <div class="layui-btn-container">
-          <button class="layui-btn layui-btn-sm" lay-event="footerDemoBtn1" style="width: 150px;" onclick="onSubmit();">立即提交</button>
+            <button class="layui-btn layui-btn-sm" lay-event="footerDemoBtn1" style="width: 150px;" onclick="onSubmit();">立即提交</button>
         </div>
-      </script>
+    </script>
 
     <!--工具栏模板-->
     <script type="text/html" id="goods_tools">
         <div class="layui-btn-group">
-            <button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" type="button" onclick="onAddGoods();" lay-event="add">
+            <button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" type="button" id="add_goods" onclick="onAddGoods();" lay-event="add">
                 <i class="layui-icon" style="font-size: 20px">&#xe61f;</i>
+            </button>
+            <button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" type="button" id="import_goods" onclick="onImportGoods();" lay-event="import">
+                <i class="layui-icon" style="font-size: 20px">&#xe63c;</i>
+            </button>
+            <button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" type="button" id="clear_goods" onclick="onClearGoods();" lay-event="clear">
+                <i class="layui-icon" style="font-size: 20px">&#xe639;</i>
             </button>
         </div>
     </script>
@@ -244,7 +250,7 @@
                     ,{field:'name', title: '商品名称', align:'center', width: '25%', templet:'#TPL-dropdpwn-demo', fixed: 'left'}
                     ,{field:'supplierName', title: '供货商', align:'center', width: '11%'}
                     ,{field:'unit', title: '单位', align:'center', width: '11%'}
-                    ,{field:'count', title: '数量', align:'center', width: '13%', totalRow: '{{= d.TOTAL_NUMS }}'}
+                    ,{field:'count', title: '数量', align:'center', width: '13%', totalRowText: '0'}
                     ,{field:'priceShow', title: '单价', align:'center', width: '13%'}
                     ,{field:'amountShow', title: '金额', align:'center', width: '13%', totalRowText: '¥ 0.00'}
                     // ,{field:'remark', title: '备注', align:'center', width: '20%'}
@@ -252,22 +258,89 @@
                 ]],
                 done: function(res, cur, count) {
                     let total_amount = 0;
+                    let total_count = 0;
                     $.each(res.data, function(index, obj){
                         total_amount += obj.amount;
+                        total_count += (obj.count * 100)
                     });
-                    console.log("total_amount:", total_amount)
                     this.elem.next().find('.layui-table-total td[data-field="amountShow"] .layui-table-cell').text("¥ " + total_amount.toFixed(2));
+                    this.elem.next().find('.layui-table-total td[data-field="count"] .layui-table-cell').text(total_count / 100);
                 }
             });
 
-            table.on('rowDouble(test)', function(obj) {
-                var data = obj.data; // 获取当前行数据
+            table.on('tool(test)', function(obj){
+                var data = obj.data; // 得到当前行数据
+                var dataCache = obj.dataCache; // 得到当前行缓存数据，包含特定字段 --- 2.8.8+
+                var index = obj.index; // 得到当前行索引
+                var layEvent = obj.event; // 获得元素对应的 lay-event 属性值
 
-                console.log(data)
-
+                if(layEvent === 'delete'){ //删除
+                    layer.confirm('确定删除'+data.name+'*'+data.count+data.unit+'吗？', function(index){
+                        var cache = table.cache['order_list']
+                        for (var i = 0; i < cache.length; i++) {
+                            if (cache[i].LAY_NUM == dataCache.LAY_NUM) {
+                                cache.splice(i, 1);
+                                break;
+                            }
+                        }
+                        table.reloadData('order_list', {
+                            scrollPos: 'fixed',
+                            data: cache
+                        });
+                        layer.close(index);
+                    });
+                }
             });
 
+            $(document).ready(function() {
+                initButtionsTip();
+            });
         });
+
+        function initButtionsTip() {
+            document.getElementById("add_goods").addEventListener('mouseover', function(){
+                var timer = setTimeout(() => {
+                    layui.layer.tips('添加商品', document.getElementById('add_goods'), {
+                        tips: [1, '#16b777']
+                    });
+                }, 1000);
+
+                // 给按钮添加鼠标离开事件，清除定时器并关闭tip
+                document.getElementById('add_goods').addEventListener('mouseout', function(){
+                    clearTimeout(timer);
+                    layui.layer.closeAll('tips');
+                });
+            })
+
+            document.getElementById("import_goods").addEventListener('mouseover', function(){
+                var timer = setTimeout(() => {
+                    layui.layer.tips('通过订单导入商品', document.getElementById('import_goods'), {
+                        tips: [1, '#16b777']
+                    });
+                }, 1000);
+
+                // 给按钮添加鼠标离开事件，清除定时器并关闭tip
+                document.getElementById('import_goods').addEventListener('mouseout', function(){
+                    clearTimeout(timer);
+                    layui.layer.closeAll('tips');
+                });
+            })
+
+            document.getElementById("clear_goods").addEventListener('mouseover', function(){
+                var timer = setTimeout(() => {
+                    layui.layer.tips('删除所有商品', document.getElementById('clear_goods'), {
+                        tips: [1, '#16b777']
+                    });
+                }, 1000);
+
+                // 给按钮添加鼠标离开事件，清除定时器并关闭tip
+                document.getElementById('clear_goods').addEventListener('mouseout', function(){
+                    clearTimeout(timer);
+                    layui.layer.closeAll('tips');
+                });
+            })
+
+        }
 
 
         function onAddGoods() {
@@ -304,10 +377,6 @@
                     
                     var obj = JSON.parse(value);
                     let cache = layui.table.cache['order_list'];
-
-                    console.log("obj:", obj)
-
-
                     if (obj.count <= 0) {
                         layer.msg("数量不能为0", {icon: 5});
                     }
@@ -317,7 +386,6 @@
                     $.each(goods_list, function(index, obj){
                         let add = false
                         $.each(cache, function(index, info){
-                            console.log(info, obj)
                             if(!add && info.goodId === obj.id && info.price === obj.price && info.supplier == obj.supplier){
                                 info.count += obj.count;
                                 info.amount += obj.amount
@@ -375,9 +443,6 @@
                         }
                     })
                     
-
-
-                    console.log("table:", cache)
                     layui.table.reload('order_list', {data:cache})
 
                     iframeWin.$("#class").val("") ;
@@ -397,6 +462,93 @@
                     }
                 }
             });
+        }
+
+        function onImportGoods() {
+            layer.open({
+                type: 2,
+                area: ['80%', '720px'],
+                fixed: false, //不固定
+                maxmin: true,
+                title: "出库单-添加商品",
+                content: 'order_outbound_goods_import.html',
+                shadeClose: true,
+                scrollbar: false,
+                btn: ['确定', '取消'],
+                yes: function(index, layero, that){
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; 
+                    var elemMark = iframeWin.$('#order_id'); // 获得 iframe 中某个输入框元素
+                    var orderId = elemMark.val();
+                    if (orderId == "") {
+                        iframeWin.layui.layer.msg("请先选择要导入的订单！", {icon: 5})
+                        return;
+                    }
+
+                    var elemMark = iframeWin.$('#store_id'); 
+                    var storeId = elemMark.val();
+                    if (storeId == "") {
+                        iframeWin.layui.layer.msg("数据错误，无法完成导入！", {icon: 5})
+                        return;
+                    }
+
+                    var data = {orderId: orderId}
+                    $.ajax({
+                        url: BasePathStore + '/getordergoods',
+                        headers: {'Access-Control-Allow-Origin' : Domain, "Content-Type": "application/json"},
+                        type: 'POST',
+                        dataType: 'json',
+                        data: JSON.stringify(data),
+                        success: function (res) {
+                            if (res.code == 0) {
+                                var table_cache = layui.table.cache['order_list'];
+                                // 清空table_cache
+                                table_cache.splice(0,table_cache.length);
+
+                                $.each(res.data, function(idx, item){
+                                    console.log(idx, item)
+                                    let inData = {}
+                                    inData.LAY_NUM = item.idx
+                                    inData.name = item.goodsName
+                                    inData.goodId = item.goodId
+                                    inData.price = item.price
+                                    inData.priceShow = "¥ " + item.price.toFixed(2)
+                                    inData.unit = item.unit
+                                    inData.count = item.count
+                                    inData.amount = item.amount
+                                    inData.amountShow = "¥ " + item.amount.toFixed(2)
+                                    inData.supplier = item.supplier
+                                    inData.supplierName = item.supplierName
+                                    inData.list = []
+                                    let listData = {}
+                                    listData.orderIdx = item.orderIdx
+                                    listData.goodId = item.goodId
+                                    listData.idx = item.idx
+                                    listData.count = item.count
+                                    listData.amount = item.amount
+                                    listData.store = storeId
+                                    listData.supplier = item.supplier
+                                    inData.list.push(listData)
+                                    table_cache.push(inData)
+                                })
+
+                                layui.table.reload('order_list', {data:table_cache})
+                                layui.layer.close(index)
+                            } else if(res.code==1001) {
+                                window.top.location.href = "../../index.html";
+                                return false;
+                            } else {
+                                layer.msg(res.msg,{icon:5,time:5000});
+                                resolve();
+                                return false;
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        function onClearGoods() {
+            layui.table.reloadData("order_list", {data: []})
         }
 
         function VerifyAddForm(frame_win) {
@@ -433,7 +585,7 @@
             obj.info = ""
 
             obj.goods.forEach((item, idx) => {
-                item.count = parseInt(item.count);
+                item.count = parseFloat(item.count);
                 item.price = parseFloat(item.price);
                 item.amount = parseFloat(item.amount);
                 obj.amount = obj.amount + item.amount;
@@ -443,8 +595,6 @@
                     sub.idx = parseInt(sub.idx);
                 })
             });
-
-            console.log(obj)
 
             $.ajax({
                 type: "post",
@@ -476,6 +626,14 @@
         }
 
         function VerifyForm() {
+            var store = document.getElementById('store').value;
+            if (store == '') {
+                layui.layer.tips('请选择出货仓库', document.getElementById('storeSelect'), {
+                    tips: [1, '#16b777']
+                });
+                return;
+            }
+
             var indate = document.getElementById('indate').value;
             if (indate == '') {
                 layui.layer.tips('请选择入库日期', document.getElementById('indate'), {

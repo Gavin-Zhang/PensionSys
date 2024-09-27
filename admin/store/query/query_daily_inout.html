@@ -94,19 +94,19 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="layui-inline">
+                                <!-- <div class="layui-inline">
                                     <label class="layui-form-label">类别</label>
                                     <div class="layui-inline layui-show-xs-block">
                                         <select name="goods_class" id="goods_class" lay-filter="goods_class">
                                             <option value="">全部</option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="layui-inline" style="margin-left: 30px; height: 33px;">
                                     <button class="layui-btn"  lay-submit="" type="button" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
                                 </div>
-                                <div class="layui-inline"> 
-                                    <button class="layui-btn layui-btn-normal layui-btn-fluid" type="button" id="print" onclick="onPrint()">打印</button>
+                                <div class="layui-inline" style="margin-left: 5px; height: 33px;"> 
+                                    <button class="layui-btn" type="button" id="print" onclick="onPrint()">打印</button>
                                 </div>
                             </form>
                         </div>
@@ -361,37 +361,43 @@
 
         function resetSelectHandler() {
             return new Promise((resolve) => {
-                var class_select = document.getElementById("goods_class");
-                while (class_select.firstChild) {
-                    class_select.removeChild(class_select.firstChild);
-                }
+                // var class_select = document.getElementById("goods_class");
+                // while (class_select.firstChild) {
+                //     class_select.removeChild(class_select.firstChild);
+                // }
+
+                // var option = document.createElement("option");
+                // option.text = "全部";
+                // option.value = "";
+                // class_select.appendChild(option);
+
+                // class_map.clear()
+                // layui.$.each(layui.table.cache['in_table'], function (index, item) {
+                //     if (!class_map.has(item.class)) {
+                //         class_map.set(item.class, item.className);
+                //     }
+                //     if (!supplier_map.has(item.supplier)) {
+                //         supplier_map.set(item.supplier, item.supplierName);
+                //     }
+                // })
+
+                // class_map.forEach(function (value, key) {
+                //     var option = document.createElement("option");
+                //     option.text = value;
+                //     option.value = key;
+                //     class_select.appendChild(option);
+
+                //     if (key == last_where.class) {
+                //         class_select.value = key
+                //     }
+                // })
 
                 var supplier_select = document.getElementById("supplier")
                 while (supplier_select.firstChild) {
                     supplier_select.removeChild(supplier_select.firstChild);
                 }
 
-                var option = document.createElement("option");
-                option.text = "全部";
-                option.value = "";
-                class_select.appendChild(option);
-
-                var supplier_option = document.createElement("option");
-                supplier_option.text = "全部";
-                supplier_option.value = "";
-                supplier_select.appendChild(supplier_option)
-
-                class_map.clear()
                 supplier_map.clear()
-                layui.$.each(layui.table.cache['in_table'], function (index, item) {
-                    if (!class_map.has(item.class)) {
-                        class_map.set(item.class, item.className);
-                    }
-                    if (!supplier_map.has(item.supplier)) {
-                        supplier_map.set(item.supplier, item.supplierName);
-                    }
-                })
-
                 layui.$.each(layui.table.cache['out_table'], function (index, item) {
                     if (!class_map.has(item.class)) {
                         class_map.set(item.class, item.className);
@@ -401,26 +407,31 @@
                     }
                 })
 
-                class_map.forEach(function (value, key) {
-                    var option = document.createElement("option");
-                    option.text = value;
-                    option.value = key;
-                    class_select.appendChild(option);
+                if (supplier_map.length > 1) {
+                    var supplier_option = document.createElement("option");
+                    supplier_option.text = "全部";
+                    supplier_option.value = "";
+                    supplier_select.appendChild(supplier_option)
 
-                    if (key == last_where.class) {
-                        class_select.value = key
-                    }
-                })
-                supplier_map.forEach(function(value, key) {
-                    var option = document.createElement("option");
-                    option.text = value;
-                    option.value = key;
-                    supplier_select.appendChild(option);
+                    supplier_map.forEach(function(value, key) {
+                        var option = document.createElement("option");
+                        option.text = value;
+                        option.value = key;
+                        supplier_select.appendChild(option);
 
-                    if (key == last_where.supplier) {
+                        if (key == last_where.supplier) {
+                            supplier_select.value = key
+                        }
+                    })
+                } else {
+                    supplier_map.forEach(function(value, key) {
+                        var option = document.createElement("option");
+                        option.text = value;
+                        option.value = key;
+                        supplier_select.appendChild(option);
                         supplier_select.value = key
-                    }
-                })
+                    })
+                }
 
                 layui.form.render();
                 resolve()
@@ -520,12 +531,12 @@
             daily_out.cache_count = daily_out.cache.length
             daily_out.page_count = (Math.floor(daily_out.cache_count / 10) + 1)*10;
 
-            var goods_class = layui.$('#goods_class').find('option:selected').text();
-            goods_class = goods_class == "全部" ? "" : goods_class;
+            var supplier = layui.$('#supplier').find('option:selected').text();
+            supplier = supplier == "全部" ? "" : supplier;
 
             var print_data = {
                 date: layui.$('#date').val(),
-                class: goods_class,
+                supplier: supplier,
                 in: daily_in,
                 out: daily_out,
             }

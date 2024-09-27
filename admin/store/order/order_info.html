@@ -104,9 +104,19 @@
         </label>
     </script>
     <script id="settlementScript" type="text/html">
-        {{# if(d.orderType == "ORDER_IN") { }}
-            <button class="layui-btn" type="button" onclick="settlement()" lay-filter="settlement">结算</button>
-        {{# } }}
+        <div class="layui-inline">
+            <div class="layui-input-block">
+                {{# if(d.orderType == "ORDER_IN") { }}
+                    {{# if(d.settlement != d.amount) { }}
+                        <button class="layui-btn" type="button" onclick="settlement()" lay-filter="settlement">结算</button>
+                    {{# } else { }}
+                        <!-- <button class="layui-btn" type="button" onclick="toOrderInfo()" lay-filter="settlement">查看结算单</button> -->
+                    {{# } }}
+                {{# } else if(d.orderType == "ORDER_SETTLEMENT") { }}
+                    <button class="layui-btn" type="button" onclick="toOrderInfo()" lay-filter="settlement">查看入库单</button>
+                {{# } }}
+            </div>
+        </div>
     </script>
 
     
@@ -153,9 +163,19 @@
                         </div>
                     </div>
 
+                    
+                    
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline" style="width: 610px;">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-inline layui-input-wrap">
+                            <input type="text" id="remark" name="remark" lay-verify="required" autocomplete="off" lay-affix="clear" class="layui-input" style="width: 518px;" disabled>
+                        </div>
+                    </div> 
                     <div class="layui-inline" id="settlementDiv"></div>
                     <br>
-                    
                 </div>
             </div> 
 
@@ -179,9 +199,10 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         const orderId = params.get('orderId')
-        const orderType = params.get('orderType')
+        //const orderType = params.get('orderType')
 
         var order_data = {}
+        var loading_idx = null
         layui.use(['table', 'jquery', 'layer', 'form', 'laydate', 'laytpl'], function()  {
             var table = layui.table
             var layer = layui.layer;
@@ -208,7 +229,7 @@
             table.render({
                 elem: '#order_table'
                 ,height: function() {
-                    return $(window).height() - $('#base_div').outerHeight() - 170;
+                    return $(window).height() - $('#orderInfo').outerHeight() - 50;
                 }
                 ,data: []
                 ,method: 'post'
@@ -239,16 +260,19 @@
                     let total_amount_bd = 0;
                     let total_discount = 0;
                     let total_settlement = 0;
+                    let total_count = 0;
                     $.each(res.data, function(index, obj){
                         total_amount += obj.amount;
                         total_amount_bd += obj.amount_bd;
                         total_discount += obj.discount;
                         total_settlement += obj.settlement;
+                        total_count += (obj.count * 100)
                     });
                     this.elem.next().find('.layui-table-total td[data-field="amount_bd_show"] .layui-table-cell').text("¥ " + total_amount_bd.toFixed(2));
                     this.elem.next().find('.layui-table-total td[data-field="discount_show"] .layui-table-cell').text("¥ " + total_discount.toFixed(2));
                     this.elem.next().find('.layui-table-total td[data-field="amount_show"] .layui-table-cell').text("¥ " + total_amount.toFixed(2));
                     this.elem.next().find('.layui-table-total td[data-field="settlement_show"] .layui-table-cell').text("¥ " + total_settlement.toFixed(2));
+                    this.elem.next().find('.layui-table-total td[data-field="count"] .layui-table-cell').text(total_count / 100);
                 }
             });
 
@@ -258,75 +282,96 @@
         function initPage() {
             loadOrderInfo();
             loadOrderGoods();
+
+            loading_idx = layer.msg('加载中', {
+                icon: 16,
+                shade: 0.01
+            });
+
+            Promise.all([loadOrderInfo()]).then(initOrderGoods);
+        }
+
+        function initOrderGoods() {
+            Promise.all([loadOrderGoods()]).then(closeLoadingLayer);
+        }
+
+        function closeLoadingLayer() {
+            if (loading_idx != null) {
+                layui.layer.close(loading_idx);
+            }
         }
 
         function loadOrderInfo() {
-            var data = {orderId: orderId}
-            console.log(data)
-            $.ajax({
-                url: BasePathStore + '/getorderinfo',
-                headers: {'Access-Control-Allow-Origin' : Domain, "Content-Type": "application/json"},
-                type: 'POST',
-                dataType: 'json',
-                data: JSON.stringify(data),
-                success: function (res) {
-                    if (res.code == 0) {
-                        initOrderTypeTitle(res.data[0])
-                        initOrderInfo(res.data[0])
-                    } else if(res.code==1001) {
-                        window.top.location.href = "../../index.html";
-                        return false;
-                    } else {
-                        layer.msg(res.msg,{icon:5,time:5000});
-                        return false;
+            return new Promise((resolve) => {
+                var data = {orderId: orderId}
+                $.ajax({
+                    url: BasePathStore + '/getorderinfo',
+                    headers: {'Access-Control-Allow-Origin' : Domain, "Content-Type": "application/json"},
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(data),
+                    success: function (res) {
+                        if (res.code == 0) {
+                            initOrderTypeTitle(res.data[0])
+                            initOrderInfo(res.data[0])
+                            resolve();
+                        } else if(res.code==1001) {
+                            window.top.location.href = "../../index.html";
+                            return false;
+                        } else {
+                            layer.msg(res.msg,{icon:5,time:5000});
+                            resolve();
+                            return false;
+                        }
                     }
-                }
+                })
             })
         }
 
         function loadOrderGoods() {
-            var data = {orderId: orderId}
-            console.log(data)
-            $.ajax({
-                url: BasePathStore + '/getordergoods',
-                headers: {'Access-Control-Allow-Origin' : Domain, "Content-Type": "application/json"},
-                type: 'POST',
-                dataType: 'json',
-                data: JSON.stringify(data),
-                success: function (res) {
-                    if (res.code == 0) {
-                        var table_cache = layui.table.cache['order_list'];
-                        // 清空table_cache
-                        table_cache.splice(0,table_cache.length);
+            return new Promise((resolve) => {
+                var data = {orderId: orderId}
+                $.ajax({
+                    url: BasePathStore + '/getordergoods',
+                    headers: {'Access-Control-Allow-Origin' : Domain, "Content-Type": "application/json"},
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(data),
+                    success: function (res) {
+                        if (res.code == 0) {
+                            var table_cache = layui.table.cache['order_list'];
+                            // 清空table_cache
+                            table_cache.splice(0,table_cache.length);
 
-                        $.each(res.data, function(idx, item){
-                            item.LAY_NUM = item.sourceOrder == "" ? item.idx : item.scoureIdx;
+                            $.each(res.data, function(idx, item){
+                                item.LAY_NUM = item.sourceOrder == "" ? item.idx : item.scoureIdx;
+                                if (order_data.order.orderType == "ORDER_OUT") {
+                                    item.settlement = item.amount
+                                }
 
-                            if (orderType == "ORDER_OUT") {
-                                item.settlement = item.amount
-                            }
+                                item.price_show = ("¥ " + item.price.toFixed(2));
+                                item.amount_bd_show = item.amount_bd == 0 ? "" : ("¥ " + item.amount_bd.toFixed(2));
+                                item.discount_show = item.discount == 0 ? "" : ("¥ " + item.discount.toFixed(2));
+                                item.amount_show = ("¥ " + item.amount.toFixed(2));
+                                item.settlement_show = item.settlement == 0 ? "" : ("¥ " + item.settlement.toFixed(2));
 
-                            item.price_show = ("¥ " + item.price.toFixed(2));
-                            item.amount_bd_show = item.amount_bd == 0 ? "" : ("¥ " + item.amount_bd.toFixed(2));
-                            item.discount_show = item.discount == 0 ? "" : ("¥ " + item.discount.toFixed(2));
-                            item.amount_show = ("¥ " + item.amount.toFixed(2));
-                            item.settlement_show = item.settlement == 0 ? "" : ("¥ " + item.settlement.toFixed(2));
+                                table_cache.push(item)
+                            })
 
-                            table_cache.push(item)
-                        })
+                            order_data.goods = table_cache
+                            layui.table.reload('order_list', {data:table_cache})
+                            resolve();
 
-                        order_data.goods = table_cache
-                        layui.table.reload('order_list', {data:table_cache})
-                        
-
-                    } else if(res.code==1001) {
-                        window.top.location.href = "../../index.html";
-                        return false;
-                    } else {
-                        layer.msg(res.msg,{icon:5,time:5000});
-                        return false;
+                        } else if(res.code==1001) {
+                            window.top.location.href = "../../index.html";
+                            return false;
+                        } else {
+                            layer.msg(res.msg,{icon:5,time:5000});
+                            resolve();
+                            return false;
+                        }
                     }
-                }
+                })
             })
         }
 
@@ -349,20 +394,41 @@
                 document.getElementById("supplierDiv").classList.add("layui-hide")
             }
 
+            console.log(data)
+
             layui.$("#order_id").val(data.orderIdx)
             layui.$("#supplier").val(data.supplier_name)
             layui.$("#store").val(data.store_name)
             layui.$("#indate").val(data.buildDate.substr(0, 10))
             layui.$("#handler").val(data.handler)
+            layui.$("#remark").val(data.remark)
+            
 
             order_data.order = data;
         }
 
         function settlement() {
-            console.log("settlement", order_data)
             console.log(layui.data("store_settlement", {key:"order", value: order_data}))
-            
-            parent.xadmin.add_tab('库房管理-订单信息', "store/order/order_settlement.html");
+            parent.xadmin.add_tab('库房管理-订单结算', "store/order/order_settlement.html");
+        }
+
+        function toOrderInfo() {
+            var to = "store/order/order_info.html"
+
+            var title = "";
+            var order_idx = null;
+            switch (order_data.order.orderType) {
+                case "ORDER_IN": {
+                    title = "入库单" 
+                }break;
+                case "ORDER_SETTLEMENT": {
+                    title = "入库单"
+                    order_idx = order_data.order.sourceOrder
+                }break;
+            }
+
+            title = title + "[" + order_idx + "]"     
+            parent.xadmin.add_tab(title, to+"?orderId="+order_idx);
         }
         
     </script>

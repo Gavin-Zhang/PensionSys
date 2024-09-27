@@ -101,16 +101,6 @@
 
                 <div class="layui-form-item">
                     <div class="layui-form-label">	
-                        <span class='x-red'>*</span>数量
-                    </div>
-                    <div class="layui-input-block">
-                        <!-- 数量输入字段，必填 -->
-                        <input type="text" id="count" name="count" autocomplete="off" value="" class="layui-input" onblur="onInputCount()" disabled>
-                    </div>
-                </div>
-
-                <div class="layui-form-item">
-                    <div class="layui-form-label">	
                         <span class='x-red'>*</span>单价
                     </div>
                     <div class="layui-input-block">
@@ -121,16 +111,29 @@
 
                 <div class="layui-form-item">
                     <div class="layui-form-label">	
+                        <span class='x-red'>*</span>数量
+                    </div>
+                    <!-- <div class="layui-input-block"> -->
+                    <div class="layui-input-inline layui-input-wrap" style="width: 70%;">
+                        <!-- 数量输入字段，必填 -->
+                        <input type="text" id="count" name="count" autocomplete="off" value="" class="layui-input" onblur="onInputCount()" disabled>
+                    </div>
+                    <div class="layui-form-mid layui-text-em" id="inventory_show">库存数量:</div>
+                </div>              
+
+                <div class="layui-form-item">
+                    <div class="layui-form-label">	
                         <span class='x-red'>*</span>总价
                     </div>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline layui-input-wrap" style="width: 70%;">
                         <!-- 总价输入字段，必填 -->
                         <input type="text" id="amount" name="amount" placeholder="￥" autocomplete="off" value="" class="layui-input" disabled>
                     </div>
+                    <div class="layui-form-mid layui-text-em" id="inventory_amount_show">库存金额:</div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">连续添加</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-block"></div>
                         <input type="checkbox" checked id="open" lay-skin="switch" lay-filter="switchTest" title="开|关">
                     </div>
                 </div>
@@ -238,7 +241,6 @@
         });
 
         function onGoodSelectBack(obj) {
-            console.log("onGoodSelectBack",obj)
             select_goods = obj
 
             document.getElementById("unit").value = obj.unit;
@@ -293,7 +295,6 @@
                             info.StoreName = result.data[0].storeName
                             info.Supplier = result.data[0].supplier
                             info.SupplierName = result.data[0].supplierName
-                            console.log("--》", result)
                             $.each(selected_goods, function(index, item){
                                 $.each(item.list, function(index, good){
                                     console.log("good:", good, "info", info)
@@ -349,16 +350,16 @@
         }
 
         function onSelectGood(info) {
-            console.log("onSelectGood", typeof info)
             goods_info.outData = info
             goods_info.supplier = info.Supplier
             goods_info.price = Number(info.Price)
             goods_info.inventory = Number(info.Inventory)
-            console.log("onSelectGood", goods_info)
-            document.getElementById("count").placeholder = "库存数量：" + info.Inventory
-            document.getElementById("amount").placeholder = "库存余额：" + Number(info.Amount).toFixed(2)
+            goods_info.count = info.Inventory
+            document.getElementById("count").value = info.Inventory
+            document.getElementById("inventory_show").innerHTML = "库存数量：" + info.Inventory
+            document.getElementById("inventory_amount_show").innerHTML = "库存金额：" + Number(info.Amount).toFixed(2)
             document.getElementById("price").value= goods_info.price.toFixed(2)
-            resetBack()
+            onInputCount()
         }
 
         /**
@@ -376,7 +377,7 @@
             }
 
             // 如果输入的数量不是数字，则提示用户并清空输入框
-            if (!VerifyValue("number", count)) {
+            if (!VerifyValue("float", count)) {
                 layui.layer.tips('请输入正确的数量', dom, {
                     tips: [1, '#16b777']
                 });
@@ -432,6 +433,9 @@
                 case "number":
                     // 纯数字格式
                     regex = /^\d+$/;
+                    break;
+                case "float":
+                    regex = /^\d+(\.\d+)?$/;
                     break;
                 default:
                     // 如果类型不是"price"或"number"，返回false

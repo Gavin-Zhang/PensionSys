@@ -117,9 +117,9 @@
                             </div>
 
                             <div class="layui-inline">
-                                <label class="layui-form-label" style="color: blue;">供货单位</label>
+                                <label class="layui-form-label">供货单位</label>
                                 <div class="layui-input-block">
-                                    <input type="hidden" id="supplier" name="supplier" autocomplete="off" lay-verify="required">
+                                    <input type="hidden" id="supplier" name="supplier" autocomplete="off">
                                     <a class="chosen-area" id="supplierSelect"></a>
                                 </div>
                             </div>
@@ -134,10 +134,10 @@
                             </div>
                             
                             <div class="layui-inline layui-show-xs-block">
-                                <button class="layui-btn" type="button" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+                                <button class="layui-btn" lay-submit="" type="button" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
                             </div>
                             <div class="layui-inline layui-show-xs-block">
-                                <button class="layui-btn" type="button" lay-filter="reset"><i class="layui-icon">&#xe788;</i></button>
+                                <button class="layui-btn" lay-submit="" type="button" lay-filter="reset"><i class="layui-icon">&#xe788;</i></button>
                             </div>
                         </form>
                     </div>
@@ -175,7 +175,7 @@
     <script type="text/html" id="TPL-settlement">
         {{# if(d.orderType == "ORDER_IN") { }}
             {{# if(d.settlement == d.amount) {}}
-                <span style="color: #05fc16;">{{= d.settlementShow}}</span>
+                <span style="color: #000000;">{{= d.settlementShow}}</span>
             {{# } else {}}
                 <span style="color: #FF5722;">{{= d.settlementShow}}</span>
             {{# }}}
@@ -213,7 +213,7 @@
 
             table.render({
                 elem: '#order_table'
-                ,height: 'full-110'//,height: 420
+                ,height: 'full-120'//,height: 420
                 ,url: BasePathStore + '/getorders'	
                 ,where: table_where
                 ,data: []
@@ -240,7 +240,8 @@
                     ,{field:'amountShow', title: '金额', align:'center', minWidth: 30, width: '8%'}
                     //,{field:'settlement_progress', title: '结算', align:'center', minWidth: 30, width: '12%', templet: '#TPL-settlement'}
                     ,{field:'settlementShow', title: '结算', align:'center', minWidth: 30, width: '8%', templet: '#TPL-settlement'}
-                    ,{field:'info', title: '信息', align:'left', minWidth: 50, width: '49%'}
+                    ,{field:'info', title: '信息', align:'left', minWidth: 50, width: '18%'}
+                    ,{field:'remark', title: '备注', align:'left', minWidth: 50, width: '19%'}
                     //,{title: '操作', align:'center', toolbar: '#fieldtool', minWidth: 150, width: '10%', fixed: 'right'}
                 ]]
                 ,parseData: function(res){ //res 即为原始返回的数据
@@ -259,6 +260,8 @@
                             data.amountShow = data.amount == 0 ? "" :"¥ " + Number(data.amount).toFixed(2)
                             data.settlementShow = data.settlement == 0 ? "" : "¥ " + Number(data.settlement).toFixed(2)
                             data.info = res.data[i].info
+                            data.remark = res.data[i].remark
+                            console.log(res.data[i])
 
                             switch (res.data[i].orderType) {
                                 case "ORDER_INIT": {
@@ -275,9 +278,8 @@
                                 } break;
                                 case "ORDER_SETTLEMENT": {
                                     data.orderTypeShow = "结算单"
-                                    data.amountShow = "——"
-                                    data.settlement = data.amount
-                                    data.amount = 0
+                                    //data.amountShow = "——"
+                                    data.settlementShow = "——"
                                 } break;
                             }
                             
@@ -317,7 +319,25 @@
             table.on('rowDouble(order_table_filter)', function(obj) {
                 var data = obj.data; // 获取当前行数据
                 var to = "store/order/order_info.html"
-                parent.xadmin.add_tab('库房管理-订单信息', to+"?orderId="+data.orderIdx+"&orderType="+data.orderType, true, to);
+
+                var title = "";
+                switch (data.orderType) {
+                    case "ORDER_IN": {
+                        title = "入库单" 
+                    }break;
+                    case "ORDER_OUT": {
+                        title = "出库单"
+                    }break;
+                    case "ORDER_INIT": {
+                        title = "期初单"
+                    }break;
+                    case "ORDER_SETTLEMENT": {
+                        title = "结算单"
+                    }break;
+                }
+                title = title + "[" + data.orderIdx + "]" 
+                
+                parent.xadmin.add_tab(title, to+"?orderId="+data.orderIdx+"&orderType="+data.orderType);
             });
 
             var dropdown_table_supplier_select = { 
@@ -387,7 +407,6 @@
             if (table_where.bgDate == bgDate && table_where.eddate == edDate && table_where.orderType == orderType && table_where.supplier == supplier) {
                 return;
             }
-
             table_where.bgDate = bgDate;
             table_where.edDate = edDate;
             table_where.orderType = orderType;
