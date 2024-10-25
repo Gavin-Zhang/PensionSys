@@ -606,11 +606,12 @@
 			,data: JSON.parse(local["Contacts"])
 			,editTrigger: 'dblclick'
 			,cols: [[
+				{type:'radio', field:'main', title: '监护人', width: '5%', fixed: 'left'}
 				,{field:'id', width: '1%', align:'center', title: '序号', hide: true}
 				,{field:'name', width: '10%', align:'center', title: '姓名'}
 				,{field:'phone', width: '20%', align:'center', title: '联系电话'}
 				,{field:'relationship', width: '10%', align:'center', title: '与老人关系'}
-				,{field:'address', width: '49%', align:'center', title: '家庭住址'}
+				,{field:'address', width: '44%', align:'center', title: '家庭住址'}
 				,{field:'op', title: '操作', width: '10%', align:'center', toolbar: '#fieldtool', fixed: 'right'}
 			]]
 		});

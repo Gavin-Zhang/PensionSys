@@ -638,17 +638,53 @@
                 </td>
                 <td></td>
             </tr>
-            <tr height="41.67" style='height:41.00pt;'>
-                <td class="borderSet layui-font-20" height="125.00" rowspan="3" x:str>担保人<br/>（有权决定老人入住所有事项）</td>
-                <td class="borderSet-left layui-font-20" colspan="2" x:str><span>&nbsp;</span>姓名：</td>
-                <td class="borderSet-left layui-font-20" colspan="3" x:str><span>&nbsp;</span>与老人关系：</td>
-                <td class="borderSet-left layui-font-20" colspan="4" x:str><span>&nbsp;</span>手机：</td>
-                <td></td>
-            </tr>
-            <tr height="41.67" style='height:41.00pt;'>
-                <td class="borderSet-left layui-font-20" colspan="9" x:str><span>&nbsp;</span>家庭地址：</td>
-                <td></td>
-            </tr>
+
+            
+            {{# if(typeof d.ContactData === 'undefined' || d.ContactData == null){ }}
+                <tr height="41.67" style='height:41.00pt;'>
+                    <td class="borderSet layui-font-20" height="125.00" rowspan="3" x:str>担保人<br/>（有权决定老人入住所有事项）</td>
+                    <td class="borderSet-left layui-font-20" colspan="2" x:str><span>&nbsp;</span>姓名：</td>
+                    <td class="borderSet-left layui-font-20" colspan="3" x:str><span>&nbsp;</span>与老人关系：</td>
+                    <td class="borderSet-left layui-font-20" colspan="4" x:str><span>&nbsp;</span>手机：</td>
+                    <td></td>
+                </tr>
+                <tr height="41.67" style='height:41.00pt;'>
+                    <td class="borderSet-left layui-font-20" colspan="9" x:str><span>&nbsp;</span>家庭地址：</td>
+                    <td></td>
+                </tr>
+            {{# } else { }}
+                    {{# let have = false; }}
+                    {{# for (var i = 0; i < d.ContactData.length; i++) { }}
+                        {{# if(d.ContactData[i].LAY_CHECKED) { }}
+                            <tr height="41.67" style='height:41.00pt;'>
+                                <td class="borderSet layui-font-20" height="125.00" rowspan="3" x:str>担保人<br/>（有权决定老人入住所有事项）</td>
+                                <td class="borderSet-left layui-font-20" colspan="2" x:str><span>&nbsp;</span>姓名：{{= d.ContactData[i].name}}</td>
+                                <td class="borderSet-left layui-font-20" colspan="3" x:str><span>&nbsp;</span>与老人关系：{{= d.ContactData[i].relationship}}</td>
+                                <td class="borderSet-left layui-font-20" colspan="4" x:str><span>&nbsp;</span>手机：{{= d.ContactData[i].phone}}</td>
+                                <td></td>
+                            </tr>
+                            <tr height="41.67" style='height:41.00pt;'>
+                                <td class="borderSet-left layui-font-20" colspan="9" x:str><span>&nbsp;</span>家庭地址：{{= d.ContactData[i].address}}</td>
+                                <td></td>
+                            </tr>
+                            {{# have = true; }}
+                        {{# }}}
+                    {{# } }}
+
+                    {{# if(!have){ }}
+                        <tr height="41.67" style='height:41.00pt;'>
+                            <td class="borderSet layui-font-20" height="125.00" rowspan="3" x:str>担保人<br/>（有权决定老人入住所有事项）</td>
+                            <td class="borderSet-left layui-font-20" colspan="2" x:str><span>&nbsp;</span>姓名：</td>
+                            <td class="borderSet-left layui-font-20" colspan="3" x:str><span>&nbsp;</span>与老人关系：</td>
+                            <td class="borderSet-left layui-font-20" colspan="4" x:str><span>&nbsp;</span>手机：</td>
+                            <td></td>
+                        </tr>
+                        <tr height="41.67" style='height:41.00pt;'>
+                            <td class="borderSet-left layui-font-20" colspan="9" x:str><span>&nbsp;</span>家庭地址：</td>
+                            <td></td>
+                        </tr>
+                    {{# } }}
+            {{# }}}
             <tr height="41.67" style='height:41.00pt;'>
                 <td class="borderSet-left layui-font-20" colspan="9" x:str>
                     <span>&nbsp;</span>填表日期：

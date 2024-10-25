@@ -295,11 +295,12 @@
 			,editTrigger: 'dblclick'
 			,toolbar: '#contactstools'
 			,cols: [[
+				{type:'radio', field:'main', title: '监护人', width: '5%', fixed: 'left'}
 				,{field:'id', width: '1%', align:'center', title: '序号', hide: true}
 				,{field:'name', width: '10%', align:'center', edit: 'text', title: '姓名'}
 				,{field:'phone', width: '25%', align:'center', edit: 'text', title: '联系电话'}
 				,{field:'relationship', width: '10%', align:'center', edit: 'text', title: '与老人关系'} 
-				,{field:'address', width: '45%', align:'center', edit: 'text', title: '家庭住址'} 
+				,{field:'address', width: '40%', align:'center', edit: 'text', title: '家庭住址'} 
 				,{title: '操作', width: '10%', align:'center', toolbar: '#fieldtool', fixed: 'right'}
 			]]
 		});
@@ -393,6 +394,9 @@
 			data.field["interest"] = JSON.stringify(interest);
 			// 联系人
 			data.field["contacts"] = JSON.stringify(table.cache["contacts"]);
+
+			console.log(data)
+			return;
 
 			//Loading层
 			var loading_idx = layer.load(1, {
