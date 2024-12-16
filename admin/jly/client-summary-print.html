@@ -45,14 +45,16 @@
 					div.innerHTML = html
 				})
 				document.body.appendChild(div)
+
+				//{scale: 0.8}
+				window.print();
+				setTimeout(() => {
+					var index = parent.layer.getFrameIndex(window.name);
+					parent.layer.close(index);
+				})
 			})
 			
-			//{scale: 0.8}
-			window.print();
-			setTimeout(() => {
-				var index = parent.layer.getFrameIndex(window.name);
-                parent.layer.close(index);
-			})
+			
 		})
 	</script>
 </html>

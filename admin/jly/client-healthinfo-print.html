@@ -42,13 +42,15 @@
 					div.innerHTML = html
 				})
 				document.body.appendChild(div)
+
+				window.print();
+				setTimeout(() => {
+					var index = parent.layer.getFrameIndex(window.name);
+					parent.layer.close(index);
+				})
 			})
 			
-			window.print();
-			setTimeout(() => {
-				var index = parent.layer.getFrameIndex(window.name);
-                parent.layer.close(index);
-			})
+			
 		})
 	</script>
 </html>

@@ -50,13 +50,15 @@
 					div.innerHTML = html
 				})
 				document.body.appendChild(div)
+
+				window.print({scale: 0.8});
+				setTimeout(() => {
+					var index = parent.layer.getFrameIndex(window.name);
+					parent.layer.close(index);
+				})
 			})
 			
-			window.print({scale: 0.8});
-			setTimeout(() => {
-				var index = parent.layer.getFrameIndex(window.name);
-                parent.layer.close(index);
-			})
+			
 		})
 	</script>
 </html>
