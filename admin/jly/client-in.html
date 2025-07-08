@@ -209,6 +209,7 @@
 						<textarea id="interest_other" name="interest_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
 					</div>
 				</fieldset>
+
 				<fieldset class="layui-elem-field">
 					<legend class="layui-font-14">宗教信仰</legend>
 					<div class="layui-field-box">
@@ -217,8 +218,8 @@
 							<input type="radio" name="religion" value="佛教" title="佛教">
 							<input type="radio" name="religion" value="基督教" title="基督教">
 							<input type="radio" name="religion" value="其他" title="其他">
-							<textarea id="religion_other" name="religion_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
 						</div>
+						<textarea id="religion_other" name="religion_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
 					</div>
 				</fieldset>
 				<fieldset class="layui-elem-field">
@@ -231,10 +232,11 @@
 							<input type="radio" name="treat" value="全公费" title="全公费">
 							<input type="radio" name="treat" value="全自费" title="全自费">
 							<input type="radio" name="treat" value="其他" title="其他">
-							<textarea id="treat_other" name="treat_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
 						</div>
+						<textarea id="treat_other" name="treat_other" placeholder="其他说明" class="layui-textarea" disabled="disabled"></textarea>
 					</div>
 				</fieldset>
+
 				<!--  <form class="layui-form layui-form-pane" action="" id="add">-->
 				<fieldset class="layui-elem-field">
 					<legend class="layui-font-14">联系人</legend>
@@ -288,6 +290,7 @@
 			,value: date
 		});
 		
+		//document.getElementById('table_radio_name').style.visibility = 'hidden';
 		table.render({
 			elem: '#contacts'
 			,height: 270
@@ -367,14 +370,14 @@
 			if (data.elem.value == "其他") {
 				if (data.elem.name == "religion") {
 					document.getElementById('religion_other').disabled = false;	
-				} else if (data.elem.name = "treat") {
+				} else if (data.elem.name == "treat") {
 					document.getElementById('treat_other').disabled = false;	
 				}
 			} else {
 				if (data.elem.name == "religion") {
 					document.getElementById('religion_other').value = "";
 					document.getElementById('treat_other').value = "";
-				} else if (data.elem.name = "treat") {
+				} else if (data.elem.name == "treat") {
 					document.getElementById('religion_other').disabled = true;
 					document.getElementById('treat_other').disabled = true;		
 				}			
