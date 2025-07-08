@@ -106,12 +106,17 @@ function GetSex(identityCard) {
  * @returns string
  */
 function GetBirthdateFromIdCard(identityCard) {
-	identityCard = identityCard.substring(6,14);
-	const regex = /(\d{4})(\d{2})(\d{2})/;  
+	var len = (identityCard + "").length;
+        if (len == 0 || ((len != 15) && (len != 18))) {
+                return null;
+        }
+
+	identityCard = len ==18 ? identityCard.substring(6,14) : identityCard.substring(6,12);
+	const regex = len == 18 ? /(\d{4})(\d{2})(\d{2})/ : /(\d{2})(\d{2})(\d{2})/;  
 	const match = identityCard.match(regex);  
 	
-	if (match) {  
-	  const year = match[1];  
+	if (match) {
+	  const year = len == 18 ? match[1] : "19"+match[1];  
 	  const month = match[2];  
 	  const day = match[3];  
 	
