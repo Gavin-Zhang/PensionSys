@@ -249,6 +249,29 @@
 										</select>
 									</div>
 								</div>
+								<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>入住
+									</label>
+									<div class="layui-input-block">
+										<select name="build_type" id="build_type" lay-verify="required">
+											<option value="1号楼">1号楼</option>
+											<option value="2号楼">2号楼</option>
+										</select>
+									</div>
+								</div>
+								<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>自理情况
+									</label>
+									<div class="layui-input-block">
+										<select name="care_type" id="care_type" lay-verify="required">
+											<option value="全自理">全自理</option>
+											<option value="半自理">半自理</option>
+											<option value="全护理">全护理</option>
+										</select>
+									</div>
+								</div>
 								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4 layui-hide">
 									<label for="indate" class="layui-form-label">
 										<span class='x-red'>*</span>政府托管
@@ -817,6 +840,8 @@
 			"treat": data["Treat"],
 			"treat_other": data["TreatOther"],
 			"status": data["Status"],
+			"build_type": data["BuildType"],
+			"care_type": data["CareType"],
 		});
 	}
 
