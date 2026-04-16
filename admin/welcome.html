@@ -71,7 +71,7 @@
         <div class="layuimini-main">
             <div class="layui-row layui-col-space15">
 
-                <div class="layui-col-xs12 layui-col-md4">
+                <div class="layui-col-xs12 layui-col-md3">
                     <div class="layui-card top-panel">
                         <div class="layui-card-header">平凡医院</div>
                         <div class="layui-card-body">
@@ -82,7 +82,7 @@
                     </div>
                 </div>
 
-                <div class="layui-col-xs12 layui-col-md4">
+                <div class="layui-col-xs12 layui-col-md3">
                     <div class="layui-card top-panel">
                         <div class="layui-card-header">1号楼</div>
                         <div class="layui-card-body">
@@ -93,7 +93,7 @@
                     </div>
                 </div>
 
-                <div class="layui-col-xs12 layui-col-md4">
+                <div class="layui-col-xs12 layui-col-md3">
                     <div class="layui-card top-panel">
                         <div class="layui-card-header">2号楼</div>
                         <div class="layui-card-body">
@@ -104,18 +104,32 @@
                     </div>
                 </div>
 
+                <div class="layui-col-xs12 layui-col-md3">
+                    <div class="layui-card top-panel">
+                        <div class="layui-card-header">3号楼</div>
+                        <div class="layui-card-body">
+                            <div class="layui-col-xs12 layui-col-md12 top-panel-number">
+                                <span id="panel-number-4">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 
             </div>
 
             <div class="layui-row layui-col-space15">
-                <div class="layui-col-xs12 layui-col-md4">
+                <div class="layui-col-xs12 layui-col-md3">
                     <div id="echarts-pies-1" style="background-color:#ffffff;min-height:400px;padding: 10px"></div>
                 </div>
-                <div class="layui-col-xs12 layui-col-md4">
+                <div class="layui-col-xs12 layui-col-md3">
                     <div id="echarts-pies-2" style="background-color:#ffffff;min-height:400px;padding: 10px"></div>
                 </div>
-                <div class="layui-col-xs12 layui-col-md4">
+                <div class="layui-col-xs12 layui-col-md3">
                     <div id="echarts-pies-3" style="background-color:#ffffff;min-height:400px;padding: 10px"></div>
+                </div>
+                <div class="layui-col-xs12 layui-col-md3">
+                    <div id="echarts-pies-4" style="background-color:#ffffff;min-height:400px;padding: 10px"></div>
                 </div>
             </div>
         </div>
@@ -125,7 +139,8 @@
             var panelData = {
                 number1: "9,054,056",
                 number2: "9,054,056",
-                number3: "9,054,056"
+                number3: "9,054,056",
+                number4: "9,054,056"
             };
 
             // 更新面板数值的函数
@@ -133,6 +148,8 @@
                 document.getElementById('panel-number-1').textContent = panelData.number1.toLocaleString();
                 document.getElementById('panel-number-2').textContent = panelData.number2.toLocaleString();
                 document.getElementById('panel-number-3').textContent = panelData.number3.toLocaleString();
+                document.getElementById('panel-number-4').textContent = panelData.number4.toLocaleString();
+
             }
 
             function InitPanelNumbers() {
