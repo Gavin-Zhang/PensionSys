@@ -212,15 +212,18 @@
                 var echartsPies_1 = echarts.init(document.getElementById('echarts-pies-1'), 'walden');
                 var echartsPies_2 = echarts.init(document.getElementById('echarts-pies-2'), 'walden');
                 var echartsPies_3 = echarts.init(document.getElementById('echarts-pies-3'), 'walden');
+                var echartsPies_4 = echarts.init(document.getElementById('echarts-pies-4'), 'walden');
 
                 InitEchartsPiesData(echartsPies_1, data[0], '全院 - 自理情况');
                 InitEchartsPiesData(echartsPies_2, data[1], '1号楼 - 自理情况');
                 InitEchartsPiesData(echartsPies_3, data[2], '2号楼 - 自理情况');
+                InitEchartsPiesData(echartsPies_4, data[3], '3号楼 - 自理情况');
 
                 window.onresize = function () {
                     echartsPies_1.resize();
                     echartsPies_2.resize();
                     echartsPies_3.resize();
+                    echartsPies_4.resize();
                 }
             }
 
