@@ -28,6 +28,8 @@
 			var iframe = document.querySelector('iframe');
 			iframe.addEventListener('load', function(){
 				var sessiondata = layui.sessionData("jly-client-list")[sessiondata_key.toString()];
+				sessiondata.User = layui.data('yl-user').user;
+
 				if (typeof sessiondata === 'undefined') {
 					sessiondata = {}
 				}
@@ -50,5 +52,6 @@
 			
 			
 		})
+		console.log(sessiondata)
 	</script>
 </html>
