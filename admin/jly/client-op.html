@@ -263,6 +263,14 @@
 								</div>
 								<div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
 									<label class="layui-form-label">
+										房间号
+									</label>
+									<div class="layui-input-block">
+										<input type="text" lay-verify="" name="room_num" autocomplete="off" value="" class="layui-input">
+									</div>
+								</div>
+								<!-- <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+									<label class="layui-form-label">
 										<span class='x-red'>*</span>自理情况
 									</label>
 									<div class="layui-input-block">
@@ -272,8 +280,8 @@
 											<option value="全护理">全护理</option>
 										</select>
 									</div>
-								</div>
-								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4 layui-hide">
+								</div> -->
+								<!-- <div class="layui-col-xs4 layui-col-sm4 layui-col-md4 layui-hide">
 									<label for="indate" class="layui-form-label">
 										<span class='x-red'>*</span>政府托管
 									</label>
@@ -283,18 +291,40 @@
 											<option value="是">是</option>
 										</select>
 									</div>
-								</div>
+								</div> -->
 							</div>
 						</td>
 					</tr>
 					<tr>
 						<td class="layui-form-item">
-							<div class="layui-row">
+							<!-- <div class="layui-row">
 								<label class="layui-form-label">
 									<span class='x-red'>*</span>住址
 								</label>
 								<div class="layui-input-block">
 									<input type="text" name="addr" id="addr" autocomplete="off" value="" class="layui-input" disabled="disable">
+								</div>
+							</div> -->
+							<div class="layui-row layui-col-space5">
+								<div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+									<label class="layui-form-label">
+										住址
+									</label>
+									<div class="layui-input-block">
+										<input type="text" name="addr" id="addr" autocomplete="off" value="" class="layui-input" disabled="disable">
+									</div>
+								</div>
+								<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+									<label class="layui-form-label">
+										<span class='x-red'>*</span>自理情况
+									</label>
+									<div class="layui-input-block">
+										<select name="care_type" id="care_type" lay-verify="required">
+											<option value="全自理">全自理</option>
+											<option value="半自理">半自理</option>
+											<option value="全护理">全护理</option>
+										</select>
+									</div>
 								</div>
 							</div>
 						</td>
@@ -828,6 +858,7 @@
 			"trusteeship": data["Trusteeship"],
 			"address": data["Address"],
 			"addr": data["Addr"],
+			"room_num": data["RoomNum"],
 			"棋牌": interest.includes("棋牌"),			
 			"戏曲": interest.includes("戏曲"),
 			"唱歌": interest.includes("唱歌"),

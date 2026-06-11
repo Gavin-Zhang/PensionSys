@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>消防疏散示意图 · 支持CAD描画房间</title>
+    <!-- LayUI 核心样式 -->
+    <link href="https://cdn.jsdelivr.net/npm/layui@2.9.8/dist/css/layui.css" rel="stylesheet">
+    <!-- Fabric.js 绘图库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+    <script type="text/javascript" src="./js/base.js"></script>
+    <script type="text/javascript" src="../../js/base.js"></script>
+    <style>
+        body {
+            background-color: #f0f2f5;
+            padding: 15px;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+        .layui-card {
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .layui-card-header {
+            font-weight: bold;
+            font-size: 18px;
+            border-bottom: 1px solid #eee;
+            background: #fafcff;
+            border-radius: 10px 10px 0 0;
+        }
+        .canvas-wrapper {
+            background: #fef9e8;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            border-radius: 8px;
+            overflow-x: auto;
+            position: relative;
+        }
+        #evacCanvas {
+            border: 2px solid #b0a088;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+            background-color: #fffef7;
+            cursor: crosshair;
+        }
+        .legend-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 12px;
+            background: #fef7e0;
+            padding: 12px 15px;
+            border-radius: 8px;
+        }
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .legend-icon {
+            width: 24px;
+            height: 18px;
+            border-radius: 3px;
+        }
+        .toolbar-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .info-panel {
+            background: #fff9ef;
+            border-left: 5px solid #ff6b6b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .fire-tip {
+            background: #ffeedd;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #b33;
+        }
+        hr {
+            margin: 12px 0;
+        }
+        .badge-red {
+            background: #e54d42;
+            color: white;
+            border-radius: 20px;
+            padding: 2px 8px;
+            font-size: 12px;
+        }
+        .cad-upload-area {
+            background: #f4efe6;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+            border: 1px solid #e2d5c0;
+        }
+        .opacity-slider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .room-draw-tip {
+            font-size: 12px;
+            background: #fff3cf;
+            padding: 6px;
+            border-radius: 6px;
+            margin-top: 10px;
+            color: #c45c1a;
+        }
+        .delete-btn {
+            background: #e67e22;
+            border: none;
+        }
+        @media (max-width: 1500px) {
+            .canvas-wrapper { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!--  -->
+<div class="layui-container" style="min-width: 1500px;">
+    <div class="layui-card">
+        <div class="layui-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+            振安区养老服务中心 · 一号楼三层居住分布
+            <button id="refreshBtn" class="layui-btn layui-btn-primary layui-btn-sm" >
+                <i class="layui-icon layui-icon-refresh">刷新</i> 
+            </button>
+        </div>
+    </div>
+
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    🗺️ 三层平面图 
+                </div>
+                <div class="layui-card-body canvas-wrapper">
+                    <canvas id="evacCanvas" width="1450" height="600"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+   layui.use([], function(){
+        var  $ = layui.jquery;
+
+        // 初始化 canvas
+        const canvas = new fabric.Canvas('evacCanvas', {
+            selection: false,
+            preserveObjectStacking: true,
+            backgroundColor: '#FFF9EF'
+        });
+
+        // 全局背景图片对象
+        let bgImage = null;
+        // 存储所有用户描画的房间对象 (用来支持右键删除)
+        let userRooms = []; // 每个元素 { group, rect, text }
+        //
+        let roomMap = new Map();
+        //
+        let roomRoleCount = new Map();
+        const fillColor = '#e3d6b5'; // 默认暖色
+        
+        // 描画模式相关
+        let drawingMode = false;
+        let isDrawing = false;
+        let startPointer = null;
+        let currentRect = null;
+        
+        // 存储所有文字对象（用于全局显隐）
+        let allTextLabels = [];
+        
+        // ----- 辅助函数：锁定对象不可移动/缩放，但保留点击 -----
+        function makeStatic(obj, evented = true) {
+            obj.set({
+                selectable: false,
+                hasControls: false,
+                hasBorders: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                lockRotation: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                evented: evented,
+                hoverCursor: evented ? 'pointer' : 'default'
+            });
+            return obj;
+        }
+        
+        function bindPopup(obj, title, detail = '') {
+            if (!obj) return;
+            obj.set('name', title);
+            obj.on('mousedown', (e) => {
+                layui.use('layer', function() {
+                    layer.msg(`📍 ${title} ${detail ? '· ' + detail : ''}`, { offset: 't', icon: 1, time: 1800 });
+                });
+                
+            });
+        }
+        
+        // 统一添加房间矩形 + 文字 (并注册到文本列表)
+        function createRoomShape(x, y, w, h, fillColor, roomName, extraInfo = '', isUserDrawn = true) {
+            const rect = new fabric.Rect({
+                left: x, top: y, width: w, height: h,
+                fill: fillColor, stroke: '#8b6b4d', strokeWidth: 2,
+                rx: 5, ry: 5, opacity: 0.85
+            });
+            canvas.add(rect);
+
+
+            bindPopup(rect, roomName, extraInfo);
+            makeStatic(rect, true);
+            
+            // 'rgba(255,250,210,0.85)'
+            const text = new fabric.Text(roomName, {
+                //left: x + w/2, top: y + h/2,
+                left: x+w/2, top: y+30,
+                fontSize: 20, fontFamily: 'Microsoft YaHei', fill: '#3e2a1f',
+                fontWeight: '800', originX: 'center', originY: 'center',
+                backgroundColor: fillColor, padding: 4,
+                hasControls: false, selectable: false, lockMovement: true
+            });
+
+            canvas.add(text);
+            makeStatic(text, true);
+            bindPopup(text, roomName);
+            allTextLabels.push(text);
+            
+            if (isUserDrawn) {
+                const roomGroup = { rect, text, name: roomName };
+                userRooms.push(roomGroup);
+                // 绑定右键删除事件
+                rect.on('mouseup', function(e) {
+                    if (e.button === 2) { // 右键
+                        e.stopPropagation();
+                        removeUserRoom(roomGroup);
+                    }
+                });
+                text.on('mouseup', function(e) {
+                    if (e.button === 2) {
+                        e.stopPropagation();
+                        removeUserRoom(roomGroup);
+                    }
+                });
+            }
+
+            roomMap.set(roomName, { rect, text });
+            return { rect, text };
+        }
+        
+        function removeUserRoom(roomGroup) {
+            layui.use('layer', function() {
+                layer.confirm('确定要删除房间 "' + roomGroup.name + '" 吗？', {
+                    icon: 3, title: '删除房间'
+                }, function(index) {
+                    canvas.remove(roomGroup.rect);
+                    canvas.remove(roomGroup.text);
+                    // 从数组中移除
+                    const idx = userRooms.findIndex(r => r === roomGroup);
+                    if (idx !== -1) userRooms.splice(idx, 1);
+                    // 从文本列表中移除文字
+                    const textIdx = allTextLabels.indexOf(roomGroup.text);
+                    if (textIdx !== -1) allTextLabels.splice(textIdx, 1);
+                    canvas.renderAll();
+                    layer.close(index);
+                    layer.msg('已删除房间: ' + roomGroup.name, { icon: 1, time: 1000 });
+                });
+            });
+        }
+        
+        // 描画房间模式逻辑
+        function enableDrawing() {
+            if (drawingMode) return;
+            drawingMode = true;
+            canvas.selection = false;
+            canvas.defaultCursor = 'crosshair';
+            layui.use('layer', () => layer.msg('描画模式已激活，在画布上按住鼠标左键拖拽绘制矩形房间', { time: 2000 }));
+            document.getElementById('drawRoomBtn').style.background = '#e67e22';
+            document.getElementById('cancelDrawBtn').disabled = false;
+        }
+        
+        function disableDrawing() {
+            if (!drawingMode) return;
+            drawingMode = false;
+            canvas.selection = false;
+            canvas.defaultCursor = 'default';
+            if (currentRect) {
+                canvas.remove(currentRect);
+                currentRect = null;
+            }
+            isDrawing = false;
+            startPointer = null;
+            document.getElementById('drawRoomBtn').style.background = '#ffd966';
+            document.getElementById('cancelDrawBtn').disabled = true;
+            layui.use('layer', () => layer.msg('已退出描画模式', { time: 1000 }));
+        }
+        
+        // 鼠标事件
+        canvas.on('mouse:down', (opt) => {
+            if (!drawingMode) return;
+            const pointer = canvas.getPointer(opt.e);
+            startPointer = { x: pointer.x, y: pointer.y };
+            isDrawing = true;
+            if (currentRect) canvas.remove(currentRect);
+            currentRect = new fabric.Rect({
+                left: startPointer.x, top: startPointer.y,
+                width: 1, height: 1,
+                fill: 'rgba(100,200,200,0.3)', stroke: '#2c7da0', strokeWidth: 2,
+                selectable: false, evented: false
+            });
+            canvas.add(currentRect);
+        });
+        
+        canvas.on('mouse:move', (opt) => {
+            if (!drawingMode || !isDrawing || !startPointer || !currentRect) return;
+            const pointer = canvas.getPointer(opt.e);
+            let width = pointer.x - startPointer.x;
+            let height = pointer.y - startPointer.y;
+            if (width < 0) {
+                currentRect.set({ left: pointer.x, width: -width });
+            } else {
+                currentRect.set({ left: startPointer.x, width: width });
+            }
+            if (height < 0) {
+                currentRect.set({ top: pointer.y, height: -height });
+            } else {
+                currentRect.set({ top: startPointer.y, height: height });
+            }
+            canvas.renderAll();
+        });
+        
+        canvas.on('mouse:up', (opt) => {
+            if (!drawingMode || !isDrawing || !currentRect) {
+                isDrawing = false;
+                startPointer = null;
+                return;
+            }
+            const finalRect = currentRect;
+            const left = finalRect.left;
+            const top = finalRect.top;
+            const width = Math.abs(finalRect.width);
+            const height = Math.abs(finalRect.height);
+            if (width > 15 && height > 15) {
+                // 弹出房间信息
+                layui.use('layer', () => {
+                    layer.prompt({
+                        title: '输入房间名称',
+                        value: '新房间',
+                        area: ['260px', '80px']
+                    }, (val, index) => {
+                        layer.close(index);
+                        const roomName = val.trim() || '未命名房间';
+                        
+                        const newRoom = createRoomShape(left, top, width, height, fillColor, roomName, '用户描画房间', true);
+                        // 自动将该房间的文字加入allTextLabels (已经在createRoomShape中加入)
+                        canvas.remove(finalRect);
+                        currentRect = null;
+                        canvas.renderAll();
+                        layer.msg(`房间“${roomName}”已添加，可右键删除`, { icon: 1, time: 1500 });
+                    });
+                });
+            } else {
+                canvas.remove(finalRect);
+                layer.msg('区域太小，未创建房间', { icon: 2, time: 800 });
+            }
+            currentRect = null;
+            isDrawing = false;
+            startPointer = null;
+        });
+
+        /**
+         * 添加双开门（对开）
+         * @param {number} x 门洞中心点 X 坐标
+         * @param {number} y 门洞中心点 Y 坐标
+         * @param {number} width 总宽度（门洞宽）
+         * @param {string} direction 开启方向：'out'（外开）或 'in'（内开）
+         * @param {string} label 门名称（用于弹窗）
+         */
+        function addDoubleDoor(x, y, width = 40, direction = 'E', sw = 6, label = '双开门') {
+            const half = width / 2;
+            const arcRadius = half;
+            let leftArc, rightArc;
+            if (direction === 'E') {
+                leftArc = new fabric.Path(`M ${x} ${y - half} L ${x + half} ${y - half} A ${arcRadius} ${arcRadius} 0 0 1 ${x} ${y}`, {
+                    fill: '', stroke: '#8B5A2B', strokeWidth: sw, strokeLineCap: 'round'
+                });
+                rightArc = new fabric.Path(`M ${x} ${y + half} L ${x + half} ${y + half} A ${arcRadius} ${arcRadius} 0 0 0 ${x} ${y}`, {
+                    fill: '', stroke: '#8B5A2B', strokeWidth: sw, strokeLineCap: 'round'
+                });
+            } else if (direction === 'S') {
+                leftArc = new fabric.Path(`M ${x - half} ${y} L ${x - half} ${y + half} A ${arcRadius} ${arcRadius} 0 0 0 ${x} ${y}`, {
+                    fill: '', stroke: '#8B5A2B', strokeWidth: sw, strokeLineCap: 'round'
+                });
+                rightArc = new fabric.Path(`M ${x + half} ${y} L ${x + half} ${y + half} A ${arcRadius} ${arcRadius} 0 0 1 ${x} ${y}`, {
+                    fill: '', stroke: '#8B5A2B', strokeWidth: sw, strokeLineCap: 'round'
+                });
+            } else if (direction === 'W') {
+                leftArc = new fabric.Path(`M ${x} ${y - half} L ${x - half} ${y - half} A ${arcRadius} ${arcRadius} 0 0 0 ${x} ${y}`, {
+                    fill: '', stroke: '#8B5A2B', strokeWidth: sw, strokeLineCap: 'round'
+                });
+                rightArc = new fabric.Path(`M ${x} ${y + half} L ${x - half} ${y + half} A ${arcRadius} ${arcRadius} 0 0 1 ${x} ${y}`, {
+                    fill: '', stroke: '#8B5A2B', strokeWidth: sw, strokeLineCap: 'round'
+                });
+            } else if (direction === 'N') {
+                leftArc = new fabric.Path(`M ${x - half} ${y} L ${x - half} ${y - half} A ${arcRadius} ${arcRadius} 0 0 1 ${x} ${y}`, {
+                    fill: '', stroke: '#8B5A2B', strokeWidth: sw, strokeLineCap: 'round'
+                });
+                rightArc = new fabric.Path(`M ${x + half} ${y} L ${x + half} ${y - half} A ${arcRadius} ${arcRadius} 0 0 0 ${x} ${y}`, {
+                    fill: '', stroke: '#8B5A2B', strokeWidth: sw, strokeLineCap: 'round'
+                });
+            }
+            const doorGroup = new fabric.Group([leftArc, rightArc], {
+                selectable: false, evented: true, hasControls: false, lockMovement: true
+            });
+            canvas.add(doorGroup);
+        }
+
+        
+        // ---------- 以下为原有的基础平面图绘制 (保留所有消防设施) ----------
+        function buildBaseMap() {
+            const baseWidth = 1450;
+            const baseHeight = 600;
+            let borderWidth = 1350;
+            let borderHeight = 460;
+            const offsetL = baseWidth / 2 - borderWidth / 2;
+            const offsetT = baseHeight / 2 - borderHeight / 2;
+            
+            const lines = [
+                new fabric.Line([offsetL, offsetT, offsetL+borderWidth, offsetT]), // 上边
+                new fabric.Line([offsetL, offsetT, offsetL, offsetT+borderHeight]), // 左边
+                new fabric.Line([offsetL+borderWidth, offsetT, offsetL+borderWidth, offsetT+borderHeight]),  // 右边
+                new fabric.Line([offsetL+351, offsetT+borderHeight, offsetL+borderWidth+6, offsetT+borderHeight]),  // 下边
+
+                new fabric.Line([offsetL, offsetT+borderHeight-195, offsetL+351, offsetT+borderHeight-195]),    // -
+                new fabric.Line([offsetL+351, offsetT+borderHeight-195, offsetL+351, offsetT+borderHeight]),    // |
+            ];
+            lines.forEach(line => {
+                line.set({ stroke: '#8b6b4d', strokeWidth: 6, rx: 8 });
+                canvas.add(line);
+            });
+            let xuline = new fabric.Line([offsetL, offsetT+borderHeight, offsetL+351, offsetT+borderHeight], {stroke: '#8b6b4d', strokeWidth: 6, rx: 8, strokeDashArray: [15, 8], strokeLineCap: 'round'})
+            canvas.add(xuline);
+            
+            // 上方预置房间
+            const wd = 117;
+            const roomH = 195;
+            let bottomX = offsetL + 5;
+            let bottomY = offsetT + 5;
+            const topRooms = [
+                { name: '309', w: 138, h: roomH, fill: '#f3c6b0', info: '' },
+                { name: '楼梯间', w: 96, h: roomH, fill: '#f3c6b0', info: '' },
+                { name: '310', w: wd, h: roomH, fill: '#f3c6b0', info: '' },
+                { name: '311', w: wd, h: roomH, fill: '#f3c6b0', info: '' },
+                { name: '312', w: wd, h: roomH, fill: '#f3c6b0', info: '' },
+                { name: '313', w: wd, h: roomH, fill: '#f3c6b0', info: '' },
+                { name: '电梯', w: 78, h: 90, fill: '#f3c6b0', info: '' },
+                { name: '楼梯间', w: 96, h: roomH, fill: '#f3c6b0', info: '' },
+                { name: '3-避难间', w: wd, h: roomH, fill: '#f3c6b0', info: '' },
+                { name: '315', w: wd, h: roomH, fill: '#f3c6b0', info: '' },
+                { name: '316', w: wd, h: roomH, fill: '#f3c6b0', info: '' },
+                { name: '317', w: wd, h: roomH, fill: '#f3c6b0', info: '' }
+            ];
+            let curX = offsetT;
+            topRooms.forEach(rm => {
+                createRoomShape(bottomX, bottomY, rm.w, rm.h, rm.fill, rm.name, rm.info, false);
+                bottomX += rm.w;
+            });
+            
+            // 下方预置房间
+            const bottom1Rooms = [
+                { name: '308', w: wd, h: roomH, fill: '#f3c6b0', info: ''},
+                { name: '307', w: wd, h: roomH, fill: '#f3c6b0', info: ''},
+                { name: '306', w: wd, h: roomH, fill: '#f3c6b0', info: ''},
+                { name: '305', w: 174, h: roomH, fill: '#f3c6b0', info: ''}, 
+                { name: '304', w: wd, h: roomH, fill: '#f3c6b0', info: ''},
+                { name: '303', w: wd, h: roomH, fill: '#f3c6b0', info: ''},
+                { name: '302', w: wd, h: roomH, fill: '#f3c6b0', info: ''},
+                { name: '301', w: wd, h: roomH, fill: '#f3c6b0', info: ''},
+            ];
+            bottomX = offsetL + 5 + 138 + 96 + wd;
+            bottomY = borderHeight - roomH + offsetT;
+            bottom1Rooms.forEach(rm => {
+                createRoomShape(bottomX, bottomY, rm.w, rm.h, rm.fill, rm.name, rm.info, false);
+                bottomX += rm.w;
+            });
+            // const bottom2Rooms = [
+            //     { name: '104', fill: '#f3c6b0', info: '' },
+            //     { name: '103', fill: '#f3c6b0', info: '' },
+            //     { name: '102', fill: '#f3c6b0', info: '' },
+            //     { name: '101', fill: '#f3c6b0', info: '' }
+            // ];
+            // bottomX += 174
+            // bottom2Rooms.forEach(rm => {
+            //     createRoomShape(bottomX, bottomY, wd, roomH, rm.fill, rm.name, rm.info, false);
+            //     bottomX += wd + 0;
+            // });
+
+            // 添加门
+            // addDoubleDoor(offsetL+5+wd*2+47, offsetT+borderHeight+5, 80, 'S');
+            // addDoubleDoor(offsetL+5+wd*2+127, offsetT+borderHeight+5, 80, 'S');
+            // addDoubleDoor(offsetL+borderWidth+5, offsetT+borderHeight/2+4, 40, 'E');
+            // addDoubleDoor(offsetL+5+wd*2+wd/2+78+96, offsetT, 40, 'N');
+            // addDoubleDoor(offsetL+5+wd*5+wd/2+78+96, offsetT, 40, 'N');
+            
+            // 添加消防设施函数
+            // function addFireExtinguisher(x, y, label) {
+            //     const group = new fabric.Group([
+            //         new fabric.Rect({ left: -6, top: -12, width: 12, height: 24, rx: 4, fill: '#e34234', stroke: '#8b0000' }),
+            //         new fabric.Rect({ left: -8, top: -6, width: 16, height: 8, rx: 2, fill: '#c9321c' }),
+            //         new fabric.Text('🔥', { left: -4, top: -9, fontSize: 14, originX: 'center', originY: 'center' })
+            //     ], { left: x, top: y, originX: 'center', originY: 'center' });
+            //     canvas.add(group);
+            //     makeStatic(group, true);
+            //     bindPopup(group, label || '灭火器', '干粉灭火器');
+            //     return group;
+            // }
+            // function addHydrant(x, y, label) {
+            //     const box = new fabric.Group([
+            //         new fabric.Rect({ left: -12, top: -15, width: 24, height: 30, fill: '#dc143c', stroke: '#8b0000', strokeWidth: 1.5, rx: 3 }),
+            //         new fabric.Text('🧯', { left: -5, top: -10, fontSize: 18 }),
+            //         new fabric.Text('消火栓', { left: 0, top: 8, fontSize: 9, fill: 'white', originX: 'center' })
+            //     ], { left: x, top: y });
+            //     canvas.add(box);
+            //     makeStatic(box, true);
+            //     bindPopup(box, label || '室内消火栓', '消防软管卷盘');
+            //     return box;
+            // }
+            // function addExitSign(x, y, name = '安全出口') {
+            //     const rect = new fabric.Rect({ left: x, top: y, width: 28, height: 40, fill: '#2ecc71', stroke: '#1f8a4c', strokeWidth: 2, rx: 4 });
+            //     const text = new fabric.Text('🚪', { left: x + 5, top: y + 8, fontSize: 20 });
+            //     const labelExit = new fabric.Text(name, { left: x - 8, top: y + 42, fontSize: 10, fill: '#145c33', fontWeight: 'bold' });
+            //     const group = new fabric.Group([rect, text, labelExit], { left: x, top: y });
+            //     canvas.add(group);
+            //     makeStatic(group, true);
+            //     bindPopup(group, name, '紧急疏散出口');
+            //     return group;
+            // }
+            // function drawArrow(fromX, fromY, toX, toY, color = '#e34234') {
+            //     const headlen = 10;
+            //     const angle = Math.atan2(toY - fromY, toX - fromX);
+            //     const arrowLine = new fabric.Line([fromX, fromY, toX, toY], { stroke: color, strokeWidth: 2.5, strokeDashArray: [8, 6], evented: false });
+            //     const arrowHead = new fabric.Triangle({ left: toX, top: toY, width: headlen, height: headlen, fill: color, angle: (angle * 180 / Math.PI) + 90, originX: 'center', originY: 'center', evented: false });
+            //     canvas.add(arrowLine, arrowHead);
+            //     makeStatic(arrowLine, false); makeStatic(arrowHead, false);
+            // }
+            // addExitSign(1020, 270, '主安全出口 → 楼梯间');
+            // addExitSign(40, 270, '西侧辅助出口');
+            // drawArrow(280, 290, 520, 290, '#e6542c');
+            // drawArrow(720, 290, 980, 290, '#e6542c');
+            // drawArrow(520, 290, 320, 290, '#e6542c');
+            // drawArrow(800, 290, 1000, 290, '#e6542c');
+            // addFireExtinguisher(180, 315, '灭火器M1');
+            // addFireExtinguisher(420, 320, '灭火器M2');
+            // addFireExtinguisher(780, 315, '灭火器M3');
+            // addFireExtinguisher(960, 600, '灭火器M4');
+            // addHydrant(650, 315, '消火栓箱');
+            // addHydrant(120, 610, '消火栓箱');
+            // const callPoint = new fabric.Circle({ left: 530, top: 210, radius: 12, fill: '#ff9966', stroke: '#cc3300' });
+            // canvas.add(callPoint);
+            // const pointText = new fabric.Text('🚨 手动报警器', { left: 545, top: 200, fontSize: 10, fill: '#b33' });
+            // canvas.add(pointText);
+            // makeStatic(callPoint, true); makeStatic(pointText, true);
+            // bindPopup(callPoint, '火灾报警按钮', '按下报警');
+            
+            // const starGroup = new fabric.Group([
+            //     new fabric.Circle({ left: 680, top: 290, radius: 8, fill: '#ffb347', originX: 'center', originY: 'center' }),
+            //     new fabric.Triangle({ left: 680, top: 290, width: 18, height: 18, fill: '#FFD966', stroke: '#b87c1a', originX: 'center', originY: 'center' }),
+            //     new fabric.Text('📍 当前位置', { left: 692, top: 282, fontSize: 11, fill: '#c55a1a', backgroundColor: 'rgba(255,245,200,0.8)' })
+            // ], { left: 680, top: 290 });
+            // canvas.add(starGroup);
+            // makeStatic(starGroup, true);
+            // bindPopup(starGroup, '当前位置', '主走廊中心');
+            
+            // const elevatorGroup = new fabric.Group([
+            //     new fabric.Rect({ left: -12, top: -18, width: 24, height: 36, fill: '#aaa9c2', stroke: '#555', rx: 2 }),
+            //     new fabric.Text('🚫', { left: -6, top: -10, fontSize: 18 }),
+            //     new fabric.Text('电梯', { left: 0, top: 8, fontSize: 9, fill: 'red', fontWeight: 'bold' })
+            // ], { left: 990, top: 490 });
+            // canvas.add(elevatorGroup);
+            // makeStatic(elevatorGroup, true);
+            // bindPopup(elevatorGroup, '电梯(火灾禁用)', '请走楼梯');
+        }
+
+        $('#refreshBtn').on('click', function() {
+            location.reload();
+        });
+        
+        buildBaseMap();
+
+        for ([key, value] of roomMap) {
+            console.log(key, value);
+             const text = new fabric.Text('♂️♀️🚶🦽🛌测试', {
+                //left: x + w/2, top: y + h/2,
+                left: value.left+value.width/2, top: value.top+60,
+                fontSize: 20, fontFamily: 'Microsoft YaHei', fill: '#3e2a1f',
+                fontWeight: '800', originX: 'center', originY: 'center',
+                backgroundColor: 'rgba(255,250,210,0.85)', padding: 4,
+                hasControls: false, selectable: false, lockMovement: true
+            });
+            canvas.add(text);
+        }
+
+
+        // canvas.renderAll();
+        // return;
+
+
+        let param = { "buildType": "1号楼", "floor": "3" };
+        $.ajax({
+            type: "post",
+            url: BasePathJLY + '/getdistribution',
+            data: param,
+            dataType: "json",
+            headers: {'Access-Control-Allow-Origin' : BasePath}, // 移除末尾逗号以避免严格模式问题，虽非报错主因但建议规范
+            xhrFields: {withCredentials: true},
+            success: function(data){
+                if(data.code == 0){
+                    let role_count = new Map();
+                    $.each(data.data[0], function(index, item) {
+                        if (role_count.has(item.RoomNum)) {
+                            role_count.set(item.RoomNum, role_count.get(item.RoomNum) + 1);
+                        } else {
+                            role_count.set(item.RoomNum, 1);
+                        }
+                    });
+
+                    $.each(data.data[0], function(index, item) {
+                        if (!roomMap.has(item.RoomNum)) {
+                            return; // 在 $.each 中使用 return 跳过当前迭代
+                        }
+                        
+                        if (!roomRoleCount.has(item.RoomNum)) {
+                            roomRoleCount.set(item.RoomNum, 1);
+                        } else {
+                            roomRoleCount.set(item.RoomNum, roomRoleCount.get(item.RoomNum) + 1);
+                        }
+                        
+                        let count = roomRoleCount.get(item.RoomNum);
+                        let roomObj = roomMap.get(item.RoomNum);
+                        
+                        // 修复点2: 确保正确获取 fabric 对象的坐标
+                        // 假设 roomObj.text 是之前 createRoomShape 返回的对象中的 text 属性
+                        // 原代码 roomObj.Text 可能大小写错误或结构不对，这里依据上文 createRoomShape 返回结构修正
+                        let targetText = roomObj.text; 
+                        let text = "";
+                        let textColor = "";
+                        if (targetText) {
+                            switch(item.CareType) {
+                                case "全自理": text = "🚶 "; textColor = "#00B050"; break;
+                                case "半自理": text = "🦽 "; textColor = "#DA9634"; break;
+                                case "全护理": text = "🛌 "; textColor = "#F50909"; break;
+                            }
+                            text += item.Name;
+                            // '♂️♀️🚶🦽🛌测试'
+
+                            let step = role_count.get(item.RoomNum) > 2 ? 30 : 45;
+                            const newText = new fabric.Text(text, {
+                                left: targetText.left, 
+                                top: targetText.top + step * count, // 调整间距，避免重叠
+                                fontSize: 22, // 适当减小字体以适应列表
+                                fontFamily: 'Microsoft YaHei', 
+                                fill: textColor,
+                                fontWeight: '800', 
+                                originX: 'center', 
+                                originY: 'top', // 改为 top 以便更好地控制垂直堆叠
+                                backgroundColor: fillColor, 
+                                padding: 2,
+                                hasControls: false, 
+                                selectable: false, 
+                                lockMovement: true,
+                            });
+                            canvas.add(newText);
+                            allTextLabels.push(newText); // 加入全局管理列表
+                        }
+                    });
+
+                    canvas.renderAll(); // 数据加载完成后重新渲染
+                } else if(data.code == 1001) {
+                    // cookie 失效
+                    window.top.location.href = "../../index.html";
+                } else {
+                    // 确保 layer 已加载
+                    layui.use('layer', function(){
+                        layer.msg(data.msg, {icon: 5, time: 5000});
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("AJAX Error:", error);
+                layui.use('layer', function(){
+                    layer.msg("数据加载失败", {icon: 2});
+                });
+            }
+        });
+
+        
+        
+        //canvas.renderAll();
+    })();
+</script>
+</body>
+</html>
