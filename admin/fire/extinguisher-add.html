@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="utf-8">
+    <title>
+        基本信息
+    </title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+	
+	<script type="text/javascript" src="../../js/base.js"></script>
+</head>
+<body>
+
+<div class="layui-card">
+    <form class="layui-form layui-form-pane" action="" id="register" lay-filter="register">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+			<input type="hidden" id="from">
+			
+			<br>
+			<div class="layui-tab-item layui-show">
+				<div class="layui-form-item">
+					<div>
+						<label class="layui-form-label">	
+							<span class='x-red'>*</span>编号
+						</label>
+						<div class="layui-input-block">
+							<input type="text" id="extinguisher_code" name="extinguisher_code" lay-verify="required" value="" class="layui-input">
+						</div>
+					</div>
+					<div>
+						<label class="layui-form-label">
+							<span class='x-red'>*</span>区域
+						</label>
+						<div class="layui-input-block">
+							<input type="text" name="area" id="area" lay-verify="required" value="" class="layui-input">
+						</div>
+					</div>
+					<div>
+						<label class="layui-form-label">
+							<span class='x-red'>*</span>位置
+						</label>
+						<div class="layui-input-block">
+							<input type="text" name="location" id="location" lay-verify="required" value="" class="layui-input">
+						</div>
+					</div>
+					<div>
+						<label class="layui-form-label">
+							<span class='x-red'>*</span>类型
+						</label>
+						<div class="layui-input-block">
+							<input type="text" name="type" id="type" lay-verify="required" value="MFZ/ABC5 干粉" class="layui-input">
+						</div>
+					</div>
+					<div>
+						<label class="layui-form-label">
+							<span class='x-red'>*</span>规格
+						</label>
+						<div class="layui-input-block">
+							<select name="specification" id="specification" lay-verify="required">
+								<option value="5KG">5KG</option>
+								<option value="3KG">3KG</option>
+							</select>
+						</div>
+					</div>
+					<div>
+						<label class="layui-form-label">
+							<span class='x-red'>*</span>有效期
+						</label>
+						<div class="layui-input-block">
+							<input type="text" name="validity_years" id="validity_years" lay-verify="required number" value="5" class="layui-input">
+						</div>
+					</div>
+					<div>
+						<label for="production_date" class="layui-form-label">
+							<span class='x-red'>*</span>生产日期
+						</label>
+						<div class="layui-input-inline">
+							<input type="text" autocomplete="off" id="production_date" name="production_date" lay-verify="required" class="layui-input" placeholder="生产日期">
+						</div>
+					</div>
+					<div>
+						<label for="expiry_date" class="layui-form-label">
+							<span class='x-red'>*</span>到期日期
+						</label>
+						<div class="layui-input-inline">
+							<input type="text" autocomplete="off" id="expiry_date" name="expiry_date" lay-verify="required" class="layui-input" placeholder="到期日期" disabled>
+						</div>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<button class="layui-btn layui-btn-fluid"  type="button" lay-filter="add" lay-submit="">
+						提交
+					</button>
+				</div>
+			</div>
+        </div>
+    </form>
+</div>
+
+<!--工具栏模板-->
+<script type="text/html" id="contactstools">
+  <div class="layui-btn-group">
+    <button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" id="contacts_add">
+		<i class="layui-icon"  style="font-size: 20px">&#xe61f;</i>
+	</button>
+	<!--<button class="layui-btn layui-btn-primary layui-btn layui-btn-sm" onclick="onRefresh();" lay-event="refresh"><i class="layui-icon"  style="font-size: 20px">&#xe669;</i></button>-->
+  </div>
+</script>
+
+<script type="text/html" id="fieldtool">
+  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="delete">删除</a>
+</script>
+
+<script>
+
+    layui.use(['element','layer','form', 'table', 'laydate'], function(){
+        var  $ = layui.jquery;//jquery
+        var lement = layui.element;//面包导航
+        var layer = layui.layer;//弹出层
+        var form = layui.form;
+		var table = layui.table;
+		var laydate = layui.laydate;
+
+		var date= new Date();
+		var inst = laydate.render({
+			elem: '#expiry_date'
+			,id:'expiry_date_inst'
+			,isInitValue: true
+			,type: 'date'
+			,value: date
+		});
+		
+		laydate.render({
+			elem: '#production_date'
+			,isInitValue: true
+			,type: 'date'
+			,value: date
+			,done: function(value, date, endDate){
+				var validity = document.getElementById("validity_years")
+				console.log("validity:",validity.value, /^-?\d+(\.\d+)?$/.test(validity.value));
+				if (/^-?\d+(\.\d+)?$/.test(validity.value)) {
+					var newDate = new Date(date.year, date.month - 1, date.date);
+					laydate.unbind("expiry_date_inst");
+					laydate.render({
+						elem: '#expiry_date'
+						,id:'expiry_date_inst'
+						,isInitValue: true
+						,type: 'date'
+						,value: newDate
+					});
+				}
+			}
+		});
+
+		 //鼠标失去焦点事件
+        // $(document).ready(function () {
+        //     $("#chinaid").blur(function () {
+        //         var china_id = $(this).val();
+		// 		var age = GetAge(china_id);
+		// 		if (age != 0) {
+		// 			$("#age").val(age);
+		// 		}
+				
+		// 		var sex = GetSex(china_id);
+		// 		if (sex != 0) {
+		// 			document.getElementById("sex").value = GetSex(china_id);
+		// 			form.render("select");
+		// 		}
+        //     })
+        // });
+		
+
+        //监听提交
+        form.on('submit(add)', function(data){
+            $.ajax({
+                type: "post",
+                url: BasePathJLY + '/addextinguisher',
+                data: data.field,
+                dataType: "json",
+				headers: {'Access-Control-Allow-Origin' : BasePathJLY,},
+				xhrFields: {withCredentials: true},
+                success: function(data){
+					console.log(data)
+                    if(data.code==0){
+                        layer.msg("添加成功", {icon: 6,time:2000},function () {
+                            window.parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                        return false;
+                    }else if(data.code==1001) {
+						// cookie 失效
+						window.top.location.href = "../../index.html"
+                        return false;
+					}else{
+                        layer.msg(data.msg,{icon:5,time:5000});
+						return false;
+                    }
+                },
+				end: function(){
+					layer.close(loading_idx);
+				}
+            });
+
+			console.log("add:", data.field);
+        });
+		
+		$(document).keyup(function(event){
+			if (event.keyCode == 27) {
+			
+				var childFrame = window.frames[0];
+				console.log(childFrame);
+				
+				var len = window.frames.length;
+				if (len == 0) {
+					// 获得frame索引
+					var index = parent.layer.getFrameIndex(window.name);
+					//关闭当前frame
+					parent.layer.close(index);
+				} else {
+					var childFrame = window.frames[len-1];
+					// 获得frame索引
+					var index = layer.getFrameIndex(childFrame.name);
+					//关闭当前frame
+					layer.close(index);
+				}
+			}
+		})
+    })
+</script>
+
+</body>
+</html>

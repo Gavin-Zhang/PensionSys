@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="../css/index.css">
 		<script src="../lib/layui/layui.js" charset="utf-8"></script>
 		<script type="text/javascript" src="../js/index.js"></script>
-		<script type="text/javascript" src="./js/base.js"></script>
+		<script type="text/javascript" src="../jly/js/base.js"></script>
 		<script type="text/javascript" src="../../js/base.js"></script>
 		<script type="text/javascript" src="../../js/printtpl.js"></script>
 	</head>
@@ -27,7 +27,7 @@
 				<i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
 			</a>
 		</div>
-		<!--
+
 		<div class="layui-fluid">
 			<div class="layui-row layui-col-space15">
 				<div class="layui-col-md12">
@@ -35,48 +35,22 @@
 						<div class="layui-card-body ">
 							<form class="layui-form layui-col-space5">
 								<div class="layui-inline layui-show-xs-block">
-									<input type="text" id="username" name="username"  placeholder="姓名" autocomplete="off" class="layui-input">
+									<input type="text" id="code" name="code"  placeholder="编号" autocomplete="off" class="layui-input">
 								</div>
 								<div class="layui-inline layui-show-xs-block">
-									<input type="text" id="phone" name="phone"  placeholder="联系方式"  autocomplete="off" class="layui-input">
+									<input type="text" id="area" name="area"  placeholder="区域"  autocomplete="off" class="layui-input">
 								</div>
 								<div class="layui-inline layui-show-xs-block">
-									<input type="text" id="chinaid" name="chinaid"  placeholder="身份证" autocomplete="off" class="layui-input">
+									<input type="text" id="location" name="location"  placeholder="位置" autocomplete="off" class="layui-input">
 								</div>
 								<div class="layui-inline layui-show-xs-block">
-									<select name="client_type" id="client_type" lay-filter="client_type">
-										<option value="">人员类型</option>
-										<option value="社会老人">社会老人</option>
-										<option value="农村低保老人">农村低保老人</option>
-										<option value="城镇低保老人">城镇低保老人</option> 
-										<option value="五保老人">五保老人</option>
-									</select>
-								</div>
-								<div class="layui-inline layui-show-xs-block">
-									<select name="pay_type" id="pay_type" lay-filter="pay_type">
-										<option value="">缴费类型</option>
-										<option value="自费">自费</option>
-										<option value="低保">低保</option>
-										<option value="五保">五保</option>
-									</select>
-								</div>
-								<div class="layui-inline layui-show-xs-block">
-									<select name="trusteeship" id="trusteeship" lay-filter="trusteeship">
-										<option value="">政府托管</option>
-										<option value="否">否</option>
-										<option value="是">是</option>
-									</select>
-								</div>
-								<div class="layui-inline layui-show-xs-block">
-									<select name="status" id="status" lay-filter="status">
-										<option value="">入住状态</option>
-										<option value="在院">在院</option>
-										<option value="离院">离院</option>
-										<option value="平凡医院">平凡医院</option>
-									</select>
+									<input type="text" id="specification" name="specification"  placeholder="规格" autocomplete="off" class="layui-input">
 								</div>
 								<div class="layui-inline layui-show-xs-block">
 									<button class="layui-btn"  lay-submit="" type="button" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+								</div>
+								<div class="layui-inline layui-show-xs-block">
+									<button class="layui-btn"  lay-submit="" type="button" lay-filter="add"><i class="layui-icon">&#xe608;</i></button>
 								</div>
 							</form>
 						</div>
@@ -84,7 +58,7 @@
 				</div>
 			</div>
 		</div>	
-	-->
+
 		<table class="layui-hide" id="demo" lay-filter="test"></table>
 
 
@@ -93,7 +67,7 @@
 		</script>
 
 		<script>
-			let search_data = {name: "", phone: "", chinaid: "", clienttype: "", paytype: "", trusteeship: "", status: ""};
+			let search_data = {code: "", area: "", location: "", specification: ""};
 			layui.use(['table', 'laydate','form'], function(){
 				var table = layui.table
 				var laydate = layui.laydate;
@@ -116,7 +90,7 @@
 					,even: true //开启隔行背景
 					//,totalRow: true //开启合计行
 					,cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-					,id:"clients"
+					,id:"extinguishers"
 					,title:"列表"
 					,limits:[10,20,30,50,100,150,200,300,400,500,1000]
 					,limit: 20
@@ -158,24 +132,31 @@
 					}
 				});
 			
-			
 				//监听提交
 				form.on('submit(sreach)', function(data){
-					sreachClient();
+					sreachExtinguisher();
 				});
-				$("input[name='username']").keypress(function (e) {
+				form.on('submit(add)', function(data){
+					onAddExtinguisher();
+				});
+				$("input[name='code']").keypress(function (e) {
 					if (e.which == key_enter) {
-						sreachClient()
+						sreachExtinguisher()
 					}
 				});
-				$("input[name='phone']").keypress(function (e) {
+				$("input[name='area']").keypress(function (e) {
 					if (e.which == key_enter) {
-						sreachClient()
+						sreachExtinguisher()
 					}
 				});
-				$("input[name='chinaid']").keypress(function (e) {
+				$("input[name='location']").keypress(function (e) {
 					if (e.which == key_enter) {
-						sreachClient()
+						sreachExtinguisher()
+					}
+				});
+				$("input[name='specification']").keypress(function (e) {
+					if (e.which == key_enter) {
+						sreachExtinguisher()
 					}
 				});
 				
@@ -188,77 +169,53 @@
 				})
 			});
 		
-			function onAddClient() {
+			function onAddExtinguisher() {
 				layer.open({
 					type: 2,
 					area: ['900px', '600px'],
 					fixed: false, //不固定
 					maxmin: true,
-					title: "敬老院服务管理-总览-入住",
-					content: 'client-in.html',
-					success:function(layero,index){
-						var body = layer.getChildFrame('body', index);
-						body.contents().find("#from").val("client-list");
-						layer.full(index);
-					}
+					title: "敬老院消防管理-灭火器-添加",
+					content: 'extinguisher-add.html',
 				});
 			}
 
-			function sreachClient() {
-				var chinaid = layui.$('#chinaid').val()
-				var name = layui.$('#username').val()
-				var phone = layui.$('#phone').val()
-				var clienttype =layui.$('#client_type').val()
-				var paytype = layui.$('#pay_type').val()
-				var trusteeship = layui.$('#trusteeship').val()
-				var status = layui.$('#status').val()
+			function sreachExtinguisher() {
+				var code = layui.$('#code').val()
+				var area = layui.$('#area').val()
+				var location = layui.$('#location').val()
+				var specification =layui.$('#specification').val()
 				
-				if (name == search_data.name && 
-					phone == search_data.phone && 
-					chinaid == search_data.chinaid &&
-					clienttype == search_data.clienttype &&
-					paytype == search_data.paytype &&
-					trusteeship == search_data.trusteeship &&
-					status == search_data.status) {
+				if (code == search_data.code && 
+					area == search_data.area && 
+					location == search_data.location &&
+					specification == search_data.specification) {
 					return;
 				}
 
-				search_data.name = name;
-				search_data.phone = phone;
-				search_data.chinaid = chinaid;
-				search_data.clienttype = clienttype;
-				search_data.paytype = paytype;
-				search_data.trusteeship = trusteeship;
-				search_data.status = status;
-				if (name == "" && phone == "" && chinaid == "" && clienttype == "" 
-					&& paytype == "" && trusteeship == "" && status == "") {
-					layui.table.reload('clients', {where:{}})
+				search_data.code = code;
+				search_data.area = area;
+				search_data.location = location;
+				search_data.specification = specification;
+				if (code == "" && area == "" && location == "" && specification == "") {
+					layui.table.reload('extinguishers', {where:{}})
 					return;
 				}
 
 				let where = {}
-				if (name != "") {
-					where.name = name
+				if (code != "") {
+					where.code = code
 				}
-				if (phone != "") {
-					where.phone = phone
+				if (area != "") {
+					where.area = area
 				}
-				if (chinaid != "") {
-					where.chinaid = chinaid
+				if (location != "") {
+					where.location = location
 				}
-				if (clienttype!= "") {
-					where.clienttype = clienttype
+				if (specification!= "") {
+					where.specification = specification
 				}
-				if (paytype!= "") {
-					where.paytype = paytype
-				}
-				if (trusteeship!= "") {
-					where.trusteeship = trusteeship
-				}
-				if (status!= "") {
-					where.status = status
-				}
-				layui.table.reload('clients', { where: where })
+				layui.table.reload('extinguishers', { where: where })
 			}
 
 		</script>
