@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="utf-8">
+    <title>隐患信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+    <script type="text/javascript" src="../../js/base.js"></script>
+    <style>
+        html, body {
+            overflow: hidden !important;
+        }
+        /* ===== 表单卡片 ===== */
+        .danger-card {
+            margin: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .danger-card .layui-card-header {
+            background: linear-gradient(135deg, #09b4c5 0%, #04564e 100%);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            padding: 14px 20px;
+            border-bottom: none;
+        }
+
+        .danger-card .layui-card-header i {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .danger-card .layui-card-body {
+            padding: 30px 25px;
+        }
+
+        /* ===== 分区标题 ===== */
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            padding: 0 0 8px 0;
+            margin: 24px 0 16px 0;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #09b4c5;
+            border-radius: 2px;
+        }
+        .section-title:first-child {
+            margin-top: 0;
+        }
+        .section-title i {
+            margin-right: 6px;
+            color: #09b4c5;
+        }
+
+        /* ===== 双列布局 ===== */
+        .form-row {
+            margin-bottom: 0;
+        }
+        .form-row .layui-col-md6 {
+            padding: 0 8px;
+        }
+        .form-row .layui-col-md6:first-child {
+            padding-left: 0;
+        }
+        .form-row .layui-col-md6:last-child {
+            padding-right: 0;
+        }
+
+        /* ===== 上传区域 ===== */
+        .upload-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .upload-btn-wrap {
+            width: 160px;
+            height: 90px;
+            border: 2px dashed #d2d2d2;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            background: #fafbfc;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-btn-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 8px;
+            padding: 2px;
+            background: linear-gradient(135deg, #09b4c5, #5fb878);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .upload-btn-wrap:hover {
+            border-color: #09b4c5;
+            color: #09b4c5;
+            background: #f0fafb;
+            box-shadow: 0 2px 8px rgba(9, 180, 197, 0.12);
+        }
+
+        .upload-btn-wrap:hover::before {
+            opacity: 1;
+        }
+
+        .upload-btn-wrap i {
+            font-size: 30px;
+            margin-bottom: 6px;
+        }
+
+        .upload-btn-wrap span {
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 160px;
+            height: 90px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid #e6e6e6;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s;
+        }
+
+        .preview-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item .del-mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .preview-item:hover .del-mask {
+            opacity: 1;
+        }
+
+        .upload-hint {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 8px;
+            padding-left: 2px;
+        }
+
+        .upload-hint i {
+            font-size: 14px;
+            margin-right: 3px;
+            vertical-align: -1px;
+        }
+
+        /* ===== 提交按钮 ===== */
+        .submit-wrap {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .submit-wrap .layui-btn {
+            min-width: 200px;
+            height: 42px;
+            line-height: 42px;
+            font-size: 15px;
+            letter-spacing: 3px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #09b4c5 0%, #04564e 100%);
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-wrap .layui-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(9, 180, 197, 0.4);
+        }
+
+        .submit-wrap .layui-btn i {
+            margin-right: 4px;
+        }
+
+        /* ===== 隐患处理操作按钮 ===== */
+        .layui-btn-container .layui-btn-action {
+            background: linear-gradient(135deg, #09b4c5 0%, #04564e 100%);
+            border: none;
+            color: #fff;
+            letter-spacing: 1px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .layui-btn-container .layui-btn-action:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(9, 180, 197, 0.4);
+            color: #fff;
+        }
+
+        .layui-btn-container .layui-btn-action i {
+            margin-right: 4px;
+            font-size: 14px;
+        }
+
+        /* ===== 输入框增强 ===== */
+        .layui-input:focus,
+        .layui-textarea:focus {
+            border-color: #09b4c5 !important;
+            box-shadow: 0 0 0 2px rgba(9, 180, 197, 0.1) !important;
+        }
+
+        /* ===== 面包屑导航 ===== */
+        .x-nav {
+            margin: 0 15px;
+            border-radius: 6px 6px 0 0;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .danger-card {
+                margin: 10px;
+            }
+            .danger-card .layui-card-body {
+                padding: 15px;
+            }
+            .form-row .layui-col-md6 {
+                padding: 0;
+            }
+            .upload-btn-wrap,
+            .preview-item {
+                width: 130px;
+                height: 73px;
+            }
+        }
+
+        /* ===== 照片轮播区 ===== */
+        .photo-row {
+            display: flex;
+            gap: 20px;
+            margin: 0 0 24px 0;
+        }
+        .photo-col {
+            flex: 1;
+            min-width: 0;
+            background: #f9fbfd;
+            border-radius: 10px;
+            border: 1px solid #eef2f7;
+            padding: 14px 14px 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .photo-col-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eef2f7;
+        }
+        .photo-col-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            letter-spacing: 1px;
+        }
+        .photo-col-title i {
+            margin-right: 6px;
+            color: #09b4c5;
+            font-size: 16px;
+        }
+        .photo-col .photo-count {
+            font-size: 12px;
+            color: #999;
+            background: #fff;
+            padding: 2px 10px;
+            border-radius: 10px;
+            border: 1px solid #e8e8e8;
+        }
+        .photo-col .photo-count strong {
+            color: #09b4c5;
+        }
+        .photo-carousel-wrap {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            aspect-ratio: 16 / 9;
+            max-height: 200px;
+        }
+        .photo-carousel-wrap .layui-carousel {
+            width: 100%;
+            height: 100% !important;
+        }
+        .photo-carousel-wrap .layui-carousel > div[carousel-item] {
+            height: 100% !important;
+        }
+        .photo-carousel-wrap .layui-carousel > div[carousel-item] > div {
+            height: 100% !important;
+        }
+        .carousel-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            max-height: 200px;
+            height: auto;
+            color: #999;
+            font-size: 14px;
+            background: #fafbfc;
+            border-radius: 8px;
+            border: 1px dashed #dcdfe6;
+        }
+        .carousel-empty i {
+            font-size: 44px;
+            display: block;
+            margin-bottom: 8px;
+            color: #d0d5dd;
+        }
+        .carousel-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #eef2f7;
+        }
+        .carousel-toolbar .layui-btn-xs {
+            height: 26px;
+            line-height: 26px;
+            border-radius: 4px;
+            font-size: 12px;
+            padding: 0 10px;
+        }
+        /* ===== Step Progress 步骤条 ===== */
+        .step-progress-wrap {
+            position: relative;
+            padding: 0;
+        }
+        .step-progress {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 4px 13px 0 13px;
+            position: relative;
+            min-height: 60px;
+        }
+        .step-item {
+            flex: 0 0 0;
+            min-width: 0;
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+        }
+        .step-item-inner {
+            text-align: center;
+            transform: translateX(-50%);
+            transition: transform 0.3s ease;
+            white-space: nowrap;
+        }
+        .step-item:hover .step-item-inner {
+            transform: translateX(-50%) translateY(-4px);
+        }
+        .step-item:hover .step-circle {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .step-item .step-circle {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            background: #f0f2f5;
+            color: #b0b7c4;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid #e4e7ed;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .step-item .step-circle i {
+            transition: transform 0.4s ease;
+        }
+        .step-item .step-label {
+            display: block;
+            margin-top: 4px;
+            font-size: 11px;
+            color: #b0b7c4;
+            font-weight: 500;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+        }
+        .step-item .step-date {
+            display: block;
+            font-size: 10px;
+            color: #c0c6ce;
+            margin-top: 2px;
+            transition: color 0.3s;
+        }
+        .step-item .step-tag {
+            display: none;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        /* Done 已完成 */
+        .step-item.done .step-circle {
+            background: linear-gradient(135deg, #09b4c5 0%, #5fb878 100%);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 16px rgba(9, 180, 197, 0.35);
+        }
+        .step-item.done .step-circle i {
+            animation: step-icon-pop 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .step-item.done .step-label {
+            color: #09b4c5;
+            font-weight: 600;
+        }
+        .step-item.done .step-date {
+            color: #09b4c5;
+        }
+
+        /* Active 进行中 */
+        .step-item.active .step-circle {
+            background: #fff;
+            color: #09b4c5;
+            border-color: #09b4c5;
+            box-shadow: 0 0 0 0 rgba(9, 180, 197, 0.35);
+            animation: pulse-ring 2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+        }
+        .step-item.active .step-circle i {
+            animation: step-icon-bounce 1.2s ease-in-out infinite;
+        }
+        .step-item.active .step-label {
+            color: #09b4c5;
+            font-weight: 700;
+        }
+        .step-item.active .step-date {
+            color: #09b4c5;
+            font-weight: 500;
+        }
+        .step-item.active .step-tag {
+            display: block;
+            background: linear-gradient(135deg, #09b4c5, #0d8775);
+            color: #fff;
+            animation: tag-slide-in 0.5s ease forwards;
+        }
+
+        /* Cancel 已取消 */
+        .step-item.cancel .step-circle {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.35);
+        }
+        .step-item.cancel .step-label {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        .step-item.cancel .step-date {
+            color: #e74c3c;
+        }
+
+        /* 连接线 */
+        .step-line {
+            position: absolute;
+            top: 17px;
+            left: 13px;
+            right: 13px;
+            height: 2px;
+            background: #e8ebf0;
+            z-index: 0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .step-line-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #09b4c5, #5fb878, #5fb878);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 4px;
+            box-shadow: 0 0 12px rgba(9, 180, 197, 0.4);
+        }
+        .step-line-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 14px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
+            border-radius: 2px;
+            animation: line-shine 2s ease-in-out infinite;
+        }
+
+        /* Animations */
+        @keyframes pulse-ring {
+            0%   { box-shadow: 0 0 0 0 rgba(9, 180, 197, 0.4); }
+            60%  { box-shadow: 0 0 0 16px rgba(9, 180, 197, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(9, 180, 197, 0); }
+        }
+        @keyframes step-icon-bounce {
+            0%, 100% { transform: scale(1); }
+            50%      { transform: scale(1.15); }
+        }
+        @keyframes step-icon-pop {
+            0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+            60%  { transform: scale(1.3) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes tag-slide-in {
+            0%   { opacity: 0; transform: translateX(-50%) translateY(6px); }
+            100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        @keyframes line-shine {
+            0%, 100% { opacity: 0; }
+            50%      { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- 表单卡片 -->
+<div class="layui-card danger-card">
+    <div class="layui-card-body">
+        <form class="layui-form layui-form-pane" action="" id="dangerForm" lay-filter="dangerForm">
+            <div class="section-title">
+                <i class="layui-icon layui-icon-app"></i>隐患处理
+            </div>
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-radius layui-btn-action" type="button" id="btnGoDanger"><i class="layui-icon layui-icon-set"></i> 隐患信息</button>
+				<button class="layui-btn layui-btn-radius layui-btn-action" type="button" id="btnGoRectify"><i class="layui-icon layui-icon-set"></i> 整改信息</button>
+				<button class="layui-btn layui-btn-radius layui-btn-action" type="button" id="btnGoMaintain"><i class="layui-icon layui-icon-util"></i> 维修处理</button>
+                <button class="layui-btn layui-btn-radius layui-btn-action" type="button" id="btnPrintRectify"><i class="layui-icon layui-icon-print"></i>打印隐患整改</button>
+                <button class="layui-btn layui-btn-radius layui-btn-action" type="button" id="btnPrintRepair"><i class="layui-icon layui-icon-print"></i>打印故障维修</button>
+                <button class="layui-btn layui-btn-radius layui-btn-action layui-btn-disabled" type="button" id="btnOver" disabled><i class="layui-icon layui-icon-ok-circle"></i>销号</button>
+            </div>
+
+            <!-- 整改进度步骤条 -->
+            <div class="section-title">
+                <i class="layui-icon layui-icon-test"></i>整改进度
+            </div>
+            
+            <div class="layui-form-item form-row">
+                <div class="layui-row">
+                    <label class="layui-form-label">
+                        整体进度
+                    </label>
+                    <div class="layui-input-block">
+                        <div class="step-progress-wrap" id="stepProgressWrap">
+                            <div class="step-progress" id="stepProgress_totle"></div>
+                            <div class="step-line"><div class="step-line-fill" id="stepLineFill_totle" style="width:0%;"></div></div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item form-row">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">
+                            整改进度
+                        </label>
+                        <div class="layui-input-block">
+                            <div class="step-progress-wrap" id="stepProgressWrap">
+                                <div class="step-progress" id="stepProgress_rectification"></div>
+                                <div class="step-line"><div class="step-line-fill" id="stepLineFill_rectification" style="width:0%;"></div></div>
+                            </div>  
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">
+                            复查进度
+                        </label>
+                        <div class="layui-input-block">
+                            <div class="step-progress-wrap" id="stepProgressWrap">
+                                <div class="step-progress" id="stepProgress_review"></div>
+                                <div class="step-line"><div class="step-line-fill" id="stepLineFill_review" style="width:0%;"></div></div>
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item form-row" id="row_repair" hidden>
+                <div class="layui-row">
+                    <label class="layui-form-label">
+                        维修进度
+                    </label>
+                    <div class="layui-input-block">
+                        <div class="step-progress-wrap" id="stepProgressWrap">
+                            <div class="step-progress" id="stepProgress_repair"></div>
+                            <div class="step-line"><div class="step-line-fill" id="stepLineFill_repair" style="width:0%;"></div></div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== 照片轮播（并排） ========== -->
+            <div class="section-title">
+                <i class="layui-icon layui-icon-picture"></i>照片管理
+            </div>
+            <div class="photo-row">
+                <!-- 隐患照片 -->
+                <div class="photo-col">
+                    <div class="photo-col-header">
+                        <span class="photo-col-title"><i class="layui-icon"></i>隐患照片</span>
+                        <span class="photo-count" id="dangerPhotoCount">共 <strong>0</strong> 张</span>
+                    </div>
+                    <div class="photo-carousel-wrap">
+                        <div class="carousel-empty" id="dangerCarouselEmpty">
+                            <div style="text-align:center;">
+                                <i class="layui-icon layui-icon-picture"></i>
+                                <div>暂无隐患现场照片</div>
+                            </div>
+                        </div>
+                        <div class="layui-carousel" id="dangerCarousel" lay-filter="dangerCarousel" style="display:none;">
+                            <div carousel-item id="dangerCarouselItems"></div>
+                        </div>
+                    </div>
+                    <div class="carousel-toolbar" id="dangerCarouselToolbar" style="display:none;">
+                        <button class="layui-btn layui-btn-xs" type="button" id="dangerCarouselPrev">
+                            <i class="layui-icon layui-icon-prev"></i> 上一张
+                        </button>
+                        <button class="layui-btn layui-btn-xs layui-btn-normal" type="button" id="dangerCarouselNext">
+                            下一张 <i class="layui-icon layui-icon-next"></i>
+                        </button>
+                        <button class="layui-btn layui-btn-xs layui-btn-warm" type="button" id="dangerCarouselView">
+                            <i class="layui-icon layui-icon-search"></i> 放大查看
+                        </button>
+                    </div>
+                </div>
+                <!-- 整改照片 -->
+                <div class="photo-col">
+                    <div class="photo-col-header">
+                        <span class="photo-col-title"><i class="layui-icon"></i>整改照片</span>
+                        <span class="photo-count" id="rectifyPhotoCount">共 <strong>0</strong> 张</span>
+                    </div>
+                    <div class="photo-carousel-wrap">
+                        <div class="carousel-empty" id="rectifyCarouselEmpty">
+                            <div style="text-align:center;">
+                                <i class="layui-icon layui-icon-picture"></i>
+                                <div>暂无整改现场照片</div>
+                            </div>
+                        </div>
+                        <div class="layui-carousel" id="rectifyCarousel" lay-filter="rectifyCarousel" style="display:none;">
+                            <div carousel-item id="rectifyCarouselItems"></div>
+                        </div>
+                    </div>
+                    <div class="carousel-toolbar" id="rectifyCarouselToolbar" style="display:none;">
+                        <button class="layui-btn layui-btn-xs" type="button" id="rectifyCarouselPrev">
+                            <i class="layui-icon layui-icon-prev"></i> 上一张
+                        </button>
+                        <button class="layui-btn layui-btn-xs layui-btn-normal" type="button" id="rectifyCarouselNext">
+                            下一张 <i class="layui-icon layui-icon-next"></i>
+                        </button>
+                        <button class="layui-btn layui-btn-xs layui-btn-warm" type="button" id="rectifyCarouselView">
+                            <i class="layui-icon layui-icon-search"></i> 放大查看
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== 提交 ========== -->
+            <!-- <div class="submit-wrap">
+                <button class="layui-btn" type="button" lay-filter="add" lay-submit="">
+                    <i class="layui-icon layui-icon-ok"></i> 提 交
+                </button>
+            </div> -->
+
+        </form>
+    </div>
+</div>
+
+<script>
+    //getdanger
+    const params = new URLSearchParams(window.location.search);
+	const id = params.get('id');
+    layui.use(['element', 'layer', 'form', 'upload', 'laydate'], function () {
+        var $ = layui.jquery;
+        var element = layui.element;
+        var layer = layui.layer;
+        var form = layui.form;
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+        var danger_data = {};
+
+        $.ajaxSetup({
+            headers: { 'Access-Control-Allow-Origin': Domain },
+            xhrFields: { withCredentials: true }
+        });
+
+        // 快捷操作按钮
+        $('#btnGoDanger').on('click', function () {
+            layer.open({
+                type: 2,
+                area: ['1000px', '685px'],
+                fixed: false,
+                maxmin: false,
+                title: false,
+                content: 'danger-detail-danger.html?id=' + danger_data.Id,
+            });
+        });
+        $('#btnGoRectify').on('click', function () {
+            layer.open({
+                type: 2,
+                area: ['1000px', '755px'],
+                fixed: false,
+                maxmin: false,
+                title: false,
+                content: 'danger-detail-rectification.html?id=' + danger_data.Id,
+            });
+        });
+        $('#btnGoMaintain').on('click', function () {
+            if (danger_data.RepairNo === '') {
+                layer.confirm('是否创建维修工单？', { icon: 3 }, function (index) {
+                    if (danger_data.RepairNo !== '') return;
+
+                    layer.close(index);
+                    var loadIdx = layer.load(1);
+                    $.ajax({
+                        type: 'post',
+                        url: BasePathJLY + '/createrepairorder',
+                        data: { id: danger_data.Id },
+                        dataType: 'json',
+                        success: function (res) {
+                            if (res.code == 0 && res.data && res.data[0]) {
+                                danger_data = res.data[0];
+                                layui.data('danger_data', { key: danger_data.Id, value: res.data[0]})
+                                layer.open({
+                                    type: 2,
+                                    area: ['1000px', '650px'],
+                                    fixed: false,
+                                    maxmin: false,
+                                    title: false,
+                                    content: 'danger-detail-repair.html?id=' + danger_data.Id
+                                });
+                                initstep(danger_data);
+                            } else {
+                                layer.msg('创建维修工单失败', { icon: 2 });
+                            }
+                        },
+                        error: function () {
+                            layer.msg('加载数据失败', { icon: 2 });
+                        },
+                        complete: function () {
+                            layer.close(loadIdx);
+                        }
+                    });
+                });
+            } else {
+                layer.open({
+                    type: 2,
+                    area: ['1000px', '650px'],
+                    fixed: false,
+                    maxmin: false,
+                    title: false,
+                    content: 'danger-detail-repair.html?id=' + danger_data.Id
+                });
+            }
+        });
+
+        // 打印隐患整改记录
+        $('#btnPrintRectify').on('click', function () {
+            // 构建打印数据
+            var printData = {
+                Id: danger_data.Id,
+                RectificationNo: (danger_data.RecInfo && danger_data.RecInfo.RectificationNo) || '',
+                CheckDate: danger_data.CheckDate || '',
+                CheckType: danger_data.CheckType || '',
+                SafetyInvestigator: danger_data.SafetyInvestigator || '',
+                Position: danger_data.Position || '',
+                Level: danger_data.Level || '',
+                Description: danger_data.Description || '',
+                RepairNo: danger_data.RepairNo || '',
+                DangerPhoto: danger_data.DangerPhoto || '',
+                RectificationPhoto: danger_data.RectificationPhoto || '',
+                RecInfo: danger_data.RecInfo || {},
+                RectificationState: danger_data.RectificationResult || ''
+            };
+            // 隐患照片列表
+            var dangerPhotos = [];
+            if (danger_data.DangerPhoto) {
+                $.each(danger_data.DangerPhoto.split(';'), function (i, p) {
+                    p = $.trim(p);
+                    if (p) dangerPhotos.push({ Path: p, Selected: false });
+                });
+            }
+            // 整改照片列表
+            var rectifyPhotos = [];
+            if (danger_data.RectificationPhoto) {
+                $.each(danger_data.RectificationPhoto.split(';'), function (i, p) {
+                    p = $.trim(p);
+                    if (p) rectifyPhotos.push({ Path: p, Selected: false });
+                });
+            }
+            layui.sessionData('danger_print', {
+                key: 'printdata',
+                value: JSON.stringify(printData)
+            });
+            layui.sessionData('danger_print', {
+                key: 'dangerPhotos',
+                value: JSON.stringify(dangerPhotos)
+            });
+            layui.sessionData('danger_print', {
+                key: 'rectifyPhotos',
+                value: JSON.stringify(rectifyPhotos)
+            });
+            layer.open({
+                type: 2,
+                area: ['900px', '550px'],
+                fixed: false,
+                maxmin: false, 
+                title: '选择打印照片',
+                content: 'danger-printset.html'
+            });
+        });
+
+        // 打印故障维修记录
+        $('#btnPrintRepair').on('click', function () {
+            var recInfo = danger_data.RecInfo || {};
+            var repInfo = danger_data.RepInfo || {};
+            // 构建打印数据
+            var printData = {
+                Id: danger_data.Id,
+                RepairNo: recInfo.RectificationNo || '',
+                RectificationNo: danger_data.RectificationNo || '',
+                CheckDate: danger_data.CheckDate || '',
+                SafetyInvestigator: danger_data.SafetyInvestigator || '',
+                Position: danger_data.Position || '',
+                Description: danger_data.Description || '',
+                SystemStopSign: repInfo.IsStopSys || '',
+                FireDeptSign: repInfo.IsFiling || '',
+                SafetyMeasure: repInfo.Safeguards || '',
+                RepairTime: repInfo.RepairDate || '',
+                RepairPerson: repInfo.RepairMan || '',
+                RepairMethod: repInfo.Method || '',
+                ConfirmTime: repInfo.ConfirmDate || '',
+                ConfirmSign: repInfo.Confirmer || ''
+            };
+            layui.sessionData('danger_repair_print', {
+                key: 'printdata',
+                value: JSON.stringify(printData)
+            });
+            layer.open({
+                type: 2,
+                area: ['900px', '780px'],
+                fixed: false,
+                maxmin: false,
+                title: '维修记录 - 打印预览',
+                content: 'danger-repair-print.html',
+                btn: ['打印'],
+                yes: function (index, layero) {
+                    var iframe = layero.find('iframe')[0];
+                    if (iframe) iframe.contentWindow.print();
+                }
+            });
+        });
+
+        $('#btnOver').on('click', function () {
+            if ($(this).hasClass('layui-btn-disabled')) return;
+            layer.confirm('确认执行销号操作？', { icon: 3, title: '销号确认' }, function (index) {
+                layer.close(index);
+                var loadIdx = layer.load(1);
+                $.ajax({
+                    type: 'post',
+                    url: BasePathJLY + '/destroydanger',
+                    data: { id: danger_data.Id },
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.code == 0) {
+                            danger_data.RectificationResult = '销号';
+                            initstep(danger_data);
+                            layer.msg('销号成功', { icon: 1 });
+                        } else {
+                            layer.msg('销号失败:' + res.Message, { icon: 2 });
+                        }
+                    },
+                    error: function () {
+                        layer.msg('加载数据失败', { icon: 2 });
+                    },
+                    complete: function () {
+                        layer.close(loadIdx);
+                    }
+                });
+            });
+        });
+
+        // 检查销号按钮状态：整改进度=已整改，复查进度=已验收，维修进度=已维修或无维修工单
+        function checkOverButton(rectification_step, review_step, repair_step, isCancel) {
+            var $btn = $('#btnOver');
+            var enable = false;
+            if (danger_data.RectificationResult !== '销号') {
+                if (!isCancel && rectification_step >= 2 && review_step >= 2) {
+                    // 无维修工单 或 维修已完成
+                    if (repair_step === -1 || repair_step >= 2) {
+                        enable = true;
+                    }
+                }
+            }
+            
+            if (enable) {
+                $btn.removeClass('layui-btn-disabled').removeAttr('disabled');
+            } else {
+                $btn.addClass('layui-btn-disabled').attr('disabled', 'disabled');
+            }
+        }
+        
+
+        // ==================== 步骤条 ====================
+        function renderStepProgress(progress, fill, steps, currentStep, stepDates, isCancel) {
+            var html = '';
+            var totalSteps = steps.length;
+            steps.forEach(function (step) {
+                var cls = '';
+                var iconClass = step.icon;
+                if (isCancel) {
+                    if (step.key < currentStep) {
+                        cls = 'done';
+                        iconClass = 'layui-icon-ok';
+                    } else if (step.key === currentStep) {
+                        cls = 'cancel';
+                        iconClass = 'layui-icon-close-fill';
+                    }
+                } else {
+                    if (step.key < currentStep) {
+                        cls = 'done';
+                        iconClass = 'layui-icon-ok';
+                    } else if (step.key === currentStep) {
+                        cls = 'active';
+                    }
+                }
+                var dateText = '';
+                if (stepDates && stepDates[step.key]) {
+                    dateText = '<span class="step-date">' + stepDates[step.key] + '</span>';
+                }
+                html += '<div class="step-item ' + cls + '" data-step="' + step.key + '">';
+                html += '  <div class="step-item-inner">';
+                html += '    <div class="step-circle"><i class="layui-icon ' + iconClass + '"></i></div>';
+                html += '    <span class="step-label">' + step.label + '</span>';
+                html += dateText;
+                html += '  </div>';
+                html += '</div>';
+            });
+            $('#' + progress).html(html);
+            var percent;
+            if (isCancel) {
+                percent = 0;
+            } else if (currentStep >= totalSteps - 1) {
+                percent = 100;
+            } else {
+                percent = (currentStep / (totalSteps - 1)) * 100;
+            }
+            $('#'+fill).css('width', percent + '%');
+        }
+
+        // ESC 关闭弹窗
+        $(document).keyup(function (event) {
+            if (event.keyCode == 27) {
+                var childFrame = window.frames[0];
+                var len = window.frames.length;
+                if (len == 0) {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                } else {
+                    var childFrame = window.frames[len - 1];
+                    var index = layer.getFrameIndex(childFrame.name);
+                    layer.close(index);
+                }
+            }
+        });
+
+        var totle_step_config = [
+            { key: 0, label: '待整改', icon: 'layui-icon-flag',      iconDone: 'layui-icon-ok' },
+            { key: 1, label: '整改中', icon: 'layui-icon-set-fill',  iconDone: 'layui-icon-ok' },
+            { key: 2, label: '超期',   icon: 'layui-icon-ok-circle', iconDone: 'layui-icon-ok' },
+            { key: 3, label: '销号',   icon: 'layui-icon-ok-circle', iconDone: 'layui-icon-ok' },
+        ];
+        //renderStepProgress("stepProgress_totle", "stepLineFill_totle", totle_step_config, 0, null, false);
+        var rectification_step_config = [
+            { key: 0, label: '待整改', icon: 'layui-icon-flag',      iconDone: 'layui-icon-ok' },
+            { key: 1, label: '整改中', icon: 'layui-icon-set-fill',  iconDone: 'layui-icon-ok' },
+            { key: 2, label: '已整改', icon: 'layui-icon-ok-circle', iconDone: 'layui-icon-ok' },
+        ];
+       // renderStepProgress("stepProgress_rectification", "stepLineFill_rectification", rectification_step_config, 1, null, false);
+        var review_step_config = [
+            { key: 0, label: '待整改', icon: 'layui-icon-flag',      iconDone: 'layui-icon-ok' },
+            { key: 1, label: '整改中', icon: 'layui-icon-set-fill',  iconDone: 'layui-icon-ok' },
+            { key: 2, label: '已验收', icon: 'layui-icon-ok-circle', iconDone: 'layui-icon-ok' },
+        ];
+        //renderStepProgress("stepProgress_review", "stepLineFill_review", review_step_config, 1, null, false);
+        var repair_step_config = [
+            { key: 0, label: '待维修', icon: 'layui-icon-flag',      iconDone: 'layui-icon-ok' },
+            { key: 1, label: '维修中', icon: 'layui-icon-set-fill',  iconDone: 'layui-icon-ok' },
+            { key: 2, label: '已维修', icon: 'layui-icon-ok-circle', iconDone: 'layui-icon-ok' },
+        ];
+        //renderStepProgress("stepProgress_repair", "stepLineFill_repair", repair_step_config, 1, null, false);
+
+
+        // ==================== 照片轮播 ====================
+        var dangerPhotos = [];       // 隐患照片列表
+        var rectifyPhotos = [];      // 整改照片列表
+        var dangerCarouselIns = null;
+        var rectifyCarouselIns = null;
+
+        // 初始化轮播（无照片时先不渲染layui carousel）
+        function initCarousel(type, photos) {
+            var carouselId, itemsId, emptyId, toolbarId, countId;
+            if (type === 'danger') {
+                carouselId = 'dangerCarousel';
+                itemsId = 'dangerCarouselItems';
+                emptyId = 'dangerCarouselEmpty';
+                toolbarId = 'dangerCarouselToolbar';
+                countId = 'dangerPhotoCount';
+                dangerPhotos = photos || [];
+            } else {
+                carouselId = 'rectifyCarousel';
+                itemsId = 'rectifyCarouselItems';
+                emptyId = 'rectifyCarouselEmpty';
+                toolbarId = 'rectifyCarouselToolbar';
+                countId = 'rectifyPhotoCount';
+                rectifyPhotos = photos || [];
+            }
+
+            // 更新数量
+            $('#' + countId + ' strong').text(photos.length);
+
+            if (photos.length === 0) {
+                $('#' + emptyId).show();
+                $('#' + carouselId).hide();
+                $('#' + toolbarId).hide();
+                return;
+            }
+
+            // 有照片：显示轮播
+            $('#' + emptyId).hide();
+            $('#' + toolbarId).show();
+
+            // 构建轮播项
+            var html = '';
+            photos.forEach(function (photo) {
+                var url = BasePathJLY + '/dangerphoto/' + photo;
+                html += '<div><img src="' + url + '" alt="照片" style="width:100%;height:100%;object-fit:contain;"></div>';
+            });
+            $('#' + itemsId).html(html);
+
+            // 渲染carousel
+            layui.carousel.render({
+                elem: '#' + carouselId,
+                width: '100%',
+                height: '100%',
+                arrow: 'hover',
+                anim: 'fade',
+                indicator: 'inside',
+                autoplay: photos.length > 1
+            });
+
+            $('#' + carouselId).show();
+        }
+
+        // 轮播：上一张 / 下一张
+        function carouselGo(type, direction) {
+            var carouselId = type === 'danger' ? 'dangerCarousel' : 'rectifyCarousel';
+            var $carousel = layui.$('#' + carouselId);
+            // 通过触发layui carousel事件切换
+            var $next = $carousel.find('.layui-carousel').data('layui-carousel');
+            if (!$next) return;
+            // 使用layui内部方法
+            var index = $carousel.find('.layui-carousel').attr('lay-index') || '0';
+            index = parseInt(index);
+            var photos = type === 'danger' ? dangerPhotos : rectifyPhotos;
+            if (direction === 'prev') {
+                index = index <= 0 ? photos.length - 1 : index - 1;
+            } else {
+                index = index >= photos.length - 1 ? 0 : index + 1;
+            }
+            // 通过设置indicator来切换
+            $carousel.find('.layui-carousel-ind li').eq(index).trigger('click');
+        }
+
+        // 放大查看
+        function carouselView(type) {
+            var photos = type === 'danger' ? dangerPhotos : rectifyPhotos;
+            if (photos.length === 0) {
+                layer.msg('暂无照片', { icon: 2 });
+                return;
+            }
+
+            var data = photos.map(function (p) {
+                var src = BasePathJLY + '/dangerphoto/' + p;
+                return { src: src, alt: '照片' };
+            });
+            layer.photos({ photos: { title: type === 'danger' ? '隐患照片' : '整改照片', start: 0, data: data }, anim: 5, shade: 0.7 });
+        }
+
+        // ==================== 加载隐患数据 ====================
+        function loadDangerData() {
+            if (!id) return;
+            var loadIdx = layer.load(1, { shade: [0.3, '#000'] });
+            $.ajax({
+                type: "post",
+                url: BasePathJLY + '/getdanger',
+                data: { id: id },
+                dataType: "json",
+                success: function (res) {
+                    if (res.code == 0 && res.data && res.data[0]) {
+                        fillFormData(res.data[0]);
+                    } else if (res.code == 1001) {
+                        window.top.location.href = "../../index.html";
+                    } else {
+                        layer.msg('未找到隐患记录', { icon: 2 });
+                    }
+                },
+                error: function () { layer.msg('加载数据失败', { icon: 2 }); },
+                complete: function () { layer.close(loadIdx); }
+            });
+        }
+
+        function initstep(data) {
+            var recInfo = data.RecInfo || {};
+
+            // 整改状态 → 步骤值 映射
+            var RECT_STEP = { '待整改': 0, '整改中': 1, '已整改': 2 };
+            var rectification_step = RECT_STEP[recInfo.RectificationState] || 0;
+
+            // 整体进度映射：整改进度 [0,1,2] → 整体 [0=待整改, 1=整改中, 3=销号]
+            var TOTLE_MAP = [0, 1, 3];
+            var totle_step = TOTLE_MAP[rectification_step] || 0;
+
+            // 销号判断
+            var isCancel = data.RectificationResult === '销号';
+            if (isCancel) totle_step = 3;
+
+            // 超期判断：当前日期 > 整改截止日期
+            if (totle_step !== 3 && recInfo.RectificationPeriod) {
+                var today = new Date().toISOString().substring(0, 10);
+                var period = recInfo.RectificationPeriod.substring(0, 10);
+                if (today > period) totle_step = 2;
+            }
+
+            // 渲染整体进度 & 整改进度
+            renderStepProgress("stepProgress_totle", "stepLineFill_totle", totle_step_config, totle_step, null, isCancel);
+            renderStepProgress("stepProgress_rectification", "stepLineFill_rectification", rectification_step_config, rectification_step, null, isCancel);
+
+            REVIEW_STEP = { '待整改': 0, '整改中': 1, '已验收': 2 }
+            var review_step = REVIEW_STEP[recInfo.ReviewResult] || 0;
+            renderStepProgress("stepProgress_review", "stepLineFill_review", review_step_config, review_step, null, isCancel);
+
+            // 维修进度（仅当存在报修单号时生效）
+            var repair_step = -1; // -1 表示无维修工单
+            if (data.RepairNo) {
+                var REPAIR_STEP = { '待维修': 0, '维修中': 1, '已维修': 2 };
+                repair_step = REPAIR_STEP[data.RepInfo.RepairState] || 0;
+                renderStepProgress("stepProgress_repair", "stepLineFill_repair", repair_step_config, repair_step, null, isCancel);
+                $("#row_repair").show();
+            }
+
+            // 检查销号按钮是否可启用
+            checkOverButton(rectification_step, review_step, repair_step, isCancel);
+
+            if (danger_data.RectificationResult === '销号' && data.RepairNo === '') {
+                $('#btnGoMaintain').addClass('layui-btn-disabled').attr('disabled', 'disabled');
+            }
+        }
+
+        function fillFormData(data) {
+            danger_data = data;
+            layui.data('danger_data', { key: data.Id, value: data })
+            var test = layui.data('danger_data');
+            console.log(test);
+            // 解析 StepDates（日期数据，用于步骤条）
+            var stepDates = {};
+            if (data.StepDates) {
+                try { stepDates = JSON.parse(data.StepDates); } catch (e) {
+                    if (data.CheckDate) stepDates['0'] = data.CheckDate.substring(0, 10);
+                }
+            } else if (data.CheckDate) {
+                stepDates['0'] = data.CheckDate.substring(0, 10);
+            }
+
+            initstep(data);
+
+            // 4. 隐患照片
+            var dangerPhotoStr = data.DangerPhoto || '';
+            var dangerPhotos = dangerPhotoStr ? dangerPhotoStr.split(';').filter(function (p) { return p; }) : [];
+            initCarousel('danger', dangerPhotos);
+
+            // 5. 整改照片
+            var rectifyPhotoStr = data.RectificationPhoto || '';
+            var rectifyPhotos = rectifyPhotoStr ? rectifyPhotoStr.split(';').filter(function (p) { return p; }) : [];
+            initCarousel('rectify', rectifyPhotos);
+        }
+
+        // 绑定工具栏按钮
+        $('#dangerCarouselPrev').on('click', function () { carouselGo('danger', 'prev'); });
+        $('#dangerCarouselNext').on('click', function () { carouselGo('danger', 'next'); });
+        $('#dangerCarouselView').on('click', function () { carouselView('danger'); });
+        $('#rectifyCarouselPrev').on('click', function () { carouselGo('rectify', 'prev'); });
+        $('#rectifyCarouselNext').on('click', function () { carouselGo('rectify', 'next'); });
+        $('#rectifyCarouselView').on('click', function () { carouselView('rectify'); });
+
+        // 页面加载时通过 ID 请求后台数据
+        loadDangerData();
+    });
+</script>
+
+</body>
+</html>

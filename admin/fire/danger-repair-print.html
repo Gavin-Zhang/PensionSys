@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../../layui/layui.js" charset="utf-8"></script>
+    <style>
+        @page {
+            size: A4;
+            margin: 10mm 14mm 10mm 14mm;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "SimSun", "宋体", serif;
+            font-size: 15px;
+            color: #000;
+            background: #fff;
+            line-height: 1.8;
+        }
+        .print-wrap {
+            width: 100%;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 5mm 5mm;
+        }
+        .repair-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        .repair-table td, .repair-table th {
+            border: 1.5px solid #000;
+            padding: 8px 5px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 2;
+            word-break: break-all;
+            font-size: 15px;
+        }
+        .repair-table .title-cell {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 10px;
+            height: 50px;
+            font-family: "SimHei", "黑体", sans-serif;
+            background: #fff;
+            border: none !important;
+            text-align: center;
+        }
+        .repair-table .section-label {
+            font-weight: bold;
+            font-size: 15px;
+            letter-spacing: 1px;
+            width: 18%;
+            line-height: 1.4;
+            font-family: "SimHei", "黑体", sans-serif;
+            background: #f5f5f5;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .repair-table .label-cell {
+            font-weight: bold;
+            width: 20%;
+            background: #fafafa;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+            font-size: 14px;
+        }
+        .repair-table .value-cell {
+            /* padding-left: 10px; */
+            font-size: 15px;
+            text-align: center;
+            width: 20;
+        }
+        .repair-table .value-cell-multi {
+            text-align: left;
+            padding: 12px 10px;
+            font-size: 15px;
+            height: 170px;
+            vertical-align: top;
+            line-height: 2;
+        }
+        .repair-table .checkbox-cell {
+            text-align: center;
+            font-size: 15px;
+        }
+        .repair-table .footer-note {
+            border: none;
+            font-size: 12px;
+            text-align: left;
+            padding: 0px 8px;
+            color: #555;
+        }
+        .repair-table .repair-no-row td {
+            font-size: 15px;
+            font-weight: bold;
+            padding: 0px 8px 0px 8px;
+            text-align: right;
+            border: none;
+        }
+
+        .repair-table .check-list {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px 20px;
+        }
+        .check-list span {
+            white-space: nowrap;
+            font-size: 15px;
+        }
+        .check-list .checked {
+            color: #000;
+            font-weight: bold;
+        }
+        .check-list .unchecked {
+            color: #999;
+        }
+
+        .btn-area {
+            text-align: center;
+            padding: 20px 0 10px;
+        }
+        .btn-area .layui-btn {
+            min-width: 120px;
+        }
+
+        @media print {
+            .btn-area { display: none !important; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .print-wrap { padding: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- <div class="btn-area">
+        <button class="layui-btn layui-btn-normal" id="btnDoPrint"><i class="layui-icon layui-icon-print"></i> 打 印</button>
+    </div> -->
+    <div class="print-wrap">
+        <table class="repair-table">
+            <tbody id="printBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+    layui.use([], function () {
+        var $ = layui.$;
+        var data = JSON.parse(layui.sessionData('danger_repair_print').printdata || '{}');
+        console.log(data);
+
+        function fmtDate(val) {
+            if (!val) return '';
+            var d = new Date(val);
+            if (isNaN(d.getTime())) {
+                var s = String(val);
+                return s.length >= 10 ? s.substring(0, 10) : s;
+            }
+            return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate();
+        }
+
+        function esc(str) {
+            if (!str) return '';
+            return $('<div/>').text(str).html();
+        }
+
+
+        function fmtTrueFalse(result) {
+            console.log(result);
+            if (result) {
+                return '<span class="checked">\u2611是</span> &nbsp;&nbsp; <span class="unchecked">\u2610否</span>';
+            } else {
+                return '<span class="unchecked">\u2610是</span> &nbsp;&nbsp; <span class="checked">\u2611否</span>';
+            }
+        }
+
+        var html = '';
+
+        // 维修编号
+        html += '<tr class="repair-no-row"><td colspan="5">维修编号：' + esc(data.RepairNo) + '</td></tr>';
+
+        // 标题行
+        html += '<tr><td class="title-cell" colspan="5">维 修 记 录</td></tr>';
+
+        // 故障情况 (3行)
+        html += '<tr>';
+        html += '<td class="section-label" rowspan="3">故障<br>情况</td>';
+        html += '<td class="label-cell">发现时间</td>';
+        html += '<td class="value-cell">' + fmtDate(data.CheckDate) + '</td>';
+        html += '<td class="label-cell">发现人员</td>';
+        html += '<td class="value-cell">' + esc(data.SafetyInvestigator) + '</td>';
+        html += '</tr>';
+
+        html += '<tr>';
+        html += '<td class="label-cell">故障部位</td>';
+        html += '<td class="value-cell">' + esc(data.Position) + '</td>';
+        html += '<td class="label-cell">整改单号</td>';
+        html += '<td class="value-cell">' + esc(data.RectificationNo) + '</td>';
+        html += '</tr>';
+
+        html += '<tr>';
+        html += '<td class="label-cell">故障描述</td>';
+        html += '<td class="value-cell-multi" colspan="3">' + esc(data.Description) + '</td>';
+        html += '</tr>';
+
+        // 故障维修情况 (5行)
+        html += '<tr>';
+        html += '<td class="section-label" rowspan="5">故障<br>维修<br>情况</td>';
+        html += '<td class="label-cell">是否<br>停用系统</td>';
+        html += '<td class="checkbox-cell check-list">'+ fmtTrueFalse(data.SystemStopSign) + '</td>';
+        html += '<td class="label-cell">签字</td>';
+        html += '<td class="value-cell"></td>';
+        html += '</tr>';
+
+        html += '<tr>'; 
+        html += '<td class="label-cell">是否<br>报消防部门备案</td>';
+        html += '<td class="checkbox-cell check-list">'+ fmtTrueFalse(data.FireDeptSign) + '</td>';
+        html += '<td class="label-cell">签字</td>';
+        html += '<td class="value-cell"></td>';
+        html += '</tr>';
+
+        html += '<tr>';
+        html += '<td class="label-cell">安全保护措施</td>';
+        html += '<td class="value-cell-multi" colspan="3">' + esc(data.SafetyMeasure) + '</td>';
+        html += '</tr>';
+
+        html += '<tr>';
+        html += '<td class="label-cell">维修时间</td>';
+        html += '<td class="value-cell">' + fmtDate(data.RepairTime) + '</td>';
+        html += '<td class="label-cell">维修人员/单位</td>';
+        html += '<td class="value-cell">' + esc(data.RepairPerson) + '</td>';
+        html += '</tr>';
+
+        html += '<tr>';
+        html += '<td class="label-cell">维修方法</td>';
+        html += '<td class="value-cell-multi" colspan="3">' + esc(data.RepairMethod) + '</td>';
+        html += '</tr>';
+
+        // 故障排除确认
+        html += '<tr>';
+        html += '<td class="section-label">故障<br>排除<br>确认</td>';
+        html += '<td class="label-cell">确认时间</td>';
+        html += '<td class="value-cell">' + fmtDate(data.ConfirmTime) + '</td>';
+        html += '<td class="label-cell">确认人签字</td>';
+        html += '<td class="value-cell">' + esc(data.ConfirmSign) + '</td>';
+        html += '</tr>';
+
+        // 脚注
+        html += '<tr>';
+        html += '<td class="footer-note" colspan="5">* 是否停用系统：因维修故障需要停用系统的，由单位消防安全责任人在此栏签字确认</td>';
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td class="footer-note" colspan="5">* 是否报消防部门备案：停用系统超过24小时的，单位消防安全责任人应如实填写并向消防部门备案</td>';
+        html += '</tr>';
+
+        $('#printBody').html(html);
+
+        // // 打印按钮
+        // $('#btnDoPrint').on('click', function () {
+        //     window.print();
+        // });
+    });
+    </script>
+</body>
+</html>

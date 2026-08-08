@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>选择打印照片</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #f5f6fa; padding: 15px; }
+        .photo-section { margin-bottom: 20px; }
+        .section-title { font-size: 14px; font-weight: bold; color: #333; margin-bottom: 10px; padding-left: 5px; border-left: 3px solid #1e9fff; }
+        .photo-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+        .photo-item { width: calc(25% - 9px); border: 2px solid #e8ebf0; border-radius: 6px; overflow: hidden; cursor: pointer; transition: all 0.2s; position: relative; background: #fff; }
+        .photo-item:hover { border-color: #1e9fff; }
+        .photo-item.selected { border-color: #1e9fff; background: #e6f4ff; }
+        .photo-item img { width: 100%; height: 120px; object-fit: cover; display: block; }
+        .photo-item .photo-check { position: absolute; top: 5px; right: 5px; width: 22px; height: 22px; border: 2px solid #ccc; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; }
+        .photo-item.selected .photo-check { border-color: #1e9fff; }
+        .photo-item.selected .photo-check::after { content: ''; width: 12px; height: 12px; border-radius: 50%; background: #1e9fff; }
+        .photo-item .photo-name { padding: 4px 6px; font-size: 11px; color: #666; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+        .no-photo { width: 100%; text-align: center; color: #999; padding: 30px 0; font-size: 13px; }
+        .btn-area { text-align: center; padding: 15px 0 5px; }
+    </style>
+</head>
+<body>
+    <div class="photo-section">
+        <div class="section-title">隐患照片（点击图片选择/取消）</div>
+        <div class="photo-grid" id="dangerPhotoGrid"></div>
+        <div class="no-photo" id="dangerPhotoEmpty" style="display:none;">暂无隐患照片</div>
+    </div>
+    <div class="photo-section">
+        <div class="section-title">整改/复查照片（点击图片选择/取消）</div>
+        <div class="photo-grid" id="rectifyPhotoGrid"></div>
+        <div class="no-photo" id="rectifyPhotoEmpty" style="display:none;">暂无整改照片</div>
+    </div>
+    <div class="btn-area">
+        <button class="layui-btn layui-btn-normal" id="btnPrint"><i class="layui-icon layui-icon-print"></i> 打印预览</button>
+    </div>
+
+    <script src="../../layui/layui.js"></script>
+    <script>
+    layui.use(['layer'], function () {
+        var layer = layui.layer;
+        var $ = layui.$;
+
+        var printData = JSON.parse(layui.sessionData('danger_print').printdata || '{}');
+        var dangerPhotos = JSON.parse(layui.sessionData('danger_print').dangerPhotos || '[]');
+        var rectifyPhotos = JSON.parse(layui.sessionData('danger_print').rectifyPhotos || '[]');
+
+        var baseUrl = window.parent.BasePathJLY || '';
+
+        // 渲染隐患照片
+        function renderDangerPhotos() {
+            var $grid = $('#dangerPhotoGrid');
+            var $empty = $('#dangerPhotoEmpty');
+            $grid.empty();
+            if (!dangerPhotos.length) {
+                $empty.show();
+                return;
+            }
+            $empty.hide();
+            $.each(dangerPhotos, function (i, photo) {
+                var src = baseUrl + '/dangerphoto/' + photo.Path;
+                var selectedCls = photo.Selected ? ' selected' : '';
+                var escName = $('<div/>').text(photo.Path).html();
+                var html = '<div class="photo-item' + selectedCls + '" data-index="' + i + '" data-type="danger">';
+                html += '<img src="' + src + '" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22120%22><rect fill=%22%23f0f0f0%22 width=%22200%22 height=%22120%22/><text x=%22100%22 y=%2265%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2212%22>加载失败</text></svg>\'">';
+                html += '<div class="photo-check"></div>';
+                html += '<div class="photo-name">' + escName + '</div>';
+                html += '</div>';
+                $grid.append(html);
+            });
+        }
+
+        // 渲染整改照片
+        function renderRectifyPhotos() {
+            var $grid = $('#rectifyPhotoGrid');
+            var $empty = $('#rectifyPhotoEmpty');
+            $grid.empty();
+            if (!rectifyPhotos.length) {
+                $empty.show();
+                return;
+            }
+            $empty.hide();
+            $.each(rectifyPhotos, function (i, photo) {
+                var src = baseUrl + '/dangerphoto/' + photo.Path;
+                var selectedCls = photo.Selected ? ' selected' : '';
+                var escName = $('<div/>').text(photo.Path).html();
+                var html = '<div class="photo-item' + selectedCls + '" data-index="' + i + '" data-type="rectify">';
+                html += '<img src="' + src + '" onerror="this.src=\'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22120%22><rect fill=%22%23f0f0f0%22 width=%22200%22 height=%22120%22/><text x=%22100%22 y=%2265%22 text-anchor=%22middle%22 fill=%22%23999%22 font-size=%2212%22>加载失败</text></svg>\'">';
+                html += '<div class="photo-check"></div>';
+                html += '<div class="photo-name">' + escName + '</div>';
+                html += '</div>';
+                $grid.append(html);
+            });
+        }
+
+        // 点击选择（单选模式，每组只能选一张）
+        $(document).on('click', '.photo-item', function () {
+            var $this = $(this);
+            var type = $this.data('type');
+            var index = $this.data('index');
+            // 获取同组所有照片
+            var $siblings = $this.closest('.photo-grid').find('.photo-item');
+
+            if ($this.hasClass('selected')) {
+                // 取消当前选中
+                $this.removeClass('selected');
+                if (type === 'danger') {
+                    dangerPhotos[index].Selected = false;
+                } else {
+                    rectifyPhotos[index].Selected = false;
+                }
+            } else {
+                // 取消同组其他选中，选中当前
+                $siblings.removeClass('selected');
+                if (type === 'danger') {
+                    $.each(dangerPhotos, function (i) { dangerPhotos[i].Selected = false; });
+                    dangerPhotos[index].Selected = true;
+                } else {
+                    $.each(rectifyPhotos, function (i) { rectifyPhotos[i].Selected = false; });
+                    rectifyPhotos[index].Selected = true;
+                }
+                $this.addClass('selected');
+            }
+        });
+
+        // 打印按钮
+        $('#btnPrint').on('click', function () {
+            // 筛选选中的照片
+            var selectedDanger = [];
+            $.each(dangerPhotos, function (i, p) {
+                if (p.Selected) selectedDanger.push(p.Path);
+            });
+            var selectedRectify = [];
+            $.each(rectifyPhotos, function (i, p) {
+                if (p.Selected) selectedRectify.push(p.Path);
+            });
+
+            // 更新session中的照片列表
+            printData.SelectedDangerPhotos = selectedDanger;
+            printData.SelectedRectifyPhotos = selectedRectify;
+            layui.sessionData('danger_print', { key: 'printdata', value: JSON.stringify(printData) });
+
+            // 关闭当前弹窗
+            var pLayer = parent.layui.layer;
+            var curIndex = pLayer.getFrameIndex(window.name);
+            pLayer.close(curIndex);
+
+            // 打开打印预览
+            pLayer.open({
+                type: 2,
+                area: ['900px', '650px'],
+                fixed: false,
+                maxmin: false,
+                title: '打印预览',
+                content: 'danger-print.html',
+                btn: ['打印'],
+                yes: function (index, layero) {
+                    var iframe = layero.find('iframe')[0];
+                    if (iframe) iframe.contentWindow.print();
+                }
+            });
+        });
+
+        renderDangerPhotos();
+        renderRectifyPhotos();
+    });
+    </script>
+</body>
+</html>

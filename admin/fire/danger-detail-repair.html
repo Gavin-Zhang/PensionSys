@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="utf-8">
+    <title>整改信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+    <script type="text/javascript" src="../../js/base.js"></script>
+    <style>
+        html, body {
+            overflow: hidden !important;
+        }
+        /* ===== 表单卡片 ===== */
+        .danger-card {
+            margin: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .danger-card .layui-card-header {
+            background: linear-gradient(135deg, #09b4c5 0%, #04564e 100%);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            padding: 14px 20px;
+            border-bottom: none;
+        }
+
+        .danger-card .layui-card-header i {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .danger-card .layui-card-body {
+            padding: 30px 25px;
+        }
+
+        /* ===== 分区标题 ===== */
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            padding: 0 0 8px 0;
+            margin: 24px 0 16px 0;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #09b4c5;
+            border-radius: 2px;
+        }
+        .section-title:first-child {
+            margin-top: 0;
+        }
+        .section-title i {
+            margin-right: 6px;
+            color: #09b4c5;
+        }
+
+        /* ===== 双列布局 ===== */
+        .form-row {
+            margin-bottom: 0;
+        }
+        .form-row .layui-col-md6 {
+            padding: 0 8px;
+        }
+        .form-row .layui-col-md6:first-child {
+            padding-left: 0;
+        }
+        .form-row .layui-col-md6:last-child {
+            padding-right: 0;
+        }
+
+        /* ===== 上传区域 ===== */
+        .upload-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .upload-btn-wrap {
+            width: 160px;
+            height: 90px;
+            border: 2px dashed #d2d2d2;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            background: #fafbfc;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-btn-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 8px;
+            padding: 2px;
+            background: linear-gradient(135deg, #09b4c5, #5fb878);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .upload-btn-wrap:hover {
+            border-color: #09b4c5;
+            color: #09b4c5;
+            background: #f0fafb;
+            box-shadow: 0 2px 8px rgba(9, 180, 197, 0.12);
+        }
+
+        .upload-btn-wrap:hover::before {
+            opacity: 1;
+        }
+
+        .upload-btn-wrap i {
+            font-size: 30px;
+            margin-bottom: 6px;
+        }
+
+        .upload-btn-wrap span {
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 160px;
+            height: 90px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid #e6e6e6;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s;
+        }
+
+        .preview-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item .del-mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .preview-item:hover .del-mask {
+            opacity: 1;
+        }
+
+        /* 已有照片标记 */
+        .photo-tag {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background: rgba(9, 180, 197, 0.85);
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .photo-tag.new {
+            background: rgba(95, 184, 120, 0.85);
+        }
+
+        .upload-hint {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 8px;
+            padding-left: 2px;
+        }
+
+        .upload-hint i {
+            font-size: 14px;
+            margin-right: 3px;
+            vertical-align: -1px;
+        }
+
+        /* ===== 提交按钮 ===== */
+        .submit-wrap {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .submit-wrap .layui-btn {
+            min-width: 200px;
+            height: 42px;
+            line-height: 42px;
+            font-size: 15px;
+            letter-spacing: 3px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #09b4c5 0%, #04564e 100%);
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-wrap .layui-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(9, 180, 197, 0.4);
+        }
+
+        .submit-wrap .layui-btn i {
+            margin-right: 4px;
+        }
+
+        .submit-wrap .layui-btn.layui-btn-disabled,
+        .submit-wrap .layui-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            pointer-events: none;
+        }
+
+        /* ===== 隐患处理操作按钮 ===== */
+        .layui-btn-container .layui-btn-action {
+            background: linear-gradient(135deg, #09b4c5 0%, #04564e 100%);
+            border: none;
+            color: #fff;
+            letter-spacing: 1px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .layui-btn-container .layui-btn-action:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(9, 180, 197, 0.4);
+            color: #fff;
+        }
+
+        .layui-btn-container .layui-btn-action i {
+            margin-right: 4px;
+            font-size: 14px;
+        }
+
+        /* ===== 输入框增强 ===== */
+        .layui-input:focus,
+        .layui-textarea:focus {
+            border-color: #09b4c5 !important;
+            box-shadow: 0 0 0 2px rgba(9, 180, 197, 0.1) !important;
+        }
+
+        /* ===== 面包屑导航 ===== */
+        .x-nav {
+            margin: 0 15px;
+            border-radius: 6px 6px 0 0;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .danger-card {
+                margin: 10px;
+            }
+            .danger-card .layui-card-body {
+                padding: 15px;
+            }
+            .form-row .layui-col-md6 {
+                padding: 0;
+            }
+            .upload-btn-wrap,
+            .preview-item {
+                width: 130px;
+                height: 73px;
+            }
+        }
+
+        .carousel-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 480px;
+            height: 270px;
+            color: #999;
+            font-size: 16px;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px dashed #d9d9d9;
+        }
+        .carousel-empty i {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+        /* ===== Step Progress 步骤条 ===== */
+        .step-progress-wrap {
+            position: relative;
+            padding: 0;
+        }
+        .step-progress {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 4px 0 0 0;
+            position: relative;
+        }
+        .step-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .step-item:hover {
+            transform: translateY(-4px);
+        }
+        .step-item:hover .step-circle {
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .step-item .step-circle {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            background: #f0f2f5;
+            color: #b0b7c4;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid #e4e7ed;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .step-item .step-circle i {
+            transition: transform 0.4s ease;
+        }
+        .step-item .step-label {
+            display: block;
+            margin-top: 4px;
+            font-size: 11px;
+            color: #b0b7c4;
+            font-weight: 500;
+            transition: color 0.3s;
+            letter-spacing: 1px;
+        }
+        .step-item .step-date {
+            display: block;
+            font-size: 10px;
+            color: #c0c6ce;
+            margin-top: 2px;
+            transition: color 0.3s;
+        }
+        .step-item .step-tag {
+            display: none;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        /* Done 已完成 */
+        .step-item.done .step-circle {
+            background: linear-gradient(135deg, #09b4c5 0%, #5fb878 100%);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 16px rgba(9, 180, 197, 0.35);
+        }
+        .step-item.done .step-circle i {
+            animation: step-icon-pop 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .step-item.done .step-label {
+            color: #09b4c5;
+            font-weight: 600;
+        }
+        .step-item.done .step-date {
+            color: #09b4c5;
+        }
+
+        /* Active 进行中 */
+        .step-item.active .step-circle {
+            background: #fff;
+            color: #09b4c5;
+            border-color: #09b4c5;
+            box-shadow: 0 0 0 0 rgba(9, 180, 197, 0.35);
+            animation: pulse-ring 2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+        }
+        .step-item.active .step-circle i {
+            animation: step-icon-bounce 1.2s ease-in-out infinite;
+        }
+        .step-item.active .step-label {
+            color: #09b4c5;
+            font-weight: 700;
+        }
+        .step-item.active .step-date {
+            color: #09b4c5;
+            font-weight: 500;
+        }
+        .step-item.active .step-tag {
+            display: block;
+            background: linear-gradient(135deg, #09b4c5, #0d8775);
+            color: #fff;
+            animation: tag-slide-in 0.5s ease forwards;
+        }
+
+        /* Cancel 已取消 */
+        .step-item.cancel .step-circle {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.35);
+        }
+        .step-item.cancel .step-label {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        .step-item.cancel .step-date {
+            color: #e74c3c;
+        }
+
+        /* 连接线 */
+        .step-line {
+            position: absolute;
+            top: 17px;
+            left: 26px;
+            right: 26px;
+            height: 2px;
+            background: #e8ebf0;
+            z-index: 0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .step-line-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #09b4c5, #5fb878, #5fb878);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 4px;
+            box-shadow: 0 0 12px rgba(9, 180, 197, 0.4);
+        }
+        .step-line-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 14px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
+            border-radius: 2px;
+            animation: line-shine 2s ease-in-out infinite;
+        }
+
+        /* Animations */
+        @keyframes pulse-ring {
+            0%   { box-shadow: 0 0 0 0 rgba(9, 180, 197, 0.4); }
+            60%  { box-shadow: 0 0 0 16px rgba(9, 180, 197, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(9, 180, 197, 0); }
+        }
+        @keyframes step-icon-bounce {
+            0%, 100% { transform: scale(1); }
+            50%      { transform: scale(1.15); }
+        }
+        @keyframes step-icon-pop {
+            0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+            60%  { transform: scale(1.3) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        @keyframes tag-slide-in {
+            0%   { opacity: 0; transform: translateX(-50%) translateY(6px); }
+            100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        @keyframes line-shine {
+            0%, 100% { opacity: 0; }
+            50%      { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+
+<!-- 表单卡片 -->
+<div class="layui-card danger-card">
+    <div class="layui-card-body">
+        <form class="layui-form layui-form-pane" action="" id="repairForm" lay-filter="repairForm">
+            
+            <!-- ========== 排查信息 ========== -->
+            <div class="section-title">
+                <i class="layui-icon layui-icon-about"></i>维修信息
+            </div>
+
+            <div class="layui-form-item form-row">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <label for="repair_no" class="layui-form-label">
+                            维修编号
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="repair_no" id="repair_no" lay-verify="required" class="layui-input" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>维修状态
+                        </label>
+                        <div class="layui-input-block">
+                            <select name="repair_state" id="repair_state" lay-verify="required" lay-filter="repair_state_filter">
+                                <option value="待维修">待维修</option>
+                                <option value="维修中">维修中</option>
+                                <option value="已维修">已维修</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item form-row">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>停用系统
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="stop_sys" value="0" lay-filter="stop_sys_filter" title="否" checked>
+                            <input type="radio" name="stop_sys" value="1" lay-filter="stop_sys_filter" title="是"> 
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>消防报备
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="filing" value="0" lay-filter="filing_filter" title="否" checked>
+                            <input type="radio" name="filing" value="1" lay-filter="filing_filter" title="是"> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item form-row">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">维修日期</label>
+                        <div class="layui-input-block">
+                            <input type="text" autocomplete="off" id="repaire_date" name="repaire_date" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">维修人员</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="repaire_man" id="repaire_man" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item form-row">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">确认日期</label>
+                        <div class="layui-input-block">
+                            <input type="text" autocomplete="off" id="confirm_date" name="confirm_date" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">确认人员</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="confirmer" id="confirmer" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ========== 整改措施 ========== -->
+            <div class="section-title">
+                <i class="layui-icon layui-icon-util"></i>维修措施
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    保护措施
+                </label>
+                <div class="layui-input-block">
+                    <textarea name="safeguards" id="safeguards" placeholder="..." class="layui-textarea" maxlength="500" style="min-height:100px;"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    维修方法
+                </label>
+                <div class="layui-input-block">
+                    <textarea name="method" id="method" placeholder="..." class="layui-textarea" maxlength="500" style="min-height:100px;"></textarea>
+                </div>
+            </div>
+
+            <!-- ========== 提交 ========== -->
+            <div class="submit-wrap">
+                <button class="layui-btn" type="button" lay-filter="modify" lay-submit="" disabled>
+                    <i class="layui-icon layui-icon-ok"></i> 提 交
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+	const id = params.get('id');
+    var test = layui.data('danger_data');
+    var data = test[id] || {};
+    var isCanceled = data.RectificationResult === '销号'; // 销号状态
+
+    console.log(data);
+
+    layui.use(['element', 'layer', 'form', 'upload', 'laydate'], function () {
+        var $ = layui.jquery;
+        var element = layui.element;
+        var layer = layui.layer;
+        var form = layui.form;
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+
+        $.ajaxSetup({
+            headers: { 'Access-Control-Allow-Origin': Domain },
+            xhrFields: { withCredentials: true }
+        });
+
+        // 日期选择器：排除空值/无效日期，以及 0001-01-01 等无效默认值
+        var repairDate = new Date(data.RepInfo.RepairDate);
+        var repairDateValue = (isNaN(repairDate.getTime()) || repairDate.getTime() < 0) 
+            ? new Date() 
+            : data.RepInfo.RepairDate.substring(0, 10);
+        var checkDateVal = (data.CheckDate || '').substring(0, 10);
+        laydate.render({
+            elem: '#repaire_date',
+            type: 'date',
+            value: repairDateValue,
+            isInitValue: !(isNaN(repairDate.getTime()) || repairDate.getTime() < 0) ,
+            min: checkDateVal,
+            done: function () { updateSubmitButton(); }
+        });
+
+        var confirmDate = new Date(data.RepInfo.ConfirmDate);
+        var ConfirmDateValue = (isNaN(confirmDate.getTime()) || confirmDate.getTime() < 0) 
+            ? new Date() 
+            : data.RepInfo.ConfirmDate.substring(0, 10);
+        laydate.render({
+            elem: '#confirm_date',
+            type: 'date',
+            value: ConfirmDateValue,
+            isInitValue: !(isNaN(confirmDate.getTime()) || confirmDate.getTime() < 0) ,
+            min: checkDateVal,
+            done: function () { updateSubmitButton(); }
+        });
+        
+        // 回填表单字段
+        form.val('repairForm', {
+            repair_no: data.RepInfo.RepairNo || '',
+            repair_state: data.RepInfo.RepairState || '',
+            stop_sys: data.RepInfo.IsStopSys ? '1' : '0',
+            filing: data.RepInfo.IsFiling ? '1' : '0',
+            repaire_man: data.RepInfo.RepairMan || '',
+            confirmer: data.RepInfo.Confirmer || '',
+            safeguards: data.RepInfo.Safeguards || '',
+            method: data.RepInfo.Method || ''
+        });
+
+        // 记录初始值作为比对基准，初始化按钮状态
+        var initialValues = {};
+        var formDirty = false;
+        captureInitialValues();
+        updateSubmitButton();
+
+        // 销号状态：所有输入控件设为不可用
+        if (isCanceled) {
+            $('#repairForm').find('input,textarea,select').prop('disabled', true).attr('disabled', 'disabled');
+            $('button[lay-submit]').addClass('layui-btn-disabled').prop('disabled', true);
+            // 重新渲染表单以应用 disabled
+            form.render('select');
+            form.render('radio');
+        }
+
+        // ========== 监听提交 ==========
+        form.on('submit(modify)', function (submitData) {
+            // 防御：销号状态下阻止提交
+            if (isCanceled) {
+                layer.msg('隐患已销号，无法修改', { icon: 2 });
+                return false;
+            }
+            if (!id) {
+                layer.msg('缺少ID，无法提交', { icon: 2 });
+                return false;
+            }
+            if (!hasFormChanged()) {
+                layer.msg('数据未发生变化', { icon: 0 });
+                return false;
+            }
+
+            // 构建提交数据
+            var postData = submitData.field;
+
+            var $submitBtn = $('button[lay-submit]').addClass('layui-btn-disabled').prop('disabled', true);
+            var loadingIdx = layer.load(1, { shade: [0.3, '#000'] });
+
+            $.ajax({
+                type: 'post',
+                url: BasePathJLY + '/editdangerrepair',
+                data: postData,
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code == 0) {
+                        layer.msg('修改成功', { icon: 6, time: 1500 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            parent.location.reload();
+                        });
+                    } else if (res.code == 1001) {
+                        window.top.location.href = '../../index.html';
+                    } else {
+                        layer.msg(res.msg || '修改失败', { icon: 5, time: 5000 });
+                        $submitBtn.removeClass('layui-btn-disabled').prop('disabled', false);
+                    }
+                },
+                error: function () {
+                    layer.msg('提交失败，请检查网络后重试', { icon: 5, time: 5000 });
+                    $submitBtn.removeClass('layui-btn-disabled').prop('disabled', false);
+                },
+                complete: function () {
+                    layer.close(loadingIdx);
+                }
+            });
+
+            return false;
+        });
+
+        // ==================== 表单数据变化监听 ====================
+
+        // 记录表单初始值快照
+        function captureInitialValues() {
+            initialValues = form.val('repairForm');
+        }
+
+        // 检测表单是否发生了实际变化
+        function hasFormChanged() {
+            var current = form.val('repairForm');
+            for (var key in initialValues) {
+                if (initialValues.hasOwnProperty(key) && current[key] !== initialValues[key]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // 更新提交按钮状态
+        function updateSubmitButton() {
+            // 销号状态下始终禁用
+            if (isCanceled) {
+                $('button[lay-submit]').addClass('layui-btn-disabled').prop('disabled', true);
+                return;
+            }
+            var changed = hasFormChanged();
+            formDirty = changed;
+            var $btn = $('button[lay-submit]');
+            if (changed) {
+                $btn.removeClass('layui-btn-disabled').prop('disabled', false);
+            } else {
+                $btn.addClass('layui-btn-disabled').prop('disabled', true);
+            }
+        }
+
+        // 监听 layui 组件变化
+        form.on('select(repair_state_filter)', updateSubmitButton);
+        form.on('radio(stop_sys_filter)', updateSubmitButton);
+        form.on('radio(filing_filter)', updateSubmitButton);
+
+        // 监听文本输入框和文本域变化
+        $('#repairForm').on('input change', 'input[type="text"], textarea', updateSubmitButton);
+
+        // ========== 工具函数：获取URL参数 ==========
+        function getUrlParam(name) {
+            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return decodeURIComponent(r[2]);
+            return null;
+        }
+
+        // ESC 关闭弹窗
+        $(document).keyup(function (event) {
+            if (event.keyCode == 27) {
+                var len = window.frames.length;
+                if (len == 0) {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                } else {
+                    var childFrame = window.frames[len - 1];
+                    var index = layer.getFrameIndex(childFrame.name);
+                    layer.close(index);
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

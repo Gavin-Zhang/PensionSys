@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+<head>
+    <meta charset="utf-8">
+    <title>隐患信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <link rel="stylesheet" href="../css/font.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+    <script type="text/javascript" src="../../js/base.js"></script>
+    <style>
+        html, body {
+            overflow: hidden !important;
+        }
+        /* ===== 表单卡片 ===== */
+        .danger-card {
+            margin: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .danger-card .layui-card-header {
+            background: linear-gradient(135deg, #09b4c5 0%, #04564e 100%);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            padding: 14px 20px;
+            border-bottom: none;
+        }
+
+        .danger-card .layui-card-header i {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        .danger-card .layui-card-body {
+            padding: 30px 25px;
+        }
+
+        /* ===== 分区标题 ===== */
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            padding: 0 0 8px 0;
+            margin: 24px 0 16px 0;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: #09b4c5;
+            border-radius: 2px;
+        }
+        .section-title:first-child {
+            margin-top: 0;
+        }
+        .section-title i {
+            margin-right: 6px;
+            color: #09b4c5;
+        }
+
+        /* ===== 双列布局 ===== */
+        .form-row {
+            margin-bottom: 0;
+        }
+        .form-row .layui-col-md6 {
+            padding: 0 8px;
+        }
+        .form-row .layui-col-md6:first-child {
+            padding-left: 0;
+        }
+        .form-row .layui-col-md6:last-child {
+            padding-right: 0;
+        }
+
+        /* ===== 上传区域 ===== */
+        .upload-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .upload-btn-wrap {
+            width: 160px;
+            height: 90px;
+            border: 2px dashed #d2d2d2;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            background: #fafbfc;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-btn-wrap::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 8px;
+            padding: 2px;
+            background: linear-gradient(135deg, #09b4c5, #5fb878);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .upload-btn-wrap:hover {
+            border-color: #09b4c5;
+            color: #09b4c5;
+            background: #f0fafb;
+            box-shadow: 0 2px 8px rgba(9, 180, 197, 0.12);
+        }
+
+        .upload-btn-wrap:hover::before {
+            opacity: 1;
+        }
+
+        .upload-btn-wrap i {
+            font-size: 30px;
+            margin-bottom: 6px;
+        }
+
+        .upload-btn-wrap span {
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 160px;
+            height: 90px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid #e6e6e6;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+            transition: box-shadow 0.2s;
+        }
+
+        .preview-item:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item .del-mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .preview-item:hover .del-mask {
+            opacity: 1;
+        }
+
+        .upload-hint {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 8px;
+            padding-left: 2px;
+        }
+
+        .upload-hint i {
+            font-size: 14px;
+            margin-right: 3px;
+            vertical-align: -1px;
+        }
+
+        /* ===== 提交按钮 ===== */
+        .submit-wrap {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .submit-wrap .layui-btn {
+            min-width: 200px;
+            height: 42px;
+            line-height: 42px;
+            font-size: 15px;
+            letter-spacing: 3px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #09b4c5 0%, #04564e 100%);
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-wrap .layui-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(9, 180, 197, 0.4);
+        }
+
+        .submit-wrap .layui-btn i {
+            margin-right: 4px;
+        }
+
+        /* ===== 输入框增强 ===== */
+        .layui-input:focus,
+        .layui-textarea:focus {
+            border-color: #09b4c5 !important;
+            box-shadow: 0 0 0 2px rgba(9, 180, 197, 0.1) !important;
+        }
+
+        /* ===== 面包屑导航 ===== */
+        .x-nav {
+            margin: 0 15px;
+            border-radius: 6px 6px 0 0;
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 768px) {
+            .danger-card {
+                margin: 10px;
+            }
+            .danger-card .layui-card-body {
+                padding: 15px;
+            }
+            .form-row .layui-col-md6 {
+                padding: 0;
+            }
+            .upload-btn-wrap,
+            .preview-item {
+                width: 130px;
+                height: 73px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 面包屑导航 -->
+<!-- <div class="x-nav">
+    <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">敬老院消防管理</a>
+        <a><cite>隐患登记</cite></a>
+    </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+    </a>
+</div> -->
+
+<!-- 表单卡片 -->
+<div class="layui-card danger-card">
+    <!-- <div class="layui-card-header">
+        <i class="layui-icon layui-icon-survey"></i> 消防隐患登记表
+    </div> -->
+    <div class="layui-card-body">
+        <form class="layui-form layui-form-pane" action="" id="dangerForm" lay-filter="dangerForm">
+
+            <!-- ========== 排查信息 ========== -->
+            <div class="section-title">
+                <i class="layui-icon layui-icon-about"></i>排查信息
+            </div>
+
+            <div class="layui-form-item form-row">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <label for="check_date" class="layui-form-label">
+                            <span class='x-red'>*</span>排查日期
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" autocomplete="off" id="check_date" name="check_date" lay-verify="required" class="layui-input" placeholder="请选择日期">
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>排查人员
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="safety_investigator" id="safety_investigator" lay-verify="required" class="layui-input" placeholder="请输入排查人员">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item form-row">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>排查类型
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="check_type" id="check_type" lay-verify="required" class="layui-input" placeholder="请输入排查类型">
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>责任人
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="reviewer" id="reviewer" lay-verify="required" class="layui-input" placeholder="请输入责任人">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item form-row">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>隐患位置
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="position" id="position" lay-verify="required" class="layui-input" placeholder="请输入隐患位置">
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <label class="layui-form-label">
+                            <span class='x-red'>*</span>隐患等级
+                        </label>
+                        <div class="layui-input-block">
+                            <input type="text" name="level" id="level" lay-verify="required" class="layui-input" placeholder="请输入隐患等级">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+             <div class="layui-form-item form-row">
+                <label class="layui-form-label">
+                    <span class='x-red'>*</span>整改期限
+                </label>
+                <div class="layui-inline" id="ID-laydate-rangeLinked">
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" id="period0" name="period0" class="layui-input" placeholder="开始日期">
+                    </div>
+                    <div class="layui-form-mid">-</div>
+                    <div class="layui-input-inline">
+                        <input type="text" autocomplete="off" id="period" name="period" class="layui-input" placeholder="结束日期">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== 隐患详情 ========== -->
+            <div class="section-title">
+                <i class="layui-icon layui-icon-detail"></i>隐患详情
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    <span class='x-red'>*</span>隐患描述
+                </label>
+                <div class="layui-input-block">
+                    <textarea name="description" id="description" lay-verify="required" placeholder="请详细描述隐患情况，包括隐患类型、严重程度等..." class="layui-textarea" maxlength="500" style="min-height:100px;"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">现场照片</label>
+                <div class="layui-input-block">
+                    <div class="upload-box" id="uploadBox">
+                        <div class="upload-btn-wrap" id="uploadBtn">
+                            <i class="layui-icon layui-icon-upload-drag"></i>
+                            <span>上传照片</span>
+                        </div>
+                        <div id="previewBox" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+                    </div>
+                    <div class="upload-hint">
+                        <i class="layui-icon layui-icon-about"></i>支持 jpg / png / webp 格式，单张不超过 10MB
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== 提交 ========== -->
+            <div class="submit-wrap">
+                <button class="layui-btn" type="button" lay-filter="add" lay-submit="">
+                    <i class="layui-icon layui-icon-ok"></i> 提 交
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    layui.use(['element', 'layer', 'form', 'upload', 'laydate'], function () {
+        var $ = layui.jquery;
+        var element = layui.element;
+        var layer = layui.layer;
+        var form = layui.form;
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+
+        // ========== check_date 与 period0 联动：period0 值+范围 min 同步 ==========
+        function syncPeriod0(val) {
+            // 同步 period0 的值
+            $('#period0').val(val);
+            // 重新渲染范围选择器，更新 min 约束
+            laydate.render({
+                elem: '#ID-laydate-rangeLinked',
+                range: ['#period0', '#period'],
+                rangeLinked: true,
+                min: val,
+            });
+        }
+
+        // 检查日期选择器
+        laydate.render({
+            elem: '#check_date',
+            type: 'date',
+            value: new Date(),
+            isInitValue: true,
+            done: function (value) {
+                syncPeriod0(value); // check_date 变化 → period0 值和 min 同步
+            }
+        });
+
+        // 初始同步（isInitValue 触发 done 回调后这里作为兜底）
+        syncPeriod0($('#check_date').val());
+
+        // 照片上传
+        var selectedFiles = [];
+
+        var uploadInst = upload.render({
+            elem: '#uploadBtn',
+            accept: 'images',
+            acceptMime: 'image/jpeg,image/png,image/webp',
+            size: 10240,
+            multiple: true,
+            auto: false,
+            choose: function (obj) {
+                obj.preview(function (index, file, result) {
+                    var exists = selectedFiles.some(function (f) {
+                        return f.name === file.name && f.size === file.size;
+                    });
+                    if (exists) {
+                        layer.msg('文件 ' + file.name + ' 已添加', { icon: 2 });
+                        return;
+                    }
+                    selectedFiles.push(file);
+                    renderPreviews();
+                });
+            }
+        });
+
+        function renderPreviews() {
+            var html = '';
+            selectedFiles.forEach(function (file, index) {
+                html += '<div class="preview-item" data-index="' + index + '">';
+                html += '  <img src="' + URL.createObjectURL(file) + '" alt="预览">';
+                html += '  <div class="del-mask" data-index="' + index + '"><i class="layui-icon layui-icon-delete"></i></div>';
+                html += '</div>';
+            });
+            $('#previewBox').html(html);
+
+            $('#previewBox .del-mask').off('click').on('click', function (e) {
+                e.stopPropagation();
+                var idx = $(this).data('index');
+                selectedFiles.splice(idx, 1);
+                renderPreviews();
+            });
+        }
+
+        // 监听提交
+        form.on('submit(add)', function (data) {
+            console.log(data.field);
+            var formData = new FormData();
+            formData.append('check_date', data.field.check_date);
+            formData.append('safety_investigator', data.field.safety_investigator);
+            formData.append('position', data.field.position);
+            formData.append('description', data.field.description);
+            formData.append('reviewer', data.field.reviewer);
+            formData.append('level', data.field.level);
+            formData.append('check_type', data.field.check_type);
+            formData.append('period', data.field.period);
+
+            console.log(selectedFiles);
+            selectedFiles.forEach(function (file) {
+                formData.append('photos', file);
+                console.log(file);
+            });
+
+            var loadingIdx = layer.load(1, { shade: [0.3, '#000'] });
+
+            $.ajax({
+                type: "post",
+                url: BasePathJLY + '/adddanger',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: "json",
+                headers: { 'Access-Control-Allow-Origin': BasePathJLY },
+                xhrFields: { withCredentials: true },
+                success: function (res) {
+                    console.log(res);
+                    if (res.code == 0) {
+                        layer.msg("添加成功", { icon: 6, time: 2000 }, function () {
+                            window.parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        });
+                        return false;
+                    } else if (res.code == 1001) {
+                        window.top.location.href = "../../index.html";
+                        return false;
+                    } else {
+                        layer.msg(res.msg, { icon: 5, time: 5000 });
+                        return false;
+                    }
+                },
+                error: function () {
+                    layer.msg("提交失败，请重试", { icon: 5, time: 3000 });
+                },
+                complete: function () {
+                    layer.close(loadingIdx);
+                }
+            });
+
+            console.log("add:", data.field);
+            return false;
+        });
+
+        // ESC 关闭弹窗
+        $(document).keyup(function (event) {
+            if (event.keyCode == 27) {
+                var childFrame = window.frames[0];
+                var len = window.frames.length;
+                if (len == 0) {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                } else {
+                    var childFrame = window.frames[len - 1];
+                    var index = layer.getFrameIndex(childFrame.name);
+                    layer.close(index);
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
