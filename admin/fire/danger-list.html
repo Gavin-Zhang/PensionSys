@@ -381,8 +381,8 @@
                         var data = res.data && res.data[0] ? res.data[0] : [];
                         var overdue = 0, cancel = 0;
                         data.forEach(function(item) {
-                            if (item.DangerResult === '超期') overdue++;
-                            else if (item.DangerResult === '销号') cancel++;
+                            if (item.RectificationResult === '超期') overdue++;
+                            else if (item.RectificationResult === '销号') cancel++;
                         });
                         $('#countTotal').text(res.count || 0);
                         $('#countOverdue').text(overdue);
