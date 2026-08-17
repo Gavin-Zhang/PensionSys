@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>楼面平面图编辑器(Fabric+LayUI)</title>
+    <!-- LayUI CSS -->
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/layui-src@2.9/dist/css/layui.css"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/layui@2.9.27/dist/css/layui.css">
+     <!-- <link rel="stylesheet" href="./lib/layui/css/layui.css"> -->
+    <style>
+        html,body{height:100%;margin:0;}
+        .layui-layout-left{width:180px;background:#23262E}
+        #mapBox{width:calc(100% - 180px);height:100%;float:left;background:#f7f7f7;position:relative;}
+        #floorCanvas{border:1px solid #ccc;margin:10px;background:#fff;}
+        .tool-item{padding:8px 15px;cursor:pointer;color:#fff;}
+        .tool-item:hover{background:#393D49}
+    </style>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 左侧工具栏：图例工具 -->
+        <div class="layui-layout-left layui-side-scroll">
+            <div class="layui-text" style="color:#fff;padding:12px;border-bottom:#444 solid 1px">平面图工具栏</div>
+            <div class="tool-item" data-type="wall">▬ 墙体</div>
+            <div class="tool-item" data-type="room">□ 房间</div>
+            <div class="tool-item" data-type="fire">● 消防栓</div>
+            <div class="tool-item" data-type="elevator">■ 电梯</div>
+            <div class="tool-item" data-type="text">T 文字标注</div>
+            <div class="layui-btn-group layui-mt15" style="padding:0 8px;">
+                <button class="layui-btn layui-btn-xs layui-btn-primary" id="uploadBg">上传CAD底图</button>
+                <button class="layui-btn layui-btn-xs layui-btn-normal" id="saveJson">保存图纸</button>
+                <button class="layui-btn layui-btn-xs layui-btn-danger" id="delSelect">删除选中</button>
+            </div>
+        </div>
+        <!-- 绘图区域 -->
+        <div id="mapBox">
+            <canvas id="floorCanvas" width="1100" height="720"></canvas>
+        </div>
+    </div>
+
+    <!-- JS引入 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/layui-src@2.9/dist/layui.js"></script> -->
+     <script src="https://cdn.jsdelivr.net/npm/layui@2.9.27/dist/layui.js"></script>
+    <!-- <script src="./lib/layui/layui.js" charset="utf-8"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/fabric@5.3.0/dist/fabric.min.js"></script> -->
+     <script src="https://cdn.staticfile.org/fabric.js/5.3.0/fabric.min.js"></script>
+    <script>
+        layui.use(['layer','upload'],function(){
+            let layer = layui.layer;
+            let upload = layui.upload;
+            let canvas = new fabric.Canvas('floorCanvas',{
+                backgroundColor:'#ffffff',
+                selection:true,
+                fireRightClick:true
+            });
+            let drawType = null; // 当前绘制类型
+
+            // ==========1.左侧工具点击切换绘图模式==========
+            document.querySelectorAll('.tool-item').forEach(item=>{
+                item.onclick = function(){
+                    drawType = this.dataset.type;
+                    canvas.isDrawingMode = false;
+                    layer.msg(`已选中：${this.innerText.trim()}`);
+                    // 鼠标绘制监听
+                    canvas.off('mouse:down').on('mouse:down',opt=>{
+                        let p = canvas.getPointer(opt.e);
+                        switch(drawType){
+                            case 'wall': // 直线墙体
+                                let line = new fabric.Line([p.x,p.y,p.x,p.y],{stroke:'#222',strokeWidth:3,selectable:true});
+                                canvas.on('mouse:move',e=>{
+                                    let mp = canvas.getPointer(e.e);
+                                    line.set({x2:mp.x,y2:mp.y});
+                                    canvas.renderAll();
+                                })
+                                line.on('mouseup',()=>{canvas.add(line);canvas.off('mouse:move')});
+                                break;
+                            case 'room': // 房间矩形
+                                let rect = new fabric.Rect({left:p.x,top:p.y,width:0,height:0,fill:'#eef5ff',stroke:'#2266cc'});
+                                canvas.on('mouse:move',e=>{
+                                    let mp = canvas.getPointer(e.e);
+                                    rect.set({width:mp.x-p.x,height:mp.y-p.y});
+                                    canvas.renderAll();
+                                })
+                                rect.on('mouseup',()=>{canvas.add(rect);canvas.off('mouse:move')});
+                                break;
+                            case 'fire': //消防栓圆点
+                                let circle = new fabric.Circle({left:p.x,top:p.y,radius:8,fill:'red',name:'消防栓'});
+                                canvas.add(circle);
+                                break;
+                            case 'elevator': //电梯方块
+                                let elev = new fabric.Rect({left:p.x,top:p.y,width:35,height:35,fill:'#333',name:'电梯'});
+                                canvas.add(elev);
+                                break;
+                            case 'text': //文字标注
+                                let txt = new fabric.Textbox('标注',{left:p.x,top:p.y,fontSize:14});
+                                canvas.add(txt);
+                                break;
+                        }
+                    })
+                }
+            })
+
+            // ==========2.上传CAD/户型底图做背景==========
+            upload.render({
+                elem:'#uploadBg',
+                accept:'image',
+                done:function(res){
+                    fabric.Image.fromURL(res.src,img=>{
+                        img.scaleToWidth(canvas.getWidth()*0.95);
+                        canvas.setBackgroundImage(img,canvas.renderAll.bind(canvas),{
+                            crossOrigin:'anonymous'
+                        })
+                        layer.msg('底图加载成功！');
+                    })
+                }
+            })
+
+            // ==========3.保存图纸JSON(存数据库)==========
+            document.getElementById('saveJson').onclick = ()=>{
+                let json = JSON.stringify(canvas.toJSON());
+                console.log('图纸JSON数据：',json);
+                layer.alert('图纸JSON已生成，可提交后端保存',{title:'保存成功'});
+            }
+
+            // ==========4.删除选中元素==========
+            document.getElementById('delSelect').onclick = ()=>{
+                let selects = canvas.getActiveObjects();
+                selects.forEach(obj=>canvas.remove(obj));
+                canvas.discardActiveObject().renderAll();
+                layer.msg('已删除选中');
+            }
+
+            // ==========5.点击设备弹窗详情(消防栓/电梯)==========
+            canvas.on('object:click',opt=>{
+                let obj = opt.target;
+                if(obj.name){
+                    layer.open({
+                        title:obj.name+'详情',
+                        content:`设备坐标：X${Math.round(obj.left)} Y${Math.round(obj.top)}<br>可在此弹窗绑定编号、维保记录`
+                    })
+                }
+            })
+
+            // 默认预制简易楼面外墙
+            let outer = new fabric.Rect({left:30,top:30,width:980,height:620,fill:'transparent',stroke:'#000',strokeWidth:4});
+            canvas.add(outer);
+            canvas.renderAll();
+        })
+    </script>
+</body>
+</html>

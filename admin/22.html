@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>LayUI + Fabric.js 楼面平面图Demo</title>
+    <!-- LayUI 核心样式与脚本 -->
+    <link href="https://cdn.jsdelivr.net/npm/layui@2.9.8/dist/css/layui.css" rel="stylesheet">
+    <!-- Fabric.js 绘图库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <style>
+        /* 自定义样式，保证画布区域整洁并带卡片效果 */
+        body {
+            background-color: #f2f2f2;
+            padding: 15px;
+        }
+        .layui-card {
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        .layui-card-header {
+            font-weight: bold;
+            font-size: 18px;
+            border-bottom: 1px solid #eee;
+            background-color: #fafafa;
+            border-radius: 8px 8px 0 0;
+        }
+        .canvas-container-wrapper {
+            background: #fefefe;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            border-radius: 6px;
+            overflow-x: auto;
+        }
+        #floorCanvas {
+            border: 1px solid #cfcfcf;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+            cursor: default;
+        }
+        .toolbar-btn {
+            margin-right: 12px;
+            margin-bottom: 8px;
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background: #f9f9f9;
+            border-radius: 6px;
+        }
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .legend-color {
+            width: 24px;
+            height: 16px;
+            border-radius: 2px;
+        }
+        .info-text {
+            color: #666;
+            font-size: 13px;
+            padding: 8px 15px;
+            background: #f8f8f8;
+            border-left: 4px solid #5FB878;
+        }
+        @media (max-width: 768px) {
+            .legend { gap: 12px; }
+            .toolbar-btn { margin-bottom: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-container" style="max-width: 1400px;">
+    <!-- 标题与说明卡片 -->
+    <div class="layui-card">
+        <div class="layui-card-header">
+            🏢 楼面平面图设计器 | LayUI + Fabric.js
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md12">
+                    <div class="info-text">
+                        <i class="layui-icon layui-icon-home"></i> 本示例展示标准户型平面图：包含外墙、内墙、客厅、卧室、厨房/卫生间区域，以及门窗示意元素。
+                        所有图形均为矢量，支持鼠标悬停提示（点击任意元素可查看名称），右侧工具栏可切换房间标注。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要绘图区 + 右侧控制栏 (采用栅格布局) -->
+    <div class="layui-row layui-col-space15">
+        <!-- 左侧画布区 -->
+        <div class="layui-col-md9 layui-col-sm12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    📐 楼面平面图 (Fabric.js 可交互画板)
+                    <span style="font-size:12px; float:right; color:#999;">墙体深灰 · 填充色区分功能区</span>
+                </div>
+                <div class="layui-card-body canvas-container-wrapper">
+                    <canvas id="floorCanvas" width="1000" height="600" style="width:1000px; height:600px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧工具栏 (LayUI风格) -->
+        <div class="layui-col-md3 layui-col-sm12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    🛠️ 工具面板
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-btn-group" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px;">
+                        <button id="btnResetView" class="layui-btn layui-btn-primary layui-btn-sm toolbar-btn">
+                            <i class="layui-icon layui-icon-refresh"></i> 重置视图
+                        </button>
+                        <button id="btnShowInfo" class="layui-btn layui-btn-normal layui-btn-sm toolbar-btn">
+                            <i class="layui-icon layui-icon-info"></i> 户型信息
+                        </button>
+                        <button id="btnToggleLabels" class="layui-btn layui-btn-warm layui-btn-sm toolbar-btn">
+                            <i class="layui-icon layui-icon-fonts-code"></i> 隐藏/显示文字
+                        </button>
+                    </div>
+                    <hr>
+                    <div style="margin-top: 8px;">
+                        <strong><i class="layui-icon layui-icon-diamond"></i> 图例说明</strong>
+                        <div class="legend">
+                            <div class="legend-item"><div class="legend-color" style="background: #E8D3B9;"></div> 客厅</div>
+                            <div class="legend-item"><div class="legend-color" style="background: #B5D3E7;"></div> 主卧室</div>
+                            <div class="legend-item"><div class="legend-color" style="background: #C7E9C2;"></div> 厨房/卫生间</div>
+                            <div class="legend-item"><div class="legend-color" style="background: #5D5D5D;"></div> 墙体(粗线)</div>
+                            <div class="legend-item"><div class="legend-color" style="background: none; border:1px solid #AA6F3C;"></div> 🚪 门示意</div>
+                            <div class="legend-item"><div class="legend-color" style="background: #AAD4F5;"></div> 🪟 窗示意</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 18px; background: #f5f5f5; border-radius: 4px; padding: 10px;">
+                        <p style="margin:0 0 5px 0; font-size:13px;"><i class="layui-icon layui-icon-tips"></i> 操作提示</p>
+                        <p style="margin:0; font-size:12px; color:#555;">✔ 所有对象已锁定位置（防误拖）<br>✔ 单击任意房间/门窗会弹出类型名称<br>✔ 点击"户型信息"查看详细面积说明</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部版权/附加信息 -->
+    <div style="text-align: center; padding: 16px 0; color: #aaa; font-size: 12px;">
+        LayUI + Fabric.js 楼面平面图演示 | 墙体厚度示意 | 包含客厅、主卧、厨卫及门窗布局
+    </div>
+</div>
+
+<script>
+    // 等待页面完全加载后初始化 Fabric Canvas 和平面图元素
+    window.addEventListener('load', function() {
+        // 初始化 canvas (开启对象缓存，提升性能)
+        const canvas = new fabric.Canvas('floorCanvas', {
+            selection: false,      // 禁止框选
+            preserveObjectStacking: true,
+            backgroundColor: '#ffffff'
+        });
+
+        // ======================== 辅助函数 =========================
+        // 使对象不可移动、不可缩放、不可旋转，但保留点击事件用于信息弹窗
+        function makeStatic(obj) {
+            obj.set({
+                selectable: false,
+                hasControls: false,
+                hasBorders: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                lockRotation: true,
+                lockScalingX: true,
+                lockScalingY: true,
+                evented: true,    // 保留事件用于点击
+                hoverCursor: 'pointer'
+            });
+            return obj;
+        }
+
+        // 通用点击显示信息 (通过对象自带的name或者类型)
+        function bindObjectInfo(obj, name) {
+            if (!obj) return;
+            obj.set('name', name || '建筑元素');
+            obj.on('mousedown', function(e) {
+                // 防止事件冒泡到canvas，但仍然弹出提示
+                const title = this.name || (this.get('type') === 'group' ? '组合构件' : '平面图元');
+                layui.use('layer', function() {
+                    layer.msg('📍 您点击了：' + title, { offset: 't', icon: 1, time: 1500 });
+                });
+                e.stopPropagation && e.stopPropagation();
+            });
+        }
+
+        // 绘制一个标准门示意 (弧形+矩形小门扇)
+        // 参数: x, y 门轴点坐标,  direction: 'right' 朝右 (门开启弧线向右) 或 'down' 朝下
+        function addDoor(x, y, direction, doorName) {
+            let doorGroup = null;
+            const doorWidth = 28;
+            const arcRadius = 28;
+            if (direction === 'right') {
+                // 矩形门扇 + 弧线 (向右开启)
+                const rect = new fabric.Rect({
+                    left: x, top: y - 4,
+                    width: doorWidth, height: 8,
+                    fill: '#C9A87C', stroke: '#8B5A2B', strokeWidth: 1,
+                    rx: 2, ry: 2
+                });
+                const path = new fabric.Path(`M ${x} ${y} L ${x + doorWidth} ${y} A ${arcRadius} ${arcRadius} 0 0 1 ${x} ${y + arcRadius}`, {
+                    fill: '', stroke: '#8B5A2B', strokeWidth: 2,
+                    strokeLineCap: 'round'
+                });
+                doorGroup = new fabric.Group([rect, path], { left: x, top: y, selectable: false });
+            } 
+            else if (direction === 'down') {
+                // 朝下开门 (水平墙)
+                const rect = new fabric.Rect({
+                    left: x - 4, top: y,
+                    width: 8, height: doorWidth,
+                    fill: '#C9A87C', stroke: '#8B5A2B', strokeWidth: 1,
+                    rx: 2, ry: 2
+                });
+                const path = new fabric.Path(`M ${x} ${y} L ${x} ${y + doorWidth} A ${arcRadius} ${arcRadius} 0 0 1 ${x - arcRadius} ${y}`, {
+                    fill: '', stroke: '#8B5A2B', strokeWidth: 2,
+                    strokeLineCap: 'round'
+                });
+                doorGroup = new fabric.Group([rect, path], { left: x, top: y, selectable: false });
+            }
+            if (doorGroup) {
+                doorGroup.set({ selectable: false, evented: true, hasControls: false, lockMovement: true });
+                bindObjectInfo(doorGroup, doorName || '房间门');
+                canvas.add(doorGroup);
+            }
+        }
+
+        // 绘制窗户示意 (双线矩形跨在墙上)
+        function addWindow(x, y, width, height, isHorizontal = true, winName = '窗户') {
+            let winGroup;
+            if (isHorizontal) {
+                const line1 = new fabric.Line([x, y, x + width, y], { stroke: '#6B8EAD', strokeWidth: 3, strokeDashArray: [5, 3] });
+                const line2 = new fabric.Line([x, y + height, x + width, y + height], { stroke: '#6B8EAD', strokeWidth: 3, strokeDashArray: [5, 3] });
+                const fillRect = new fabric.Rect({
+                    left: x, top: y, width: width, height: height,
+                    fill: '#D9EAF7', stroke: '#4A708B', strokeWidth: 1, opacity: 0.7
+                });
+                winGroup = new fabric.Group([fillRect, line1, line2], { left: x, top: y, selectable: false });
+            } else {
+                const line1 = new fabric.Line([x, y, x, y + height], { stroke: '#6B8EAD', strokeWidth: 3, strokeDashArray: [5, 3] });
+                const line2 = new fabric.Line([x + width, y, x + width, y + height], { stroke: '#6B8EAD', strokeWidth: 3, strokeDashArray: [5, 3] });
+                const fillRect = new fabric.Rect({
+                    left: x, top: y, width: width, height: height,
+                    fill: '#D9EAF7', stroke: '#4A708B', strokeWidth: 1, opacity: 0.7
+                });
+                winGroup = new fabric.Group([fillRect, line1, line2], { left: x, top: y, selectable: false });
+            }
+            if (winGroup) {
+                winGroup.set({ selectable: false, evented: true, hasControls: false, lockMovement: true });
+                bindObjectInfo(winGroup, winName);
+                canvas.add(winGroup);
+            }
+        }
+
+        // 绘制房间文字标注 (独立文本, 方便控制隐藏显示)
+        let textLabelsArray = [];  // 存储所有文本对象，用于toggle
+
+        function addRoomLabel(text, left, top, fontSize = 16, color = '#2F4F4F') {
+            const label = new fabric.Text(text, {
+                left: left, top: top,
+                fontSize: fontSize,
+                fontFamily: 'Microsoft YaHei, sans-serif',
+                fill: color,
+                fontWeight: '500',
+                backgroundColor: 'rgba(255,255,240,0.7)',
+                padding: 4,
+                hasControls: false,
+                selectable: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                evented: true
+            });
+            bindObjectInfo(label, text + '区域');
+            canvas.add(label);
+            textLabelsArray.push(label);
+            return label;
+        }
+
+        // ======================== 绘制完整楼面平面图 ========================
+        // 1. 先添加区域填充色块 (客厅、卧室、厨卫)
+        // 坐标系统: 画布 1000x600，外墙从(30,30) 到 (970,570) 范围
+        const outerX1 = 30, outerY1 = 30, outerX2 = 970, outerY2 = 570;
+        
+        // 客厅区域 (左侧大面积)
+        const livingRect = new fabric.Rect({
+            left: outerX1 + 2, top: outerY1 + 2,
+            width: 460, height: 536,
+            fill: '#E8D3B9', stroke: 'transparent', strokeWidth: 0,
+            rx: 3, ry: 3,
+            opacity: 0.75
+        });
+        canvas.add(livingRect);
+        bindObjectInfo(livingRect, '客厅 (宽敞起居区)');
+        
+        // 主卧室区域 (右上)
+        const bedroomRect = new fabric.Rect({
+            left: 500, top: outerY1 + 2,
+            width: 468, height: 280,
+            fill: '#B5D3E7', stroke: 'transparent', strokeWidth: 0,
+            opacity: 0.7
+        });
+        canvas.add(bedroomRect);
+        bindObjectInfo(bedroomRect, '主卧室 (带飘窗)');
+        
+        // 厨房/卫生间区域 (右下)
+        const kitchenRect = new fabric.Rect({
+            left: 500, top: 318,
+            width: 468, height: 250,
+            fill: '#C7E9C2', stroke: 'transparent', strokeWidth: 0,
+            opacity: 0.7
+        });
+        canvas.add(kitchenRect);
+        bindObjectInfo(kitchenRect, '厨房+卫生间区');
+        
+        // 2. 绘制墙体 (粗线表现外墙与内墙) - 使用 Line 强调结构
+        const wallColor = '#5D5D5D';
+        const wallThick = 9;
+        const innerWallThick = 7;
+        
+        // 外墙四条线 (闭合边框)
+        const topWall = new fabric.Line([outerX1, outerY1, outerX2, outerY1], { stroke: wallColor, strokeWidth: wallThick, evented: false, selectable: false });
+        const bottomWall = new fabric.Line([outerX1, outerY2, outerX2, outerY2], { stroke: wallColor, strokeWidth: wallThick });
+        const leftWall = new fabric.Line([outerX1, outerY1, outerX1, outerY2], { stroke: wallColor, strokeWidth: wallThick });
+        const rightWall = new fabric.Line([outerX2, outerY1, outerX2, outerY2], { stroke: wallColor, strokeWidth: wallThick });
+        
+        // 内墙: 竖向分割墙 (区分客厅与右区) 从 (500,30) 到 (500,570)
+        const verticalInnerWall = new fabric.Line([500, outerY1, 500, outerY2], { stroke: wallColor, strokeWidth: innerWallThick });
+        // 横向内墙: 分割卧室与厨卫 (从500到970, y=310)
+        const horizontalInnerWall = new fabric.Line([500, 310, outerX2, 310], { stroke: wallColor, strokeWidth: innerWallThick });
+        
+        // 添加所有墙体到canvas 并设为静态不可选
+        const walls = [topWall, bottomWall, leftWall, rightWall, verticalInnerWall, horizontalInnerWall];
+        walls.forEach(wall => {
+            makeStatic(wall);
+            wall.set('evented', false); // 墙体不参与点击提示，避免干扰
+            canvas.add(wall);
+        });
+        
+        // 3. 添加门示意 (位置依据墙体布局)
+        // 门1: 客厅与主卧之间竖墙上的门 (位于竖墙 x=500, y=140~180区域，朝右开启)
+        addDoor(500, 150, 'right', '客厅 ↔ 主卧门');
+        // 门2: 厨房/卫生间区域与走廊之间(横向内墙，朝下开门) 位置 x=620, y=310
+        addDoor(620, 310, 'down', '厨卫区推拉门');
+        // 门3: 主卧通往阳台(假意外侧)示意，在外墙上加一个门(右侧墙，但是朝左不好加 为了美观加在右侧墙中上部，使用朝左方向自定义 )
+        // 简化：在右墙附加门扇组合, 制作一个朝内开的门示意 (y=150)
+        const balconyDoorRect = new fabric.Rect({
+            left: outerX2 - 20, top: 150, width: 18, height: 50,
+            fill: '#C9A87C', stroke: '#8B5A2B', strokeWidth: 1.5, rx: 2
+        });
+        const doorArcPath = new fabric.Path(`M ${outerX2 - 2} ${150} L ${outerX2 - 2} ${200} A 40 40 0 0 1 ${outerX2 - 38} ${150}`, {
+            fill: '', stroke: '#8B5A2B', strokeWidth: 2
+        });
+        const rightDoorGroup = new fabric.Group([balconyDoorRect, doorArcPath], { left: outerX2-20, top: 150, selectable: false });
+        makeStatic(rightDoorGroup);
+        bindObjectInfo(rightDoorGroup, '阳台推拉门');
+        canvas.add(rightDoorGroup);
+        
+        // 4. 添加窗户示意（在外墙合适位置）
+        // 主卧飘窗 (上外墙，x=620~780, y=30)
+        addWindow(620, outerY1 - 2, 160, 12, true, '主卧飘窗');
+        // 客厅阳台窗(上外墙偏左) x=120~280, y=30
+        addWindow(120, outerY1 - 2, 150, 12, true, '客厅观景窗');
+        // 厨房窗户(右侧外墙下方) 竖窗样式
+        addWindow(outerX2 - 14, 400, 12, 90, false, '厨房通风窗');
+        // 卫生间窗户 (右侧外墙偏下)
+        addWindow(outerX2 - 14, 520, 12, 40, false, '卫生间小窗');
+        
+        // 5. 添加房间标注文本 (便于识别)
+        addRoomLabel('🛋️ 客厅', 180, 260, 18, '#5A4A3A');
+        addRoomLabel('🛏️ 主卧室', 650, 140, 18, '#2E5A6E');
+        addRoomLabel('🍳 厨房 + 卫生间', 600, 420, 16, '#3A6B3F');
+        addRoomLabel('玄关区域', 80, 110, 14, '#8B7A6B');
+        addRoomLabel('储物区', 510, 520, 13, '#6F4F37');
+        
+        // 增加一些软装示意(圆形餐桌、床简易表示 - 可选装饰)
+        const diningTable = new fabric.Circle({
+            left: 220, top: 370, radius: 24,
+            fill: '#DDC5A0', stroke: '#AA8C5E', strokeWidth: 1.5,
+            opacity: 0.85
+        });
+        const bedSymbol = new fabric.Rect({
+            left: 680, top: 200, width: 90, height: 60, rx: 8, ry: 8,
+            fill: '#E0C6A8', stroke: '#A67C52', strokeWidth: 1.2, opacity: 0.9
+        });
+        makeStatic(diningTable);
+        makeStatic(bedSymbol);
+        bindObjectInfo(diningTable, '餐厅圆桌');
+        bindObjectInfo(bedSymbol, '双人床示意');
+        canvas.add(diningTable);
+        canvas.add(bedSymbol);
+        
+        // 给所有可交互元素添加静态锁 以及 确保墙体不可选但保留提示忽略
+        canvas.getObjects().forEach(obj => {
+            if (!obj.selectable && obj.evented === undefined) {
+                // 确保没有额外控制属性，避免可以拖拽
+                if (!obj.hasOwnProperty('lockMovementX')) {
+                    makeStatic(obj);
+                }
+            } else if (obj.selectable !== false) {
+                makeStatic(obj);
+            }
+            // 对墙体额外禁止显示提示(避免弹出墙)
+            if (walls.includes(obj)) {
+                obj.evented = false;
+                obj.hoverCursor = 'default';
+            }
+        });
+        
+        // 调整部分图层顺序使墙体在上方但文字显示在最前（默认添加顺序导致文字在后面，重新调整bringToFront）
+        textLabelsArray.forEach(txt => txt.bringToFront());
+        diningTable.bringToFront();
+        bedSymbol.bringToFront();
+        // 门窗组也要提到前部避免被墙体遮挡太严重，但效果已经很清晰
+        canvas.getObjects().forEach(obj => {
+            if (obj.type === 'group' && (obj.get('name') || (obj._objects && (obj._objects.some(o => o.fill === '#C9A87C'))))) {
+                obj.bringToFront();
+            }
+            if (obj.path && obj.stroke === '#8B5A2B') obj.bringToFront();
+        });
+        
+        // 刷新画布渲染
+        canvas.renderAll();
+        
+        // ======================== 交互与工具栏功能 ========================
+        // 重置视图 (默认缩放和平移归位)
+        document.getElementById('btnResetView').addEventListener('click', function() {
+            canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+            canvas.renderAll();
+            layui.use('layer', function() {
+                layer.msg('视图已重置为原始比例', { icon: 1, time: 1000 });
+            });
+        });
+        
+        // 户型信息 (展示各区域面积介绍)
+        document.getElementById('btnShowInfo').addEventListener('click', function() {
+            layui.use('layer', function() {
+                layer.open({
+                    title: '📋 户型详细说明',
+                    content: `
+                        <div style="padding: 8px 12px; line-height: 1.6;">
+                        🏠 <strong>楼面户型布局</strong><br>
+                        • 客厅面积: 约 24.6㎡ (含阳台采光区)<br>
+                        • 主卧室面积: 约 14.2㎡ (带飘窗及衣柜区)<br>
+                        • 厨房+卫生间: 约 12.5㎡ (干湿分离设计)<br>
+                        • 玄关及过道: 约 3.8㎡<br>
+                        🚪 门位置: 主卧与客厅之间平开门, 厨卫区推拉门, 连通生活阳台。<br>
+                        🪟 窗户: 主卧飘窗，客厅落地窗，厨卫通风窗。<br>
+                        💡 提示: 图中墙体为深灰色粗线，所有元素均支持点击查看类型。
+                        </div>
+                    `,
+                    area: '460px',
+                    shadeClose: true,
+                    btn: ['知道了']
+                });
+            });
+        });
+        
+        // 显示/隐藏文本标注
+        let labelsVisible = true;
+        document.getElementById('btnToggleLabels').addEventListener('click', function() {
+            labelsVisible = !labelsVisible;
+            textLabelsArray.forEach(label => {
+                label.visible = labelsVisible;
+            });
+            canvas.renderAll();
+            const btn = document.getElementById('btnToggleLabels');
+            const msg = labelsVisible ? '显示房间标注' : '隐藏房间标注';
+            layui.use('layer', function() {
+                layer.msg(msg, { icon: 0, time: 800 });
+            });
+        });
+        
+        // 附加canvas背景点击优雅提示（可选），不干扰
+        canvas.on('mouse:down', function(e) {
+            if (!e.target) {
+                // 点击空白区域可显示简单提示，但是不干扰主要功能
+                // 不做事防止频繁弹窗
+            }
+        });
+        
+        // 让所有门窗与家具显示友好提示
+        const allGroups = canvas.getObjects().filter(o => o.type === 'group');
+        allGroups.forEach(grp => {
+            if (!grp.name) {
+                if (grp.getObjects && grp.getObjects().some(obj => obj.fill === '#C9A87C')) {
+                    bindObjectInfo(grp, '门构件');
+                } else if (grp.getObjects && grp.getObjects().some(obj => obj.fill === '#D9EAF7')) {
+                    bindObjectInfo(grp, '窗户构件');
+                } else {
+                    bindObjectInfo(grp, '建筑组件');
+                }
+            }
+        });
+        
+        // 最终额外确保所有对象不可缩放移动二次锁定
+        canvas.getObjects().forEach(obj => {
+            if (!obj.lockMovementX) {
+                obj.set({
+                    lockMovementX: true,
+                    lockMovementY: true,
+                    lockRotation: true,
+                    lockScalingX: true,
+                    lockScalingY: true,
+                    hasControls: false,
+                    hasBorders: false,
+                    selectable: false
+                });
+            }
+        });
+        canvas.renderAll();
+        console.log('楼面平面图初始化完成，支持点击元素查看信息');
+    });
+</script>
+</body>
+</html>
